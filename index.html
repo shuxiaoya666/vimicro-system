@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小唯管理系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ========== 登录页 ========== -->
+<div id="loginPage" class="login-page">
+  <div class="login-left">
+    <div class="login-logo">
+      <div class="login-logo-icon">小</div>
+      <h2>VIMICRO <span>小唯</span></h2>
+    </div>
+    <div class="login-desc">
+      一站式数字化管理平台<br>
+      提升效率，优化运营<br><br>
+      口腔种植体产业链综合管理系统
+    </div>
+    <div class="login-features">
+      <div class="login-feature"><span>✓</span> 五端口统一登录</div>
+      <div class="login-feature"><span>✓</span> 角色权限隔离</div>
+      <div class="login-feature"><span>✓</span> 全流程数据管理</div>
+    </div>
+  </div>
+  <div class="login-right">
+    <h3>欢迎登录</h3>
+    <div class="login-sub">小唯管理系统</div>
+    <div class="login-form">
+      <div class="form-group">
+        <label>账号</label>
+        <input type="text" id="loginAccount" placeholder="请输入账号（如：admin）">
+      </div>
+      <div class="form-group">
+        <label>密码</label>
+        <input type="password" id="loginPassword" placeholder="请输入密码（如：123456）">
+      </div>
+      <div class="form-group">
+        <label>验证码</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="loginCaptcha" placeholder="请输入验证码" style="flex:1;">
+          <div id="captchaCode" class="captcha-box">A3B7</div>
+        </div>
+      </div>
+      <div id="loginError" class="login-error" style="display:none;">账号或密码错误，请重试</div>
+      <button class="login-btn" onclick="doLogin()">登 录</button>
+      <div class="login-options">
+        <span>记住密码</span>
+        <span>忘记密码？</span>
+      </div>
+      <div class="login-hint">
+        <strong>测试账号：</strong><br>
+        admin / 123456 → 超级管理员（全部端口）<br>
+        clinic / 123456 → 诊所端<br>
+        dealer / 123456 → 经销商端<br>
+        pharmacy / 123456 → 药店端<br>
+        factory / 123456 → 工厂端
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 主应用框架 ========== -->
+<div id="mainApp" class="main-app" style="display:none;">
+  <!-- 顶部导航 -->
+  <div class="top-nav">
+    <div class="top-nav-left">
+      <div class="logo" onclick="navigateTo('home')" style="cursor:pointer;">
+        <div class="logo-icon">小</div>
+        <span>VIMICRO 小唯</span>
+      </div>
+      <!-- 端口切换器 -->
+      <div class="port-switcher">
+        <div class="port-switcher-btn" onclick="togglePortMenu()">
+          <span id="currentPortIcon">🏠</span>
+          <span id="currentPortName">平台端</span>
+          <span class="arrow-down">▼</span>
+        </div>
+        <div id="portMenu" class="port-menu" style="display:none;">
+          <div class="port-menu-item" onclick="switchPort('platform')">
+            <span class="icon">🏠</span><span>小唯平台端</span>
+          </div>
+          <div class="port-menu-item" onclick="switchPort('clinic')">
+            <span class="icon">🏥</span><span>诊所端</span>
+          </div>
+          <div class="port-menu-item" onclick="switchPort('dealer')">
+            <span class="icon">👤</span><span>经销商端</span>
+          </div>
+          <div class="port-menu-item" onclick="switchPort('pharmacy')">
+            <span class="icon">💊</span><span>药店端</span>
+          </div>
+          <div class="port-menu-item" onclick="switchPort('factory')">
+            <span class="icon">🏭</span><span>工厂端</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="top-nav-right">
+      <div class="icon-btn" title="搜索">🔍</div>
+      <div class="icon-btn" title="通知" style="position:relative;">
+        🔔<span class="notif-badge">3</span>
+      </div>
+      <div class="user-info" onclick="toggleUserMenu()">
+        <div class="user-avatar" id="userAvatar">管</div>
+        <span class="user-name" id="userName">超级管理员 ▼</span>
+        <div id="userMenu" class="user-menu" style="display:none;">
+          <div class="user-menu-item">⚙️ 个人设置</div>
+          <div class="user-menu-item">📢 消息通知</div>
+          <div class="user-menu-divider"></div>
+          <div class="user-menu-item" onclick="doLogout()">🚪 退出登录</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主体区域 -->
+  <div class="body-area">
+    <!-- 侧边栏 -->
+    <div class="sidebar" id="sidebar">
+      <!-- 动态生成菜单 -->
+    </div>
+    <!-- 内容区 -->
+    <div class="main-content" id="mainContent">
+      <!-- 动态生成页面内容 -->
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/pages.js"></script>
+</body>
+</html>
