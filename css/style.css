@@ -56,6 +56,7 @@ body {
   align-items: center;
   gap: 2px;
   margin: 0;
+  text-transform: uppercase; /* [LOGO修改] 所有字母统一大写，保证大小一致 */
 }
 .brand-logo-nav { font-size: 20px; gap: 1px; }
 .brand-teal { color: #008B8B; }  /* 青绿色 - 照片中V/M/c/r字母颜色 */
