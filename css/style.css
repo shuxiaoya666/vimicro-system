@@ -45,16 +45,16 @@ body {
   align-items: center;
   margin-bottom: 24px;
 }
-/* [LOGO修改] SVG Logo - 所有字母统一字号粗细一致，像素级精确控制 */
+/* [LOGO修改] SVG Logo - cro与VM统一40px字号，i竖线用rect精确控制长度 */
 /* V/M/i/c/r为青绿色(#008B8B)，i的点为橘色空心圆圈，o为橙色(#D2691E) */
 .brand-logo-svg {
-  width: 287px;
-  height: 68px;
+  width: 263px;
+  height: 62px;
   display: block;
 }
 .brand-logo-svg-nav {
-  width: 200px;
-  height: 47px;
+  width: 182px;
+  height: 43px;
 }
 .login-desc {
   font-size: 14px;
