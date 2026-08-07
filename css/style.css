@@ -65,22 +65,20 @@ body {
 .brand-i {
   color: #008B8B;                 /* 字母主体青绿色 */
   text-transform: none;           /* 保持小写ı，不转大写 */
-  font-size: 1.85em;              /* 放大1.85倍，使小写i的x-height匹配大写字母cap-height */
-  line-height: 0.54;              /* 1/1.85≈0.54，补偿font-size增大导致的行高偏移 */
+  font-size: 1.9em;               /* 放大1.9倍，使小写i的x-height匹配大写字母cap-height */
   vertical-align: baseline;       /* 基线对齐 */
-  display: inline-block;
   position: relative;
 }
 /* [LOGO修改] i的点：橘色空心圆圈，小一些放在字母上方 */
 .brand-i::before {
   content: '';
   position: absolute;
-  top: -0.12em;                   /* 位于字母上方 */
+  top: 0;                         /* 位于字母顶部 */
   left: 50%;
   transform: translateX(-50%);
-  width: 0.22em;                  /* 圆圈尺寸缩小 */
-  height: 0.22em;
-  border: 0.05em solid #D2691E;   /* 橘色空心圆环，边框细确保空心 */
+  width: 0.24em;                  /* 圆圈尺寸 */
+  height: 0.24em;
+  border: 0.06em solid #D2691E;   /* 橘色空心圆环 */
   border-radius: 50%;
   background: transparent;         /* 透明背景，只有边框 */
 }
@@ -89,10 +87,8 @@ body {
 .brand-r-lower {
   color: #008B8B;
   text-transform: none;          /* r不转大写，保持小写 */
-  font-size: 1.85em;             /* 放大1.85倍，使小写r的x-height匹配大写字母cap-height */
-  line-height: 0.54;             /* 1/1.85≈0.54，补偿font-size增大导致的行高偏移 */
+  font-size: 1.9em;              /* 放大1.9倍，使小写r的x-height匹配大写字母cap-height */
   vertical-align: baseline;      /* 基线对齐 */
-  display: inline-block;
 }
 .brand-r {
   font-size: 10px;
