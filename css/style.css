@@ -60,14 +60,39 @@ body {
 }
 .brand-logo-nav { font-size: 20px; gap: 1px; }
 .brand-teal { color: #008B8B; }  /* 青绿色 - 照片中V/M/c/r字母颜色 */
-.brand-i { color: #D2691E; }     /* 橙色 - 照片中i的点为橙色圆环 */
+/* [LOGO修改] i使用无点ı(U+0131)，放大小写与大写等高，字母主体青绿色 */
+/* i上方的点用::before伪元素绘制为橘色空心圆圈 */
+.brand-i {
+  color: #008B8B;                 /* 字母主体青绿色 */
+  text-transform: none;           /* 保持小写ı，不转大写 */
+  font-size: 1.35em;              /* 放大1.35倍，使小写i高度匹配大写字母 */
+  line-height: 0.74;              /* 补偿font-size增大导致的行高偏移 */
+  vertical-align: baseline;       /* 基线对齐 */
+  display: inline-block;
+  position: relative;
+}
+/* [LOGO修改] i的点：橘色空心圆圈，参考桌面照片设计 */
+.brand-i::before {
+  content: '';
+  position: absolute;
+  top: 0.05em;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.28em;
+  height: 0.28em;
+  border: 0.09em solid #D2691E;   /* 橘色空心圆环 */
+  border-radius: 50%;
+  background: transparent;
+}
 .brand-o { color: #D2691E; }     /* 橙色 - 照片中o为橙色圆环 */
 /* [LOGO修改] r保持小写但放大到与大写字母等高 */
 .brand-r-lower {
   color: #008B8B;
   text-transform: none;          /* r不转大写，保持小写 */
   font-size: 1.35em;             /* 放大1.35倍，使小写r高度匹配大写字母 */
-  line-height: 1;
+  line-height: 0.74;             /* 补偿font-size增大导致的行高偏移 */
+  vertical-align: baseline;      /* 基线对齐 */
+  display: inline-block;
 }
 .brand-r {
   font-size: 10px;
