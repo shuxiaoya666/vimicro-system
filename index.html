@@ -5,20 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小唯管理系统</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
 
 <!-- ========== 登录页 ========== -->
 <div id="loginPage" class="login-page">
   <div class="login-left">
-    <!-- [LOGO修改] 参考桌面照片，品牌名改为 VMicro® -->
-    <!-- V/M/c/r为青绿色大写，i为放大小写(青绿色字母+橘色空心圆点)，o为橘色大写 -->
+    <!-- [LOGO修改] SVG像素级精确控制，所有字母统一字号粗细一致，i用橘色空心圆圈 -->
     <div class="login-logo">
-      <h2 class="brand-logo">
-        <span class="brand-teal">V</span><span class="brand-teal">M</span><span class="brand-i">ı</span><span class="brand-teal">c</span><span class="brand-r-lower">r</span><span class="brand-o">o</span><sup class="brand-r">®</sup>
-        <span class="brand-cn">小唯</span>
-      </h2>
+      <svg class="brand-logo-svg" viewBox="0 0 220 44" xmlns="http://www.w3.org/2000/svg" aria-label="VMicro 小唯">
+        <g font-family="Inter, sans-serif" font-weight="700" font-size="32" text-rendering="geometricPrecision">
+          <text x="0" y="34" fill="#008B8B">V</text>
+          <text x="22" y="34" fill="#008B8B">M</text>
+          <text x="50" y="34" fill="#008B8B">ı</text>
+          <text x="60" y="34" fill="#008B8B">c</text>
+          <text x="79" y="34" fill="#008B8B">r</text>
+          <text x="93" y="34" fill="#D2691E">o</text>
+          <text x="116" y="16" font-size="10" font-weight="400" fill="#008B8B">®</text>
+        </g>
+        <circle cx="54" cy="7" r="2.5" fill="none" stroke="#D2691E" stroke-width="1.5"/>
+        <text x="128" y="34" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="600" fill="#008B8B">小唯</text>
+      </svg>
     </div>
     <!-- [LOGO修改] 添加照片中的品牌标语 "Oral health, trust in Vmicro / 小唯" -->
     <div class="login-desc">
@@ -74,11 +82,21 @@
   <!-- 顶部导航 -->
   <div class="top-nav">
     <div class="top-nav-left">
-      <!-- [LOGO修改] 参考桌面照片，导航栏logo改为 VMicro® -->
+      <!-- [LOGO修改] 导航栏SVG Logo -->
       <div class="logo" onclick="navigateTo('home')" style="cursor:pointer;">
-        <span class="brand-logo brand-logo-nav">
-          <span class="brand-teal">V</span><span class="brand-teal">M</span><span class="brand-i">ı</span><span class="brand-teal">c</span><span class="brand-r-lower">r</span><span class="brand-o">o</span><sup class="brand-r">®</sup>
-        </span>
+        <svg class="brand-logo-svg brand-logo-svg-nav" viewBox="0 0 220 44" xmlns="http://www.w3.org/2000/svg" aria-label="VMicro 小唯">
+          <g font-family="Inter, sans-serif" font-weight="700" font-size="32" text-rendering="geometricPrecision">
+            <text x="0" y="34" fill="#008B8B">V</text>
+            <text x="22" y="34" fill="#008B8B">M</text>
+            <text x="50" y="34" fill="#008B8B">ı</text>
+            <text x="60" y="34" fill="#008B8B">c</text>
+            <text x="79" y="34" fill="#008B8B">r</text>
+            <text x="93" y="34" fill="#D2691E">o</text>
+            <text x="116" y="16" font-size="10" font-weight="400" fill="#008B8B">®</text>
+          </g>
+          <circle cx="54" cy="7" r="2.5" fill="none" stroke="#D2691E" stroke-width="1.5"/>
+          <text x="128" y="34" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="20" font-weight="600" fill="#008B8B">小唯</text>
+        </svg>
       </div>
       <!-- 端口切换器 -->
       <div class="port-switcher">
