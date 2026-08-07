@@ -65,32 +65,32 @@ body {
 .brand-i {
   color: #008B8B;                 /* 字母主体青绿色 */
   text-transform: none;           /* 保持小写ı，不转大写 */
-  font-size: 1.35em;              /* 放大1.35倍，使小写i高度匹配大写字母 */
-  line-height: 0.74;              /* 补偿font-size增大导致的行高偏移 */
+  font-size: 1.85em;              /* 放大1.85倍，使小写i的x-height匹配大写字母cap-height */
+  line-height: 0.54;              /* 1/1.85≈0.54，补偿font-size增大导致的行高偏移 */
   vertical-align: baseline;       /* 基线对齐 */
   display: inline-block;
   position: relative;
 }
-/* [LOGO修改] i的点：橘色空心圆圈，参考桌面照片设计 */
+/* [LOGO修改] i的点：橘色空心圆圈，小一些放在字母上方 */
 .brand-i::before {
   content: '';
   position: absolute;
-  top: 0.05em;
+  top: -0.12em;                   /* 位于字母上方 */
   left: 50%;
   transform: translateX(-50%);
-  width: 0.28em;
-  height: 0.28em;
-  border: 0.09em solid #D2691E;   /* 橘色空心圆环 */
+  width: 0.22em;                  /* 圆圈尺寸缩小 */
+  height: 0.22em;
+  border: 0.05em solid #D2691E;   /* 橘色空心圆环，边框细确保空心 */
   border-radius: 50%;
-  background: transparent;
+  background: transparent;         /* 透明背景，只有边框 */
 }
 .brand-o { color: #D2691E; }     /* 橙色 - 照片中o为橙色圆环 */
 /* [LOGO修改] r保持小写但放大到与大写字母等高 */
 .brand-r-lower {
   color: #008B8B;
   text-transform: none;          /* r不转大写，保持小写 */
-  font-size: 1.35em;             /* 放大1.35倍，使小写r高度匹配大写字母 */
-  line-height: 0.74;             /* 补偿font-size增大导致的行高偏移 */
+  font-size: 1.85em;             /* 放大1.85倍，使小写r的x-height匹配大写字母cap-height */
+  line-height: 0.54;             /* 1/1.85≈0.54，补偿font-size增大导致的行高偏移 */
   vertical-align: baseline;      /* 基线对齐 */
   display: inline-block;
 }
