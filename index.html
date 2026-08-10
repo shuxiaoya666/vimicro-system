@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小唯管理系统</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=15">
+<link rel="stylesheet" href="css/style.css?v=16">
 </head>
 <body>
 
@@ -155,7 +155,14 @@
   </div>
 </div>
 
+<script src="js/data.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/crud.js"></script>
 <script src="js/app.js"></script>
 <script src="js/pages.js"></script>
+<script>
+  // 页面加载时初始化数据库
+  DB.init();
+</script>
 </body>
 </html>

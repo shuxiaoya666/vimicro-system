@@ -353,6 +353,24 @@ body {
 .btn-outline { background: #fff; color: var(--text-muted); border: 1px solid var(--border); }
 .btn-outline:hover { background: var(--bg); }
 .btn-sm { padding: 4px 10px; font-size: 12px; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { background: #c0392b; }
+
+/* 分页按钮 */
+.page-btn {
+  min-width: 32px; height: 32px; padding: 0 10px;
+  border: 1px solid var(--border); background: #fff;
+  border-radius: 6px; font-size: 13px; color: var(--text);
+  cursor: pointer; transition: all 0.15s;
+}
+.page-btn:hover:not(:disabled):not(.active) {
+  border-color: var(--primary); color: var(--primary);
+}
+.page-btn.active {
+  background: var(--primary); border-color: var(--primary); color: #fff;
+}
+.page-btn:disabled { color: var(--text-muted); cursor: not-allowed; opacity: 0.5; }
+.page-ellipsis { padding: 0 4px; color: var(--text-muted); font-size: 13px; }
 
 /* 统计卡片 */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
