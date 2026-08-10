@@ -1,4 +1,4 @@
-// ===== 小唯管理系统 - 五端页面内容（动态数据版） =====
+﻿// ===== 小唯管理系统 - 五端页面内容（动态数据版） =====
 // 定义 SIDEBAR_MENUS 和 PAGE_RENDERERS 两个全局变量
 // 青绿色主色调 #1abc9c | Inter 字体 | 卡片式布局
 // 依赖：DB (data.js), UI (ui.js), CRUD (crud.js)
@@ -295,7 +295,7 @@ var PLATFORM_NOTIFICATIONS = {
     { field: 'title', label: '标题' },
     { field: 'content', label: '内容' },
     { field: 'read', label: '状态', formatter: function(val) {
-      return val ? '<span class="status-tag active">已读</span>' : '<span class="status-tag pending">未读</span>';
+      return val ? '<span class="status-tag active">已读</span>' : '<span class="status-tag pending">未读</span>`;
     }}
   ],
   formFields: [
@@ -472,7 +472,7 @@ var CLINIC_FINANCE = {
     { field: 'direction', label: '收支方向', formatter: function(val) {
       return val === '收入'
         ? '<span class="status-tag active">收入</span>'
-        : '<span class="status-tag inactive">支出</span>';
+        : '<span class="status-tag inactive">支出</span>`;
     }},
     { field: 'amount', label: '金额', type: 'money' },
     { field: 'status', label: '状态', type: 'status' }
@@ -552,7 +552,7 @@ var DEALER_COMMISSION = {
     { field: 'direction', label: '方向', formatter: function(val) {
       return val === '收入'
         ? '<span class="status-tag active">收入</span>'
-        : '<span class="status-tag inactive">支出</span>';
+        : '<span class="status-tag inactive">支出</span>`;
     }},
     { field: 'amount', label: '金额', type: 'money' },
     { field: 'status', label: '状态', type: 'status' }
@@ -709,7 +709,7 @@ var FACTORY_EXCEPTION = {
     { field: 'title', label: '异常标题' },
     { field: 'content', label: '详细描述' },
     { field: 'read', label: '处理状态', formatter: function(val) {
-      return val ? '<span class="status-tag active">已处理</span>' : '<span class="status-tag pending">未处理</span>';
+      return val ? '<span class="status-tag active">已处理</span>' : '<span class="status-tag pending">未处理</span>`;
     }}
   ],
   formFields: [
@@ -844,27 +844,27 @@ var SIDEBAR_MENUS = {
 // ==================== 动态首页生成器 ====================
 
 function _homeStats(stats) {
-  var html = '<div class="stats-grid">';
+  var html = '<div class="stats-grid">`;
   stats.forEach(function(s) {
-    html += '<div class="stat-card">' +
-      '<div class="stat-card-header"><span class="stat-card-label">' + s.label + '</span>' +
-      '<div class="stat-card-icon ' + (s.color||'green') + '">' + (s.icon||'📊') + '</div></div>' +
-      '<div class="stat-card-value">' + s.value + '</div>' +
+    html += '<div class="stat-card">` +
+      '<div class="stat-card-header"><span class="stat-card-label">' + s.label + '</span>` +
+      '<div class="stat-card-icon ' + (s.color||'green') + '">' + (s.icon||'📊') + '</div></div>` +
+      '<div class="stat-card-value">' + s.value + '</div>` +
       (s.change ? '<div class="stat-card-change up">' + s.change + '</div>' : '') +
-      '</div>';
+      '</div>`;
   });
-  html += '</div>';
+  html += '</div>`;
   return html;
 }
 
 function _barChart(values, labels) {
   var max = Math.max.apply(null, values);
-  var html = '<div class="chart-placeholder">';
+  var html = '<div class="chart-placeholder">`;
   for (var i = 0; i < values.length; i++) {
     var h = Math.round(values[i] / max * 100);
-    html += '<div class="bar-item"><div class="bar-value">' + values[i] + '</div><div class="bar" style="height:' + h + 'px"></div><div class="bar-label">' + labels[i] + '</div></div>';
+    html += '<div class="bar-item"><div class="bar-value">' + values[i] + '</div><div class="bar" style="height:' + h + 'px"></div><div class="bar-label">' + labels[i] + '</div></div>`;
   }
-  html += '</div>';
+  html += '</div>`;
   return html;
 }
 
@@ -883,23 +883,23 @@ var PAGE_RENDERERS = {
       var dealers = DB.getAll('dealers');
       var recent = clinics.slice(-4).reverse();
       var rows = recent.map(function(c) {
-        return '<tr><td>' + CRUD._esc(c.name) + '</td><td>' + CRUD._esc(c.owner) + '</td><td>' + CRUD._esc(c.phone) + '</td><td>' + CRUD._esc(c.region) + '</td><td>' + CRUD._statusTag(c.status) + '</td><td>' + CRUD._esc(c.createdAt) + '</td></tr>';
+        return '<tr><td>' + CRUD._esc(c.name) + '</td><td>' + CRUD._esc(c.owner) + '</td><td>' + CRUD._esc(c.phone) + '</td><td>' + CRUD._esc(c.region) + '</td><td>' + CRUD._statusTag(c.status) + '</td><td>' + CRUD._esc(c.createdAt) + '</td></tr>`;
       }).join('');
-      return '
-<div class="breadcrumb">首页 / <span>概览</span></div>' +
+      return `
+<div class="breadcrumb">首页 / <span>概览</span></div>` +
 _homeStats([
   { label:'合作诊所', value: clinics.length, icon:'🏥', color:'green', change:'↑ 12.5% 较上月' },
   { label:'合作药店', value: pharmacies.length, icon:'💊', color:'blue', change:'↑ 8.3% 较上月' },
   { label:'合作经销商', value: dealers.length, icon:'👤', color:'orange', change:'↑ 1 本季新增' },
   { label:'平台营收', value:'¥2,856,300', icon:'💰', color:'red', change:'↑ 18.6% 较上月' }
-]) + '
+]) + `
 <div class="card">
   <div class="card-header"><span class="card-title">最近注册诊所</span><button class="btn btn-outline btn-sm" onclick="navigateTo(\'clinics\')">查看全部</button></div>
   <table class="data-table">
     <thead><tr><th>诊所名称</th><th>负责人</th><th>联系电话</th><th>地区</th><th>状态</th><th>注册时间</th></tr></thead>
     <tbody>' + rows + '</tbody>
   </table>
-</div>';
+</div>`;
     },
 
     clinics: function() { return CRUD.builder('platform_clinics', PLATFORM_CLINICS); },
@@ -908,14 +908,14 @@ _homeStats([
     factory: function() {
       var factories = DB.getAll('factories');
       var f = factories[0] || { name:'小唯精密制造有限公司', owner:'孙志强', phone:'138-8888-0001', address:'广东省东莞市松山湖科技产业园', monthlyCapacity:12000, status:'active' };
-      return '
-<div class="breadcrumb">首页 / 业务管理 / <span>工厂详情</span></div>' +
+      return `
+<div class="breadcrumb">首页 / 业务管理 / <span>工厂详情</span></div>` +
 _homeStats([
   { label:'合作工厂', value: factories.length, icon:'🏭', color:'green', change:'↑ 1 本季新增' },
   { label:'月产能', value: (f.monthlyCapacity||0).toLocaleString(), icon:'⚙️', color:'blue', change:'↑ 9.2%' },
   { label:'本月产出', value:'10,860', icon:'📦', color:'orange', change:'↑ 7.8%' },
   { label:'平均合格率', value:'98.5%', icon:'✅', color:'red', change:'↑ 0.3%' }
-]) + '
+]) + `
 <div class="two-col">
   <div class="card">
     <div class="card-header"><span class="card-title">工厂信息</span><button class="btn btn-outline btn-sm" onclick="UI.toast.info(\'编辑功能开发中\')">编辑</button></div>
@@ -937,7 +937,7 @@ _homeStats([
     <div class="production-stage"><div class="stage-num pending">5</div><div class="stage-info"><h4>质检包装</h4><p>待表面处理完成后进入</p></div></div>
     <div class="production-stage"><div class="stage-num pending">6</div><div class="stage-info"><h4>发货出库</h4><p>质检通过后安排物流</p></div></div>
   </div>
-</div>';
+</div>`;
     },
 
     dealers: function() { return CRUD.builder('platform_dealers', PLATFORM_DEALERS); },
@@ -947,17 +947,17 @@ _homeStats([
       var products = DB.getAll('products');
       var cards = products.map(function(p) {
         var bg = { green:'var(--primary-light)', blue:'#e8f4fd', orange:'#fef3e2', purple:'#f0e6ff', teal:'#e0f7fa' };
-        return '<div class="product-card">' +
-          '<div class="product-icon" style="background:' + (bg[p.color]||'var(--primary-light)') + ';">' + (p.icon||'📦') + '</div>' +
-          '<div class="product-name">' + CRUD._esc(p.name) + '</div>' +
-          '<div class="product-price">¥' + (p.price||0).toLocaleString() + '</div>' +
-          '<div class="product-desc">' + CRUD._esc(p.desc||'') + '</div>' +
-          '<div style="margin-top:8px;display:flex;gap:4px;">' +
-          '<button class="btn btn-outline btn-sm" onclick="CRUD.showDetail(\'platform_mall\',' + p.id + ')">详情</button>' +
-          '<button class="btn btn-primary btn-sm" onclick="CRUD.showEdit(\'platform_mall\',' + p.id + ')">编辑</button>' +
-          '</div></div>';
+        return '<div class="product-card">` +
+          '<div class="product-icon" style="background:' + (bg[p.color]||'var(--primary-light)') + ';">' + (p.icon||'📦') + '</div>` +
+          '<div class="product-name">' + CRUD._esc(p.name) + '</div>` +
+          '<div class="product-price">¥' + (p.price||0).toLocaleString() + '</div>` +
+          '<div class="product-desc">' + CRUD._esc(p.desc||'') + '</div>` +
+          '<div style="margin-top:8px;display:flex;gap:4px;">` +
+          '<button class="btn btn-outline btn-sm" onclick="CRUD.showDetail(\'platform_mall\',' + p.id + ')">详情</button>` +
+          '<button class="btn btn-primary btn-sm" onclick="CRUD.showEdit(\'platform_mall\',' + p.id + ')">编辑</button>` +
+          '</div></div>`;
       }).join('');
-      return '
+      return `
 <div class="breadcrumb">首页 / 业务管理 / <span>商场管理</span></div>
 <div class="card">
   <div class="card-header">
@@ -965,7 +965,7 @@ _homeStats([
     <button class="btn btn-primary btn-sm" onclick="CRUD.showAdd(\'platform_mall\')">+ 上架商品</button>
   </div>
   <div class="quick-grid" style="grid-template-columns:repeat(4,1fr);">' + cards + '</div>
-</div>';
+</div>`;
     },
 
     settlement: function() {
@@ -985,16 +985,16 @@ _homeStats([
     },
 
     reports: function() {
-      return '
-<div class="breadcrumb">首页 / 财务 / <span>财务报表</span></div>' +
+      return `
+<div class="breadcrumb">首页 / 财务 / <span>财务报表</span></div>` +
 _homeStats([
   { label:'本月总收入', value:'¥2,856,300', icon:'📈', color:'green', change:'↑ 18.6%' },
   { label:'本月总支出', value:'¥1,892,500', icon:'📉', color:'red', change:'↑ 10.2%' },
   { label:'净利润', value:'¥963,800', icon:'💰', color:'blue', change:'↑ 35.4%' },
   { label:'利润率', value:'33.8%', icon:'📊', color:'orange', change:'↑ 4.2%' }
-]) + '
-<div class="chart-row">' +
-_barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月','6月','7月','8月']) + '
+]) + `
+<div class="chart-row">` +
+_barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月','6月','7月','8月']) + `
   <div class="chart-placeholder" style="flex-direction:column;align-items:center;justify-content:center;">
     <div class="donut-chart" style="background:conic-gradient(#1abc9c 0% 38%, #3498db 38% 62%, #f39c12 62% 82%, #e74c3c 82% 100%);">
       <div class="donut-center"><div class="num">¥285万</div><div class="label">本月营收</div></div>
@@ -1016,7 +1016,7 @@ _barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月'
       <tr><td>2025-07-28</td><td>工厂货款抽成</td><td>小唯精密制造</td><td>¥35,600</td><td><span class="status-tag active">抽成</span></td></tr>
     </tbody>
   </table>
-</div>';
+</div>`;
     },
 
     permissions: function() { return CRUD.builder('platform_permissions', PLATFORM_PERMISSIONS); },
@@ -1033,21 +1033,21 @@ _barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月'
       var orders = DB.getAll('orders');
       var implants = DB.getAll('implants');
       var records = DB.getAll('verifyRecords');
-      return '
-<div class="breadcrumb">首页 / <span>概览</span></div>' +
+      return `
+<div class="breadcrumb">首页 / <span>概览</span></div>` +
 _homeStats([
   { label:'今日核销', value: records.filter(function(r){ return r.time && r.time.indexOf(DB._today())>=0; }).length, icon:'📋', color:'green', change:'今日完成' },
   { label:'患者总数', value: patients.length, icon:'👤', color:'blue', change:'↑ 3 本周新增' },
   { label:'加工单', value: orders.filter(function(o){ return o.status==='pending'; }).length + ' 待处理', icon:'📄', color:'orange' },
   { label:'植体库存', value: implants.reduce(function(s,i){ return s+(i.stock||0); }, 0), icon:'🦷', color:'red' }
-]) + '
+]) + `
 <div class="quick-grid">
   <div class="quick-item" onclick="navigateTo(\'verify\')"><div class="icon green">📋</div><div class="name">核销登记</div><div class="desc">3 笔待核销</div></div>
   <div class="quick-item" onclick="navigateTo(\'patients\')"><div class="icon blue">👤</div><div class="name">患者建档</div><div class="desc">' + patients.length + ' 位患者</div></div>
   <div class="quick-item" onclick="navigateTo(\'orders\')"><div class="icon orange">📄</div><div class="name">加工单管理</div><div class="desc">' + orders.length + ' 单</div></div>
   <div class="quick-item" onclick="navigateTo(\'implants\')"><div class="icon purple">🦷</div><div class="name">植体管理</div><div class="desc">' + implants.length + ' 个型号</div></div>
   <div class="quick-item" onclick="navigateTo(\'finance\')"><div class="icon teal">💰</div><div class="name">收支明细</div><div class="desc">财务统计</div></div>
-</div>';
+</div>`;
     },
 
     verify: function() { return CRUD.builder('clinic_verify', CLINIC_VERIFY); },
@@ -1062,27 +1062,27 @@ _homeStats([
         { name:'已发货', count: orders.filter(function(o){return o.status==='active';}).length, icon:'📦', color:'green' },
         { name:'已签收', count: 0, icon:'✅', color:'teal' }
       ];
-      return '
+      return `
 <div class="breadcrumb">首页 / 业务 / <span>订单跟踪</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">订单跟踪</span><button class="btn btn-outline btn-sm" onclick="navigateTo(\'orders\')">查看全部订单</button></div>
-  <div class="quick-grid" style="grid-template-columns:repeat(4,1fr);">' +
+  <div class="quick-grid" style="grid-template-columns:repeat(4,1fr);">` +
     stages.map(function(s) {
-      return '<div class="quick-item"><div class="icon ' + s.color + '">' + s.icon + '</div><div class="name">' + s.name + '</div><div class="desc">' + s.count + ' 单</div></div>';
-    }).join('') + '
+      return '<div class="quick-item"><div class="icon ' + s.color + '">' + s.icon + '</div><div class="name">' + s.name + '</div><div class="desc">' + s.count + ' 单</div></div>`;
+    }).join('') + `
   </div>
 </div>
 <div class="card">
   <div class="card-header"><span class="card-title">物流时间线</span></div>
   <table class="data-table">
     <thead><tr><th>单号</th><th>患者</th><th>型号</th><th>状态</th><th>创建日期</th></tr></thead>
-    <tbody>' +
+    <tbody>` +
       orders.slice(-5).reverse().map(function(o) {
-        return '<tr><td>' + CRUD._esc(o.no) + '</td><td>' + CRUD._esc(o.patient) + '</td><td>' + CRUD._esc(o.implantType) + '</td><td>' + CRUD._statusTag(o.status) + '</td><td>' + CRUD._esc(o.createdAt) + '</td></tr>';
-      }).join('') + '
+        return '<tr><td>' + CRUD._esc(o.no) + '</td><td>' + CRUD._esc(o.patient) + '</td><td>' + CRUD._esc(o.implantType) + '</td><td>' + CRUD._statusTag(o.status) + '</td><td>' + CRUD._esc(o.createdAt) + '</td></tr>`;
+      }).join('') + `
     </tbody>
   </table>
-</div>';
+</div>`;
     },
 
     implants: function() { return CRUD.builder('clinic_implants', CLINIC_IMPLANTS); },
@@ -1090,7 +1090,7 @@ _homeStats([
     withdraw: function() { return CRUD.builder('clinic_withdraw', CLINIC_WITHDRAW); },
 
     settings: function() {
-      return '
+      return `
 <div class="breadcrumb">首页 / 系统 / <span>诊所设置</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">诊所基本信息</span></div>
@@ -1102,7 +1102,7 @@ _homeStats([
     <div class="form-group"><label>诊所地址</label><textarea placeholder="详细地址">浙江省杭州市西湖区文三路100号</textarea></div>
     <button class="btn btn-primary" onclick="UI.toast.success(\'设置已保存\')">保存设置</button>
   </div>
-</div>';
+</div>`;
     }
   },
 
@@ -1116,20 +1116,20 @@ _homeStats([
       var clinics = DB.getAll('clinics');
       var pharmacies = DB.getAll('pharmacies');
       var totalCommission = dealers.reduce(function(s,d){ return s+(d.commission||0); }, 0);
-      return '
-<div class="breadcrumb">首页 / <span>概览</span></div>' +
+      return `
+<div class="breadcrumb">首页 / <span>概览</span></div>` +
 _homeStats([
   { label:'诊所客户', value: clinics.length, icon:'🏥', color:'green', change:'↑ 5 本月' },
   { label:'药房客户', value: pharmacies.length, icon:'💊', color:'blue', change:'↑ 3 本月' },
   { label:'累计佣金', value:'¥' + totalCommission.toLocaleString(), icon:'💰', color:'orange', change:'↑ 15.2%' },
   { label:'待提现', value:'¥45,600', icon:'💳', color:'red', change:'1 笔待审' }
-]) + '
+]) + `
 <div class="quick-grid">
   <div class="quick-item" onclick="navigateTo(\'clinics\')"><div class="icon green">🏥</div><div class="name">诊所管理</div><div class="desc">' + clinics.length + ' 家</div></div>
   <div class="quick-item" onclick="navigateTo(\'pharmacy\')"><div class="icon blue">💊</div><div class="name">药房管理</div><div class="desc">' + pharmacies.length + ' 家</div></div>
   <div class="quick-item" onclick="navigateTo(\'commission\')"><div class="icon orange">💰</div><div class="name">佣金明细</div><div class="desc">收益统计</div></div>
   <div class="quick-item" onclick="navigateTo(\'withdraw\')"><div class="icon teal">💳</div><div class="name">提现申请</div><div class="desc">1 笔待审</div></div>
-</div>';
+</div>`;
     },
 
     clinics: function() { return CRUD.builder('dealer_clinics', DEALER_CLINICS); },
@@ -1137,26 +1137,26 @@ _homeStats([
 
     sales: function() {
       var dealers = DB.getAll('dealers');
-      return '
+      return `
 <div class="breadcrumb">首页 / 客户 / <span>销售活动</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">销售活动概览</span><button class="btn btn-primary btn-sm" onclick="UI.toast.info(\'新建活动功能开发中\')">+ 新建活动</button></div>
   <table class="data-table">
     <thead><tr><th>经销商</th><th>区域</th><th>诊所客户</th><th>药房客户</th><th>佣金累计</th><th>状态</th><th>操作</th></tr></thead>
-    <tbody>' +
+    <tbody>` +
       dealers.map(function(d) {
-        return '<tr><td>' + CRUD._esc(d.name) + '</td><td>' + CRUD._esc(d.region) + '</td><td>' + CRUD._dash(d.clinicClients) + '</td><td>' + CRUD._dash(d.pharmacyClients) + '</td><td>¥' + (d.commission||0).toLocaleString() + '</td><td>' + CRUD._statusTag(d.status) + '</td><td><button class="btn btn-outline btn-sm" onclick="UI.toast.info(\'查看详情\')">查看</button></td></tr>';
-      }).join('') + '
+        return '<tr><td>' + CRUD._esc(d.name) + '</td><td>' + CRUD._esc(d.region) + '</td><td>' + CRUD._dash(d.clinicClients) + '</td><td>' + CRUD._dash(d.pharmacyClients) + '</td><td>¥' + (d.commission||0).toLocaleString() + '</td><td>' + CRUD._statusTag(d.status) + '</td><td><button class="btn btn-outline btn-sm" onclick="UI.toast.info(\'查看详情\')">查看</button></td></tr>`;
+      }).join('') + `
     </tbody>
   </table>
-</div>';
+</div>`;
     },
 
     commission: function() { return CRUD.builder('dealer_commission', DEALER_COMMISSION); },
     withdraw: function() { return CRUD.builder('dealer_withdraw', DEALER_WITHDRAW); },
 
     settings: function() {
-      return '
+      return `
 <div class="breadcrumb">首页 / 系统 / <span>个人设置</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">个人信息</span></div>
@@ -1167,7 +1167,7 @@ _homeStats([
     <div class="form-group"><label>收款银行</label><input type="text" value="工商银行 尾号 8862" placeholder="收款银行"></div>
     <button class="btn btn-primary" onclick="UI.toast.success(\'设置已保存\')">保存设置</button>
   </div>
-</div>';
+</div>`;
     }
   },
 
@@ -1181,20 +1181,20 @@ _homeStats([
       var products = DB.getAll('products');
       var transactions = DB.getAll('transactions');
       var income = transactions.filter(function(t){return t.direction==='收入';}).reduce(function(s,t){return s+(t.amount||0);},0);
-      return '
-<div class="breadcrumb">首页 / <span>概览</span></div>' +
+      return `
+<div class="breadcrumb">首页 / <span>概览</span></div>` +
 _homeStats([
   { label:'种植卡销量', value: cards.length, icon:'💳', color:'green', change:'↑ 8.3%' },
   { label:'商品总数', value: products.length, icon:'🛒', color:'blue' },
   { label:'本月收入', value:'¥' + income.toLocaleString(), icon:'💰', color:'orange', change:'↑ 12.6%' },
   { label:'待提现', value:'¥56,200', icon:'💳', color:'red', change:'1 笔待审' }
-]) + '
+]) + `
 <div class="quick-grid">
   <div class="quick-item" onclick="navigateTo(\'cards\')"><div class="icon green">💳</div><div class="name">种植卡管理</div><div class="desc">' + cards.length + ' 张</div></div>
   <div class="quick-item" onclick="navigateTo(\'inventory\')"><div class="icon blue">📦</div><div class="name">库存查看</div><div class="desc">实时库存</div></div>
   <div class="quick-item" onclick="navigateTo(\'purchase\')"><div class="icon orange">🛒</div><div class="name">采购管理</div><div class="desc">下单采购</div></div>
   <div class="quick-item" onclick="navigateTo(\'finance\')"><div class="icon teal">💰</div><div class="name">财务收支</div><div class="desc">收支明细</div></div>
-</div>';
+</div>`;
     },
 
     cards: function() { return CRUD.builder('pharmacy_cards', PHARMACY_CARDS); },
@@ -1203,7 +1203,7 @@ _homeStats([
     finance: function() { return CRUD.builder('pharmacy_finance', PHARMACY_FINANCE); },
 
     mall: function() {
-      return '
+      return `
 <div class="breadcrumb">首页 / 财务 / <span>提现/商城</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">提现申请</span><button class="btn btn-primary btn-sm" onclick="navigateTo(\'cards\')">去管理种植卡</button></div>
@@ -1213,13 +1213,13 @@ _homeStats([
     <div class="form-group"><label>收款银行</label><input type="text" value="工商银行 尾号 8862" placeholder="收款银行"></div>
     <button class="btn btn-primary" onclick="UI.toast.success(\'提现申请已提交\')">提交申请</button>
   </div>
-</div>';
+</div>`;
     },
 
     customers: function() { return CRUD.builder('pharmacy_customers', PHARMACY_CUSTOMERS); },
 
     settings: function() {
-      return '
+      return `
 <div class="breadcrumb">首页 / 系统 / <span>门店设置</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">门店信息</span></div>
@@ -1231,7 +1231,7 @@ _homeStats([
     <div class="form-group"><label>门店地址</label><textarea placeholder="详细地址">浙江省杭州市拱墅区莫干山路200号</textarea></div>
     <button class="btn btn-primary" onclick="UI.toast.success(\'设置已保存\')">保存设置</button>
   </div>
-</div>';
+</div>`;
     }
   },
 
@@ -1246,20 +1246,20 @@ _homeStats([
       var pending = orders.filter(function(o){return o.status==='pending';}).length;
       var processing = orders.filter(function(o){return o.status==='processing';}).length;
       var active = orders.filter(function(o){return o.status==='active';}).length;
-      return '
-<div class="breadcrumb">首页 / <span>概览</span></div>' +
+      return `
+<div class="breadcrumb">首页 / <span>概览</span></div>` +
 _homeStats([
   { label:'待处理订单', value: pending, icon:'📥', color:'orange', change:'待接单' },
   { label:'加工中', value: processing, icon:'⚙️', color:'blue', change:'生产中' },
   { label:'已出货', value: active, icon:'📦', color:'green', change:'已发货' },
   { label:'库存总量', value: implants.reduce(function(s,i){return s+(i.stock||0);},0), icon:'🏭', color:'red' }
-]) + '
+]) + `
 <div class="quick-grid">
   <div class="quick-item" onclick="navigateTo(\'orders\')"><div class="icon green">📋</div><div class="name">订单管理</div><div class="desc">' + orders.length + ' 单</div></div>
   <div class="quick-item" onclick="navigateTo(\'shipping\')"><div class="icon blue">📦</div><div class="name">收发货管理</div><div class="desc">物流跟踪</div></div>
   <div class="quick-item" onclick="navigateTo(\'production\')"><div class="icon orange">🏭</div><div class="name">生产排产</div><div class="desc">排产计划</div></div>
   <div class="quick-item" onclick="navigateTo(\'quality\')"><div class="icon teal">✅</div><div class="name">质检记录</div><div class="desc">质量追溯</div></div>
-</div>';
+</div>`;
     },
 
     orders: function() { return CRUD.builder('factory_orders', FACTORY_ORDERS); },
@@ -1273,34 +1273,34 @@ _homeStats([
         { name:'加工中', count: orders.filter(function(o){return o.status==='processing';}).length },
         { name:'已完成', count: orders.filter(function(o){return o.status==='active';}).length }
       ];
-      return '
+      return `
 <div class="breadcrumb">首页 / 生产 / <span>生产排产</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">生产排产看板</span></div>
-  <div class="quick-grid" style="grid-template-columns:repeat(4,1fr);">' +
+  <div class="quick-grid" style="grid-template-columns:repeat(4,1fr);">` +
     stages.map(function(s) {
-      return '<div class="quick-item"><div class="icon green">🏭</div><div class="name">' + s.name + '</div><div class="desc">' + s.count + ' 单</div></div>';
-    }).join('') + '
+      return '<div class="quick-item"><div class="icon green">🏭</div><div class="name">' + s.name + '</div><div class="desc">' + s.count + ' 单</div></div>`;
+    }).join('') + `
   </div>
 </div>
 <div class="card">
   <div class="card-header"><span class="card-title">今日排产</span><button class="btn btn-outline btn-sm" onclick="navigateTo(\'orders\')">查看全部</button></div>
   <table class="data-table">
     <thead><tr><th>单号</th><th>型号</th><th>数量</th><th>状态</th><th>预计完成</th></tr></thead>
-    <tbody>' +
+    <tbody>` +
       orders.slice(-5).reverse().map(function(o) {
-        return '<tr><td>' + CRUD._esc(o.no) + '</td><td>' + CRUD._esc(o.implantType) + '</td><td>' + CRUD._dash(o.qty) + '</td><td>' + CRUD._statusTag(o.status) + '</td><td>今日</td></tr>';
-      }).join('') + '
+        return '<tr><td>' + CRUD._esc(o.no) + '</td><td>' + CRUD._esc(o.implantType) + '</td><td>' + CRUD._dash(o.qty) + '</td><td>' + CRUD._statusTag(o.status) + '</td><td>今日</td></tr>`;
+      }).join('') + `
     </tbody>
   </table>
-</div>';
+</div>`;
     },
 
     quality: function() { return CRUD.builder('factory_quality', FACTORY_QUALITY); },
     exception: function() { return CRUD.builder('factory_exception', FACTORY_EXCEPTION); },
 
     service: function() {
-      return '
+      return `
 <div class="breadcrumb">首页 / 沟通 / <span>客服中心</span></div>
 <div class="card">
   <div class="card-header"><span class="card-title">客服消息</span></div>
@@ -1318,7 +1318,7 @@ _homeStats([
     <button class="btn btn-outline" onclick="UI.toast.info(\'查看历史\')">📜 历史记录</button>
     <button class="btn btn-outline" onclick="UI.toast.info(\'常见问题\')">❓ 常见问题</button>
   </div>
-</div>';
+</div>`;
     },
 
     finance: function() { return CRUD.builder('factory_finance', FACTORY_FINANCE); }
