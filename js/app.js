@@ -26,6 +26,56 @@ let currentPort = 'platform';
 let currentPage = 'home';
 let regType = 'clinic'; // 注册类型：clinic 或 pharmacy
 let regLicenseData = null; // 营业资质base64数据
+let plantStep = 1; // 我要种植向导步骤：1绑定卡 2登录认证 3种植须知 4选择诊所 5确认信息
+let plantSelectedClinicId = null; // 选中的诊所ID
+
+// ===== 我要种植向导 =====
+function plantNextStep() {
+  if (plantStep < 5) {
+    plantStep++;
+    loadPage();
+  }
+}
+
+function plantPrevStep() {
+  if (plantStep > 1) {
+    plantStep--;
+    plantSelectedClinicId = null;
+    loadPage();
+  }
+}
+
+function plantReset() {
+  plantStep = 1;
+  plantSelectedClinicId = null;
+  loadPage();
+}
+
+function plantSelectClinic(id) {
+  plantSelectedClinicId = id;
+  // 高亮选中
+  document.querySelectorAll('.plant-clinic-item').forEach(function(el) {
+    el.classList.remove('selected');
+  });
+  var el = document.getElementById('plant-clinic-' + id);
+  if (el) el.classList.add('selected');
+  // 启用确定按钮
+  var btn = document.getElementById('plantConfirmBtn');
+  if (btn) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+  }
+}
+
+function plantConfirmClinic() {
+  if (!plantSelectedClinicId) {
+    UI.toast.error('请先选择一家诊所');
+    return;
+  }
+  plantStep = 5;
+  loadPage();
+}
 
 // ===== 注册功能 =====
 function showRegister() {

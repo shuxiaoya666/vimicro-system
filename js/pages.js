@@ -1928,31 +1928,183 @@ _homeStats([
     },
 
     plant: function() {
-      var clinics = DB.getAll('clientClinics');
-      var html = '<div class="breadcrumb">首页 / 我要种植 / <span>附近诊所</span></div>';
-      html += '<div class="card"><div class="card-header"><span class="card-title">🏥 附近诊所</span></div>';
-      html += '<div style="padding:12px;color:var(--text-muted);font-size:13px;">📍 当前定位：浙江杭州 · 按距离排序</div>';
-      clinics.forEach(function(c) {
+      var html = '<div class="breadcrumb">首页 / 我要种植 / <span>种植流程</span></div>';
+
+      // 步骤指示器
+      var stepNames = ['核销绑卡', '登录认证', '种植须知', '选择诊所', '确认信息'];
+      html += '<div class="plant-wizard-bar">';
+      for (var i = 0; i < 5; i++) {
+        var stepNum = i + 1;
+        var cls = stepNum < plantStep ? 'done' : (stepNum === plantStep ? 'current' : 'pending');
+        html += '<div class="plant-wizard-step ' + cls + '">';
+        html += '<div class="plant-step-num">' + (stepNum < plantStep ? '✓' : stepNum) + '</div>';
+        html += '<div class="plant-step-name">' + stepNames[i] + '</div>';
+        html += '</div>';
+        if (i < 4) html += '<div class="plant-step-line ' + (stepNum < plantStep ? 'done' : '') + '"></div>';
+      }
+      html += '</div>';
+
+      // ===== 步骤1：核销绑定卡 =====
+      if (plantStep === 1) {
+        html += '<div class="card" style="text-align:center;padding:40px 20px;">';
+        html += '<div style="font-size:56px;margin-bottom:16px;">💳</div>';
+        html += '<h3 style="margin-bottom:8px;">核销绑定卡</h3>';
+        html += '<p style="color:var(--text-muted);margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto;">请输入您购买的种植卡卡密进行绑定，绑定后即可开始种植流程</p>';
+        html += '<div style="max-width:400px;margin:0 auto 24px;">';
+        html += '<div class="form-group"><input type="text" id="plantCardNo" placeholder="请输入卡号（如：XW-2025-08001）" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:14px;"></div>';
+        html += '<div class="form-group"><input type="text" id="plantCardKey" placeholder="请输入卡密" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:14px;"></div>';
+        html += '</div>';
+        html += '<button class="btn btn-primary" style="padding:12px 32px;font-size:15px;" onclick="UI.toast.success(\'绑卡成功！\');plantNextStep();">绑定卡片</button>';
+        html += '<div style="margin-top:16px;font-size:13px;color:var(--text-muted);">（测试阶段可直接跳过绑卡）</div>';
+        html += '<button class="btn btn-outline" style="margin-top:8px;" onclick="plantNextStep()">跳过，下一步 →</button>';
+        html += '</div>';
+      }
+
+      // ===== 步骤2：登录认证 =====
+      if (plantStep === 2) {
+        html += '<div class="card" style="text-align:center;padding:40px 20px;">';
+        html += '<div style="font-size:56px;margin-bottom:16px;">🔐</div>';
+        html += '<h3 style="margin-bottom:8px;">登录认证</h3>';
+        html += '<p style="color:var(--text-muted);margin-bottom:24px;max-width:400px;margin-left:auto;margin-right:auto;">为保障您的账户安全，请完成身份验证</p>';
+        html += '<div style="max-width:400px;margin:0 auto 24px;">';
+        html += '<div class="form-group"><input type="text" id="plantPhone" placeholder="请输入手机号" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:14px;"></div>';
+        html += '<div style="display:flex;gap:8px;"><input type="text" id="plantCode" placeholder="验证码" style="flex:1;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:14px;"><button class="btn btn-outline" onclick="UI.toast.info(\'验证码已发送（模拟）\')">发送验证码</button></div>';
+        html += '</div>';
+        html += '<button class="btn btn-primary" style="padding:12px 32px;font-size:15px;" onclick="UI.toast.success(\'认证成功！\');plantNextStep();">确认认证</button>';
+        html += '<div style="margin-top:16px;font-size:13px;color:var(--text-muted);">（测试阶段可直接跳过认证）</div>';
+        html += '<button class="btn btn-outline" style="margin-top:8px;" onclick="plantNextStep()">跳过，下一步 →</button>';
+        html += '</div>';
+      }
+
+      // ===== 步骤3：种植须知 =====
+      if (plantStep === 3) {
+        html += '<div class="card">';
+        html += '<div class="card-header"><span class="card-title">📋 种植须知</span></div>';
+        html += '<div style="padding:16px 0;">';
+        html += '<div style="padding:12px;background:#fff3e0;border-radius:8px;margin-bottom:16px;border-left:4px solid var(--accent);">';
+        html += '<strong style="color:var(--accent);">⚠️ 重要提示</strong>';
+        html += '<div style="font-size:13px;color:var(--text);margin-top:4px;line-height:1.8;">请仔细阅读以下内容，确认后再进行种植预约</div>';
+        html += '</div>';
+        var notices = [
+          { title: '术前准备', icon: '📝', content: '种植手术前需进行口腔检查、拍片评估骨量。如有高血压、糖尿病等慢性疾病，请提前告知医生并控制稳定后再行手术。' },
+          { title: '手术过程', icon: '💉', content: '种植手术在局部麻醉下进行，手术时间约30-60分钟。过程中不会感到疼痛，术后可能有轻微肿胀。' },
+          { title: '术后护理', icon: '🩹', content: '术后24小时内避免刷牙漱口，饮食以温凉软食为主。一周内避免剧烈运动，保持口腔清洁。' },
+          { title: '骨愈合期', icon: '⏳', content: '种植体植入后需等待2-3个月骨结合期，期间需定期复查，确保愈合良好。' },
+          { title: '牙冠修复', icon: '🦷', content: '骨愈合完成后安装基台和牙冠，完成最终修复。修复后需定期复查，保持口腔卫生。' },
+          { title: '费用说明', icon: '💰', content: '费用包含种植体、基台、手术费。如需骨粉、额外材料等将另行收费，具体以诊所报价为准。' },
+          { title: '质保服务', icon: '🛡️', content: '小唯种植体提供长期质保，绑定种植卡后可享受售后保障服务。' }
+        ];
+        notices.forEach(function(n) {
+          html += '<div class="plant-notice-item">';
+          html += '<div style="display:flex;align-items:flex-start;gap:10px;">';
+          html += '<span style="font-size:20px;">' + n.icon + '</span>';
+          html += '<div><strong style="font-size:14px;">' + n.title + '</strong>';
+          html += '<div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-top:2px;">' + n.content + '</div></div>';
+          html += '</div></div>';
+        });
+        html += '</div>';
+        html += '<div style="padding:16px 0;text-align:center;border-top:1px solid var(--border);">';
+        html += '<label style="display:inline-flex;align-items:center;gap:6px;font-size:14px;cursor:pointer;">';
+        html += '<input type="checkbox" id="plantAgree" onchange="var btn=document.getElementById(\'plantAgreeBtn\');btn.disabled=!this.checked;btn.style.opacity=this.checked?\'1\':\'0.5\';btn.style.cursor=this.checked?\'pointer\':\'not-allowed\';" style="width:16px;height:16px;">';
+        html += '我已仔细阅读并同意以上种植须知</label>';
+        html += '</div>';
+        html += '<div style="text-align:center;padding-bottom:16px;">';
+        html += '<button class="btn btn-outline" style="margin-right:8px;" onclick="plantPrevStep()">← 上一步</button>';
+        html += '<button class="btn btn-primary" id="plantAgreeBtn" disabled style="opacity:0.5;cursor:not-allowed;" onclick="plantNextStep()">下一步 →</button>';
+        html += '</div>';
+        html += '</div>';
+      }
+
+      // ===== 步骤4：选择诊所 =====
+      if (plantStep === 4) {
+        var clinics = DB.getAll('clientClinics');
+        html += '<div class="card">';
+        html += '<div class="card-header"><span class="card-title">🏥 选择附近诊所</span></div>';
+        html += '<div style="display:flex;align-items:center;gap:8px;padding:12px;background:var(--primary-light);border-radius:8px;margin-bottom:16px;">';
+        html += '<span style="font-size:16px;">📍</span>';
+        html += '<input type="text" id="plantLocation" value="浙江杭州" style="flex:1;border:none;background:transparent;font-size:14px;outline:none;font-weight:600;color:var(--primary-dark);">';
+        html += '<button class="btn btn-outline btn-sm" onclick="UI.toast.info(\'正在定位...\');setTimeout(function(){UI.toast.success(\'定位成功：浙江杭州\');},1000);">🔄 重新定位</button>';
+        html += '<button class="btn btn-outline btn-sm" onclick="UI.toast.info(\'请输入您的位置\')">✏️ 手动更改</button>';
+        html += '</div>';
+        html += '<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">点击选择您想去的诊所，选定后点击「确定选择」</div>';
+        clinics.forEach(function(c) {
+          var stars = '';
+          for (var i = 0; i < 5; i++) {
+            stars += i < Math.floor(c.rating) ? '⭐' : '☆';
+          }
+          html += '<div class="plant-clinic-item" id="plant-clinic-' + c.id + '" onclick="plantSelectClinic(' + c.id + ')">';
+          html += '<div class="client-clinic-header"><strong style="font-size:15px;">' + CRUD._esc(c.name) + '</strong>';
+          html += '<span class="status-tag active">' + c.distance + ' km</span></div>';
+          html += '<div class="client-clinic-info">';
+          html += '<div><span class="label">负责人：</span>' + CRUD._esc(c.owner) + '</div>';
+          html += '<div><span class="label">电话：</span>' + CRUD._esc(c.phone) + '</div>';
+          html += '<div><span class="label">地址：</span>' + CRUD._esc(c.address) + '</div>';
+          html += '<div><span class="label">评分：</span>' + stars + ' (' + c.rating + ')</div>';
+          html += '<div><span class="label">种植量：</span>' + c.implants + ' 颗</div>';
+          html += '</div>';
+          html += '<div class="plant-clinic-check">✓ 已选择</div>';
+          html += '</div>';
+        });
+        html += '<div style="display:flex;justify-content:space-between;padding-top:16px;border-top:1px solid var(--border);">';
+        html += '<button class="btn btn-outline" onclick="plantPrevStep()">← 上一步</button>';
+        html += '<button class="btn btn-primary" id="plantConfirmBtn" disabled style="opacity:0.5;cursor:not-allowed;" onclick="plantConfirmClinic()">确定选择 →</button>';
+        html += '</div>';
+        html += '</div>';
+      }
+
+      // ===== 步骤5：确认信息 =====
+      if (plantStep === 5) {
+        var clinic = DB.getById('clientClinics', plantSelectedClinicId);
+        if (!clinic) {
+          html += '<div class="card"><div style="padding:40px;text-align:center;color:var(--text-muted);">未选择诊所，请返回上一步</div></div>';
+          html += '<div style="text-align:center;"><button class="btn btn-outline" onclick="plantPrevStep()">← 返回选择</button></div>';
+          return html;
+        }
         var stars = '';
         for (var i = 0; i < 5; i++) {
-          stars += i < Math.floor(c.rating) ? '⭐' : '☆';
+          stars += i < Math.floor(clinic.rating) ? '⭐' : '☆';
         }
-        html += '<div class="client-clinic-card" onclick="UI.toast.info(\'正在跳转预约页面\')">';
-        html += '<div class="client-clinic-header"><strong style="font-size:15px;">' + CRUD._esc(c.name) + '</strong>';
-        html += '<span class="status-tag active">' + c.distance + ' km</span></div>';
-        html += '<div class="client-clinic-info">';
-        html += '<div><span class="label">负责人：</span>' + CRUD._esc(c.owner) + '</div>';
-        html += '<div><span class="label">电话：</span>' + CRUD._esc(c.phone) + '</div>';
-        html += '<div><span class="label">地址：</span>' + CRUD._esc(c.address) + '</div>';
-        html += '<div><span class="label">评分：</span>' + stars + ' (' + c.rating + ')</div>';
-        html += '<div><span class="label">种植量：</span>' + c.implants + ' 颗</div>';
+        html += '<div class="card" style="text-align:center;padding:30px 20px;">';
+        html += '<div style="font-size:48px;margin-bottom:8px;">✅</div>';
+        html += '<h3 style="margin-bottom:8px;color:var(--success);">预约成功！</h3>';
+        html += '<p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">您已成功选择诊所，以下是诊所详细信息</p>';
         html += '</div>';
-        html += '<div class="client-clinic-actions">';
-        html += '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();UI.toast.info(\'电话：' + c.phone + '\')">📞 电话</button>';
-        html += '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();UI.toast.success(\'已预约' + CRUD._esc(c.name) + '\')">📅 预约</button>';
-        html += '</div></div>';
-      });
-      html += '</div>';
+        html += '<div class="card">';
+        html += '<div class="card-header"><span class="card-title">🏥 ' + CRUD._esc(clinic.name) + '</span>';
+        html += '<span class="status-tag active">' + clinic.distance + ' km</span></div>';
+        html += '<div style="padding:20px 0;">';
+        // 地图占位
+        html += '<div style="background:linear-gradient(135deg,var(--primary-light),#e8f4fd);border-radius:12px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;position:relative;">';
+        html += '<div style="text-align:center;color:var(--text-muted);">';
+        html += '<div style="font-size:40px;margin-bottom:8px;">🗺️</div>';
+        html += '<div style="font-size:14px;font-weight:600;">' + CRUD._esc(clinic.name) + '</div>';
+        html += '<div style="font-size:12px;">' + CRUD._esc(clinic.region) + '</div>';
+        html += '</div>';
+        html += '<div style="position:absolute;top:45%;left:50%;transform:translate(-50%,-50%);font-size:28px;">📍</div>';
+        html += '</div>';
+        // 诊所信息
+        html += '<div class="plant-confirm-info">';
+        html += '<div class="plant-info-row"><span class="plant-info-icon">📍</span><div><div class="plant-info-label">诊所地址</div><div class="plant-info-value">' + CRUD._esc(clinic.address) + '</div></div></div>';
+        html += '<div class="plant-info-row"><span class="plant-info-icon">📞</span><div><div class="plant-info-label">联系电话</div><div class="plant-info-value"><a href="tel:' + clinic.phone + '" style="color:var(--primary);font-weight:600;">' + CRUD._esc(clinic.phone) + '</a></div></div></div>';
+        html += '<div class="plant-info-row"><span class="plant-info-icon">👤</span><div><div class="plant-info-label">负责人</div><div class="plant-info-value">' + CRUD._esc(clinic.owner) + '</div></div></div>';
+        html += '<div class="plant-info-row"><span class="plant-info-icon">⭐</span><div><div class="plant-info-label">评分</div><div class="plant-info-value">' + stars + ' (' + clinic.rating + ')</div></div></div>';
+        html += '<div class="plant-info-row"><span class="plant-info-icon">🦷</span><div><div class="plant-info-label">种植量</div><div class="plant-info-value">' + clinic.implants + ' 颗</div></div></div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div style="padding:20px 0;text-align:center;">';
+        html += '<div style="padding:16px;background:var(--primary-light);border-radius:8px;margin-bottom:16px;">';
+        html += '<div style="font-size:13px;color:var(--text-muted);margin-bottom:4px;">📞 预约咨询</div>';
+        html += '<div style="font-size:18px;font-weight:700;color:var(--primary-dark);">' + CRUD._esc(clinic.phone) + '</div>';
+        html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px;">点击电话号码可直接拨打</div>';
+        html += '</div>';
+        html += '<div style="display:flex;gap:8px;justify-content:center;">';
+        html += '<button class="btn btn-outline" onclick="plantPrevStep()">← 重新选择</button>';
+        html += '<button class="btn btn-primary" onclick="UI.toast.success(\'已提交预约，诊所将在24小时内联系您\');plantReset();">完成预约</button>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+      }
+
       return html;
     },
 
