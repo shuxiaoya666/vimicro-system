@@ -2,11 +2,12 @@
 
 // 用户账号配置
 const ACCOUNTS = {
-  admin:    { password: '123456', name: '超级管理员', avatar: '管', role: 'super', ports: ['platform','clinic','dealer','pharmacy','factory'] },
+  admin:    { password: '123456', name: '超级管理员', avatar: '管', role: 'super', ports: ['platform','clinic','dealer','pharmacy','factory','client'] },
   clinic:   { password: '123456', name: '李医生',     avatar: '李', role: 'clinic',  ports: ['clinic'] },
   dealer:   { password: '123456', name: '张经理',     avatar: '张', role: 'dealer',  ports: ['dealer'] },
   pharmacy: { password: '123456', name: '周店长',     avatar: '周', role: 'pharmacy',ports: ['pharmacy'] },
   factory:  { password: '123456', name: '孙厂长',     avatar: '孙', role: 'factory', ports: ['factory'] },
+  client:   { password: '123456', name: '周小明',     avatar: '周', role: 'client',  ports: ['client'] },
 };
 
 // 端口配置
@@ -16,6 +17,7 @@ const PORT_CONFIG = {
   dealer:   { name: '经销商端',   icon: '👤', color: '#f39c12' },
   pharmacy: { name: '药店端',     icon: '💊', color: '#8e44ad' },
   factory:  { name: '工厂端',     icon: '🏭', color: '#0097a7' },
+  client:   { name: '客户端',     icon: '📱', color: '#e91e63' },
 };
 
 // 当前状态

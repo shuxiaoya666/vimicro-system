@@ -152,6 +152,98 @@ var SEED_DATA = {
     {id:4, cardNo:'XW-2025-07990', patient:'褚伟杰', type:'种植体植入', doctor:'李医生', time:'2025-08-01 11:20'}
   ],
 
+  // ---------- 客户端：商品分类 ----------
+  clientProducts: [
+    {id:1, name:'XW-TI-3510 种植体', price:1280, desc:'直径3.5mm 钛合金 · 畅销款', icon:'🦷', category:'种植体', stock:28, sales:342, status:'active'},
+    {id:2, name:'XW-TI-4200 种植体', price:1580, desc:'直径4.2mm 钛合金 · 高强度', icon:'🦷', category:'种植体', stock:22, sales:286, status:'active'},
+    {id:3, name:'XW-TI-4212 种植体', price:1680, desc:'直径4.2mm 亲水表面 · 新品', icon:'🦷', category:'种植体', stock:8, sales:98, status:'active'},
+    {id:4, name:'种植体基台', price:680, desc:'标准基台 · 适配全系', icon:'🔧', category:'配件', stock:13, sales:120, status:'active'},
+    {id:5, name:'骨粉材料 0.5g', price:420, desc:'人工骨粉 · 高生物相容', icon:'🧪', category:'耗材', stock:35, sales:86, status:'active'},
+    {id:6, name:'愈合帽', price:150, desc:'标准愈合帽 · 含螺丝', icon:'🔩', category:'配件', stock:0, sales:86, status:'inactive'},
+    {id:7, name:'种植手术工具包', price:3800, desc:'全套手术器械 · 消毒级', icon:'📦', category:'工具', stock:5, sales:42, status:'active'},
+    {id:8, name:'麻药注射器', price:85, desc:'一次性使用 · 50支装', icon:'💉', category:'耗材', stock:120, sales:230, status:'active'}
+  ],
+
+  // ---------- 客户端：种植卡套餐 ----------
+  clientPackages: [
+    {id:1, name:'基础种植套餐', price:2980, originalPrice:3580, desc:'种植体+基台+手术费', included:'XW-TI-3510种植体 + 标准基台 + 手术费', icon:'🦷', sales:156, status:'active'},
+    {id:2, name:'高端亲水套餐', price:3980, originalPrice:4880, desc:'亲水种植体+基台+骨粉', included:'XW-TI-4212种植体 + 标准基台 + 骨粉0.5g + 手术费', icon:'💎', sales:89, status:'active'},
+    {id:3, name:'全口种植套餐', price:19800, originalPrice:25800, desc:'全口种植体+基台+手术', included:'4颗XW-TI-4200种植体 + 4基台 + 手术费 + 术后护理', icon:'👑', sales:23, status:'active'},
+    {id:4, name:'术后护理套餐', price:880, originalPrice:1280, desc:'愈合帽+护理产品', included:'愈合帽 + 护理套装 + 3次复查', icon:'🩹', sales:67, status:'active'}
+  ],
+
+  // ---------- 客户端：订单 ----------
+  clientOrders: [
+    {id:1, no:'CO-2025-0801', type:'种植套餐', item:'基础种植套餐', patient:'周小明', clinic:'仁爱口腔诊所', amount:2980, status:'processing', createdAt:'2025-08-03', progress:60},
+    {id:2, no:'CO-2025-0802', type:'商品购买', item:'骨粉材料 0.5g x2', patient:'周小明', clinic:'', amount:840, status:'active', createdAt:'2025-08-02', progress:100},
+    {id:3, no:'CO-2025-0798', type:'种植套餐', item:'高端亲水套餐', patient:'周小明', clinic:'雅悦口腔医院', amount:3980, status:'active', createdAt:'2025-07-25', progress:100},
+    {id:4, no:'CO-2025-0795', type:'商品购买', item:'麻药注射器 x1', patient:'周小明', clinic:'', amount:85, status:'active', createdAt:'2025-07-20', progress:100}
+  ],
+
+  // ---------- 客户端：种植体进度 ----------
+  clientProgress: [
+    {id:1, no:'CO-2025-0801', patient:'周小明', clinic:'仁爱口腔诊所', doctor:'李医生', implantType:'XW-TI-3510', step1:'已完成', step2:'已完成', step3:'进行中', step4:'待开始', step5:'待开始', current:'基台安装', progress:60, nextDate:'2025-08-15', status:'processing'},
+    {id:2, no:'CO-2025-0798', patient:'周小明', clinic:'雅悦口腔医院', doctor:'张医生', implantType:'XW-TI-4212', step1:'已完成', step2:'已完成', step3:'已完成', step4:'已完成', step5:'已完成', current:'已完成', progress:100, nextDate:'', status:'active'},
+    {id:3, no:'CO-2025-0802', patient:'周小明', clinic:'健佳大药房', doctor:'', implantType:'', step1:'已发货', step2:'已签收', step3:'', step4:'', step5:'', current:'已完成', progress:100, nextDate:'', status:'active'}
+  ],
+
+  // ---------- 客户端：积分记录 ----------
+  clientPoints: [
+    {id:1, type:'消费获得', source:'基础种植套餐', points:298, date:'2025-08-03', balance:1268},
+    {id:2, type:'邀请奖励', source:'好友注册并下单', points:100, date:'2025-08-01', balance:970},
+    {id:3, type:'消费获得', source:'高端亲水套餐', points:398, date:'2025-07-25', balance:870},
+    {id:4, type:'老带新奖励', source:'好友完成种植', points:200, date:'2025-07-20', balance:472},
+    {id:5, type:'消费获得', source:'骨粉材料', points:84, date:'2025-07-15', balance:272},
+    {id:6, type:'积分兑换', source:'兑换愈合帽', points:-150, date:'2025-07-10', balance:188}
+  ],
+
+  // ---------- 客户端：评价 ----------
+  clientReviews: [
+    {id:1, type:'诊所评价', target:'仁爱口腔诊所', doctor:'李医生', rating:5, content:'李医生技术很好，种植过程很顺利，服务态度也很好！', date:'2025-08-03', status:'active'},
+    {id:2, type:'商品评价', target:'XW-TI-4212 种植体', doctor:'', rating:5, content:'亲水种植体恢复很快，质量很好，推荐！', date:'2025-07-25', status:'active'},
+    {id:3, type:'诊所评价', target:'雅悦口腔医院', doctor:'张医生', rating:4, content:'医院环境很好，医生专业，就是等候时间有点长。', date:'2025-07-20', status:'active'}
+  ],
+
+  // ---------- 客户端：消费记录 ----------
+  clientTransactions: [
+    {id:1, date:'2025-08-03', type:'种植套餐', item:'基础种植套餐', amount:2980, points:298, status:'active'},
+    {id:2, date:'2025-08-02', type:'商品购买', item:'骨粉材料 0.5g x2', amount:840, points:84, status:'active'},
+    {id:3, date:'2025-07-25', type:'种植套餐', item:'高端亲水套餐', amount:3980, points:398, status:'active'},
+    {id:4, date:'2025-07-20', type:'商品购买', item:'麻药注射器 x1', amount:85, points:8, status:'active'},
+    {id:5, date:'2025-07-10', type:'积分兑换', item:'兑换愈合帽', amount:0, points:-150, status:'active'},
+    {id:6, date:'2025-06-15', type:'商品购买', item:'种植手术工具包', amount:3800, points:380, status:'active'}
+  ],
+
+  // ---------- 客户端：实体卡绑定 ----------
+  clientCards: [
+    {id:1, cardNo:'XW-2025-08001', patient:'周小明', clinic:'仁爱口腔诊所', implantType:'XW-TI-3510', bindDate:'2025-08-01', status:'active'},
+    {id:2, cardNo:'XW-2025-07998', patient:'周小明', clinic:'雅悦口腔医院', implantType:'XW-TI-4212', bindDate:'2025-07-22', status:'active'}
+  ],
+
+  // ---------- 客户端：附近诊所 ----------
+  clientClinics: [
+    {id:1, name:'仁爱口腔诊所', owner:'李明华', phone:'138-0011-2233', region:'浙江杭州', address:'杭州市拱墅区莫干山路200号', distance:2.3, rating:4.8, implants:342, status:'active'},
+    {id:2, name:'雅悦口腔医院', owner:'张伟强', phone:'137-2233-4455', region:'广东深圳', address:'深圳市南山区科技园路88号', distance:5.6, rating:4.9, implants:586, status:'active'},
+    {id:3, name:'微笑牙科诊所', owner:'陈丽芳', phone:'136-8899-0011', region:'四川成都', address:'成都市武侯区人民南路四段', distance:8.2, rating:4.6, implants:218, status:'active'},
+    {id:4, name:'博雅口腔诊所', owner:'赵新民', phone:'133-4455-6677', region:'上海', address:'上海市浦东新区世纪大道100号', distance:12.5, rating:4.7, implants:456, status:'active'}
+  ],
+
+  // ---------- 客户端：售后记录 ----------
+  clientService: [
+    {id:1, no:'SV-2025-0801', type:'退款申请', content:'骨粉材料包装破损', amount:420, status:'processing', date:'2025-08-04', reply:''},
+    {id:2, no:'SV-2025-0798', type:'质保维修', content:'种植体基台松动', amount:0, status:'active', date:'2025-07-28', reply:'已安排医生检查，免费维修'}
+  ],
+
+  // ---------- 客户端：常见问题 ----------
+  clientFAQ: [
+    {id:1, q:'种植牙的周期是多久？', a:'通常种植牙周期为3-6个月，包括种植体植入手术（1天）、骨愈合期（2-3个月）、基台安装（1天）、牙冠修复（1-2周）。具体时间因个人骨质情况而异。', category:'周期'},
+    {id:2, q:'种植牙费用大概多少？', a:'单颗种植牙价格从2,980元起，包含种植体、基台和手术费。高端亲水种植体套餐3,980元。具体费用根据选择的套餐和诊所而定。', category:'费用'},
+    {id:3, q:'种植牙疼吗？', a:'种植手术在局部麻醉下进行，过程中不会感到疼痛。术后可能有轻微不适，2-3天内会消退。小唯种植体采用微创技术，恢复更快。', category:'疼痛'},
+    {id:4, q:'种植牙能用多久？', a:'小唯种植体采用钛合金材质，临床使用寿命可达15-20年以上。我们提供长期质保服务，种植卡绑定后可享受售后保障。', category:'质保'},
+    {id:5, q:'积分怎么获取和使用？', a:'消费获得积分（1元=1积分），老带新获得积分（好友下单得100积分，好友完成种植再得200积分）。积分满500可兑换商品，满1000可免费做一颗种植牙。', category:'积分'},
+    {id:6, q:'如何绑定实体卡？', a:'在"我的-实体卡绑定"页面输入卡密即可绑定。绑定后可查看种植体信息、进度追踪和质保服务。', category:'使用'}
+  ],
+
   // ---------- 注册申请 ----------
   registrations: [
     {id:1, type:'clinic', account:'brightdental', orgName:'明皓口腔诊所', person:'钱伟', phone:'138-6677-8899', region:'浙江宁波', address:'宁波市海曙区中山东路88号', licenseName:'营业执照_明皓口腔.jpg', licenseData:'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22280%22%3E%3Crect%20width%3D%22400%22%20height%3D%22280%22%20fill%3D%22%23f8f9fa%22%20stroke%3D%22%23ddd%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%20fill%3D%22%2395a5a6%22%20text-anchor%3D%22middle%22%3E%E8%90%A5%E4%B8%9A%E6%89%A7%E7%85%A7%E7%A4%BA%E4%BE%8B%E5%9B%BE%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22160%22%20font-family%3D%22sans-serif%22%20font-size%3D%2213%22%20fill%3D%22%23bbb%22%20text-anchor%3D%22middle%22%3E%E6%98%8E%E7%9A%93%E5%8F%A3%E8%85%94%E8%AF%8A%E6%89%80%3C/text%3E%3C/svg%3E', status:'pending', submittedAt:'2025-08-10'},

@@ -729,6 +729,237 @@ var FACTORY_FINANCE = Object.assign({}, CLINIC_FINANCE, {
 });
 
 
+// ==================== 客户端 CRUD 配置 ====================
+
+// ---- 客户端：商品分类 ----
+var CLIENT_PRODUCTS = {
+  entity: 'clientProducts',
+  title: '商品列表',
+  breadcrumb: '首页 / 商城',
+  pageSize: 6,
+  searchFields: ['name', 'category', 'desc'],
+  searchPlaceholder: '搜索商品名称、分类...',
+  filterField: 'category',
+  filterOptions: [
+    { value: '种植体', label: '种植体' },
+    { value: '配件', label: '配件' },
+    { value: '耗材', label: '耗材' },
+    { value: '工具', label: '工具' }
+  ],
+  exportName: '商品列表',
+  addLabel: '新增商品',
+  displayField: 'name',
+  columns: [
+    { field: 'name', label: '商品名称' },
+    { field: 'category', label: '分类' },
+    { field: 'price', label: '价格', type: 'price' },
+    { field: 'stock', label: '库存', type: 'dash' },
+    { field: 'sales', label: '销量', type: 'dash' },
+    { field: 'status', label: '状态', type: 'status' }
+  ],
+  formFields: [
+    { name: 'name', label: '商品名称', type: 'text', required: true, placeholder: '请输入商品名称' },
+    { name: 'category', label: '分类', type: 'select', options: [
+      { value: '种植体', label: '种植体' },
+      { value: '配件', label: '配件' },
+      { value: '耗材', label: '耗材' },
+      { value: '工具', label: '工具' }
+    ], required: true },
+    { name: 'price', label: '价格', type: 'number', required: true, rules: ['positive'], placeholder: '请输入价格' },
+    { name: 'desc', label: '描述', type: 'text', placeholder: '商品描述' },
+    { name: 'stock', label: '库存', type: 'number', value: 0 },
+    { name: 'status', label: '状态', type: 'select', options: FORM_STATUS, required: true }
+  ]
+};
+
+// ---- 客户端：我的订单 ----
+var CLIENT_ORDERS = {
+  entity: 'clientOrders',
+  title: '我的订单',
+  breadcrumb: '首页 / 商城',
+  pageSize: 5,
+  searchFields: ['no', 'item', 'clinic'],
+  searchPlaceholder: '搜索订单号、商品...',
+  filterField: 'status',
+  filterOptions: [
+    { value: 'active', label: '已完成' },
+    { value: 'processing', label: '进行中' }
+  ],
+  exportName: '我的订单',
+  addLabel: '新增订单',
+  displayField: 'no',
+  columns: [
+    { field: 'no', label: '订单号' },
+    { field: 'type', label: '类型' },
+    { field: 'item', label: '商品/套餐' },
+    { field: 'clinic', label: '诊所', type: 'dash' },
+    { field: 'amount', label: '金额', type: 'price' },
+    { field: 'status', label: '状态', type: 'status' },
+    { field: 'createdAt', label: '下单日期' }
+  ],
+  formFields: [
+    { name: 'no', label: '订单号', type: 'text', required: true, placeholder: '请输入订单号' },
+    { name: 'type', label: '类型', type: 'select', options: [
+      { value: '种植套餐', label: '种植套餐' },
+      { value: '商品购买', label: '商品购买' }
+    ], required: true },
+    { name: 'item', label: '商品/套餐', type: 'text', required: true, placeholder: '请输入商品名称' },
+    { name: 'clinic', label: '诊所', type: 'text', placeholder: '诊所名称' },
+    { name: 'amount', label: '金额', type: 'number', required: true, rules: ['positive'], placeholder: '请输入金额' },
+    { name: 'status', label: '状态', type: 'select', options: FORM_STATUS, required: true }
+  ]
+};
+
+// ---- 客户端：消费记录 ----
+var CLIENT_TRANSACTIONS = {
+  entity: 'clientTransactions',
+  title: '消费记录',
+  breadcrumb: '首页 / 我的',
+  pageSize: 8,
+  searchFields: ['item', 'type'],
+  searchPlaceholder: '搜索消费项目...',
+  filterField: 'type',
+  filterOptions: [
+    { value: '种植套餐', label: '种植套餐' },
+    { value: '商品购买', label: '商品购买' },
+    { value: '积分兑换', label: '积分兑换' }
+  ],
+  exportName: '消费记录',
+  addLabel: '新增记录',
+  displayField: 'item',
+  columns: [
+    { field: 'date', label: '日期' },
+    { field: 'type', label: '类型' },
+    { field: 'item', label: '项目' },
+    { field: 'amount', label: '金额', type: 'price' },
+    { field: 'points', label: '积分变动' },
+    { field: 'status', label: '状态', type: 'status' }
+  ],
+  formFields: [
+    { name: 'date', label: '日期', type: 'text', required: true, placeholder: 'YYYY-MM-DD' },
+    { name: 'type', label: '类型', type: 'select', options: [
+      { value: '种植套餐', label: '种植套餐' },
+      { value: '商品购买', label: '商品购买' },
+      { value: '积分兑换', label: '积分兑换' }
+    ], required: true },
+    { name: 'item', label: '项目', type: 'text', required: true, placeholder: '请输入项目' },
+    { name: 'amount', label: '金额', type: 'number', value: 0 },
+    { name: 'points', label: '积分变动', type: 'number', value: 0 },
+    { name: 'status', label: '状态', type: 'select', options: FORM_STATUS, required: true }
+  ]
+};
+
+// ---- 客户端：评价管理 ----
+var CLIENT_REVIEWS = {
+  entity: 'clientReviews',
+  title: '我的评价',
+  breadcrumb: '首页 / 我的',
+  pageSize: 5,
+  searchFields: ['target', 'content'],
+  searchPlaceholder: '搜索评价...',
+  filterField: 'type',
+  filterOptions: [
+    { value: '诊所评价', label: '诊所评价' },
+    { value: '商品评价', label: '商品评价' }
+  ],
+  exportName: '我的评价',
+  addLabel: '新增评价',
+  displayField: 'target',
+  columns: [
+    { field: 'type', label: '类型' },
+    { field: 'target', label: '评价对象' },
+    { field: 'rating', label: '评分', type: 'dash' },
+    { field: 'content', label: '评价内容' },
+    { field: 'date', label: '日期' },
+    { field: 'status', label: '状态', type: 'status' }
+  ],
+  formFields: [
+    { name: 'type', label: '类型', type: 'select', options: [
+      { value: '诊所评价', label: '诊所评价' },
+      { value: '商品评价', label: '商品评价' }
+    ], required: true },
+    { name: 'target', label: '评价对象', type: 'text', required: true, placeholder: '请输入评价对象' },
+    { name: 'rating', label: '评分', type: 'select', options: [
+      { value: 5, label: '5星' },
+      { value: 4, label: '4星' },
+      { value: 3, label: '3星' },
+      { value: 2, label: '2星' },
+      { value: 1, label: '1星' }
+    ], required: true },
+    { name: 'content', label: '评价内容', type: 'text', required: true, placeholder: '请输入评价内容' },
+    { name: 'status', label: '状态', type: 'select', options: FORM_STATUS, required: true }
+  ]
+};
+
+// ---- 客户端：实体卡绑定 ----
+var CLIENT_CARDS = {
+  entity: 'clientCards',
+  title: '实体卡绑定',
+  breadcrumb: '首页 / 我的',
+  pageSize: 5,
+  searchFields: ['cardNo', 'clinic', 'implantType'],
+  searchPlaceholder: '搜索卡号、诊所...',
+  exportName: '实体卡列表',
+  addLabel: '绑定新卡',
+  displayField: 'cardNo',
+  columns: [
+    { field: 'cardNo', label: '卡号' },
+    { field: 'patient', label: '患者' },
+    { field: 'clinic', label: '诊所' },
+    { field: 'implantType', label: '种植体型号' },
+    { field: 'bindDate', label: '绑定日期' },
+    { field: 'status', label: '状态', type: 'status' }
+  ],
+  formFields: [
+    { name: 'cardNo', label: '卡号', type: 'text', required: true, placeholder: '请输入卡密/卡号' },
+    { name: 'patient', label: '患者', type: 'text', required: true, placeholder: '请输入患者姓名' },
+    { name: 'clinic', label: '诊所', type: 'text', required: true, placeholder: '请输入诊所名称' },
+    { name: 'implantType', label: '种植体型号', type: 'text', placeholder: '请输入种植体型号' },
+    { name: 'status', label: '状态', type: 'select', options: FORM_STATUS, required: true }
+  ]
+};
+
+// ---- 客户端：售后记录 ----
+var CLIENT_SERVICE = {
+  entity: 'clientService',
+  title: '售后记录',
+  breadcrumb: '首页 / 我的',
+  pageSize: 5,
+  searchFields: ['no', 'type', 'content'],
+  searchPlaceholder: '搜索售后记录...',
+  filterField: 'type',
+  filterOptions: [
+    { value: '退款申请', label: '退款申请' },
+    { value: '质保维修', label: '质保维修' }
+  ],
+  exportName: '售后记录',
+  addLabel: '新增售后',
+  displayField: 'no',
+  columns: [
+    { field: 'no', label: '单号' },
+    { field: 'type', label: '类型' },
+    { field: 'content', label: '问题描述' },
+    { field: 'amount', label: '金额', type: 'price' },
+    { field: 'status', label: '状态', type: 'status' },
+    { field: 'date', label: '日期' }
+  ],
+  formFields: [
+    { name: 'no', label: '单号', type: 'text', required: true, placeholder: '请输入单号' },
+    { name: 'type', label: '类型', type: 'select', options: [
+      { value: '退款申请', label: '退款申请' },
+      { value: '质保维修', label: '质保维修' }
+    ], required: true },
+    { name: 'content', label: '问题描述', type: 'text', required: true, placeholder: '请描述问题' },
+    { name: 'amount', label: '金额', type: 'number', value: 0 },
+    { name: 'status', label: '状态', type: 'select', options: [
+      { value: 'pending', label: '待处理' },
+      { value: 'processing', label: '处理中' },
+      { value: 'active', label: '已解决' }
+    ], required: true }
+  ]
+};
+
+
 // ==================== SIDEBAR_MENUS ====================
 var SIDEBAR_MENUS = {
 
@@ -837,6 +1068,32 @@ var SIDEBAR_MENUS = {
     ]},
     { title: '财务', items: [
       { key: 'finance', icon: '💰', name: '财务收支' }
+    ]}
+  ],
+
+  // ---------- 客户端 ----------
+  client: [
+    { title: '概览', items: [
+      { key: 'home', icon: '🏠', name: '首页' }
+    ]},
+    { title: '种植服务', items: [
+      { key: 'plant', icon: '🦷', name: '我要种植' },
+      { key: 'scan', icon: '📷', name: '扫码激活' }
+    ]},
+    { title: '商城', items: [
+      { key: 'mall', icon: '🛒', name: '商品分类' },
+      { key: 'packages', icon: '📦', name: '种植卡套餐' },
+      { key: 'orders', icon: '📋', name: '我的订单' },
+      { key: 'progress', icon: '📊', name: '种植进度' }
+    ]},
+    { title: '我的', items: [
+      { key: 'profile', icon: '👤', name: '个人中心' },
+      { key: 'points', icon: '🎁', name: '我的积分', badge: '1268' },
+      { key: 'cards', icon: '💳', name: '实体卡绑定' },
+      { key: 'reviews', icon: '⭐', name: '我的评价' },
+      { key: 'transactions', icon: '💰', name: '消费记录' },
+      { key: 'service', icon: '🛠️', name: '售后质保' },
+      { key: 'faq', icon: '❓', name: '常见问题' }
     ]}
   ]
 };
@@ -1537,6 +1794,265 @@ _homeStats([
     },
 
     finance: function() { return CRUD.builder('factory_finance', FACTORY_FINANCE); }
+  },
+
+  // ================================================================
+  //  客户端 (client)
+  // ================================================================
+  client: {
+
+    home: function() {
+      var orders = DB.getAll('clientOrders');
+      var points = DB.getAll('clientPoints');
+      var totalPoints = points.length > 0 ? points[0].balance : 0;
+      var activeOrders = orders.filter(function(o){ return o.status === 'processing'; }).length;
+      return `
+<div class="breadcrumb">首页 / <span>概览</span></div>` +
+_homeStats([
+  { label:'我的积分', value: totalPoints, icon:'🎁', color:'green', change:'↑ 消费可得' },
+  { label:'进行中订单', value: activeOrders, icon:'📋', color:'orange', change:'待完成' },
+  { label:'已完成订单', value: orders.filter(function(o){ return o.status === 'active'; }).length, icon:'✅', color:'blue' },
+  { label:'绑定实体卡', value: DB.getAll('clientCards').length, icon:'💳', color:'red' }
+]) + `
+<div class="quick-grid">
+  <div class="quick-item" onclick="navigateTo('plant')"><div class="icon green">🦷</div><div class="name">我要种植</div><div class="desc">附近诊所</div></div>
+  <div class="quick-item" onclick="navigateTo('mall')"><div class="icon blue">🛒</div><div class="name">商品商城</div><div class="desc">分类选购</div></div>
+  <div class="quick-item" onclick="navigateTo('packages')"><div class="icon orange">📦</div><div class="name">种植套餐</div><div class="desc">一价全包</div></div>
+  <div class="quick-item" onclick="navigateTo('orders')"><div class="icon teal">📋</div><div class="name">我的订单</div><div class="desc">` + orders.length + ` 笔</div></div>
+  <div class="quick-item" onclick="navigateTo('points')"><div class="icon purple">🎁</div><div class="name">积分中心</div><div class="desc">` + totalPoints + ` 分</div></div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">📢 品牌动态</span></div>
+  <div style="padding:12px 0;">
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);"><strong>XW-TI-4212 亲水种植体</strong> — 全新上市，更快骨结合，更短愈合期</div>
+    <div style="padding:8px 0;border-bottom:1px solid var(--border);"><strong>一价全包套餐</strong> — 种植体+基台+手术费，透明定价无隐形消费</div>
+    <div style="padding:8px 0;"><strong>老带新活动</strong> — 邀请好友注册下单得100积分，好友完成种植再得200积分</div>
+  </div>
+</div>`;
+    },
+
+    plant: function() {
+      var clinics = DB.getAll('clientClinics');
+      var html = '<div class="breadcrumb">首页 / 种植服务 / <span>我要种植</span></div>';
+      html += '<div class="card"><div class="card-header"><span class="card-title">🏥 附近诊所</span></div>';
+      html += '<div style="padding:12px;color:var(--text-muted);font-size:13px;">📍 当前定位：浙江杭州 · 按距离排序</div>';
+      clinics.forEach(function(c) {
+        var stars = '';
+        for (var i = 0; i < 5; i++) {
+          stars += i < Math.floor(c.rating) ? '⭐' : '☆';
+        }
+        html += '<div class="client-clinic-card" onclick="UI.toast.info(\'正在跳转预约页面\')">';
+        html += '<div class="client-clinic-header"><strong style="font-size:15px;">' + CRUD._esc(c.name) + '</strong>';
+        html += '<span class="status-tag active">' + c.distance + ' km</span></div>';
+        html += '<div class="client-clinic-info">';
+        html += '<div><span class="label">负责人：</span>' + CRUD._esc(c.owner) + '</div>';
+        html += '<div><span class="label">电话：</span>' + CRUD._esc(c.phone) + '</div>';
+        html += '<div><span class="label">地址：</span>' + CRUD._esc(c.address) + '</div>';
+        html += '<div><span class="label">评分：</span>' + stars + ' (' + c.rating + ')</div>';
+        html += '<div><span class="label">种植量：</span>' + c.implants + ' 颗</div>';
+        html += '</div>';
+        html += '<div class="client-clinic-actions">';
+        html += '<button class="btn btn-outline btn-sm" onclick="event.stopPropagation();UI.toast.info(\'电话：' + c.phone + '\')">📞 电话</button>';
+        html += '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();UI.toast.success(\'已预约' + CRUD._esc(c.name) + '\')">📅 预约</button>';
+        html += '</div></div>';
+      });
+      html += '</div>';
+      return html;
+    },
+
+    scan: function() {
+      return `
+<div class="breadcrumb">首页 / 种植服务 / <span>扫码激活</span></div>
+<div class="card" style="text-align:center;padding:40px 20px;">
+  <div style="font-size:64px;margin-bottom:16px;">📷</div>
+  <h3 style="margin-bottom:8px;">扫码激活种植卡</h3>
+  <p style="color:var(--text-muted);margin-bottom:24px;">扫描实体卡上的二维码，激活您的种植体卡</p>
+  <button class="btn btn-primary" style="padding:12px 32px;font-size:15px;" onclick="UI.toast.info('扫码功能开发中')">📷 打开扫码</button>
+  <div style="margin-top:24px;padding:16px;background:var(--primary-light);border-radius:8px;font-size:13px;color:var(--text-muted);text-align:left;">
+    <strong style="color:var(--primary-dark);">使用说明：</strong><br>
+    1. 购买种植体后，您将获得一张实体卡<br>
+    2. 卡上有专属二维码，点击上方按钮扫码<br>
+    3. 扫码成功后，卡将自动绑定到您的账户<br>
+    4. 绑定后可查看种植体进度和质保信息
+  </div>
+</div>`;
+    },
+
+    mall: function() { return CRUD.builder('client_mall', CLIENT_PRODUCTS); },
+
+    packages: function() {
+      var pkgs = DB.getAll('clientPackages');
+      var html = '<div class="breadcrumb">首页 / 商城 / <span>种植卡套餐</span></div>';
+      html += '<div style="color:var(--text-muted);font-size:13px;margin-bottom:16px;">💡 套餐包含种植体+手术费用，一价全包无隐形消费</div>';
+      pkgs.forEach(function(p) {
+        var savings = p.originalPrice - p.price;
+        html += '<div class="client-package-card">';
+        html += '<div class="client-package-header"><span class="client-package-icon">' + p.icon + '</span>';
+        html += '<div><strong style="font-size:16px;">' + CRUD._esc(p.name) + '</strong>';
+        html += '<div style="font-size:13px;color:var(--text-muted);">' + CRUD._esc(p.desc) + '</div></div></div>';
+        html += '<div class="client-package-body">';
+        html += '<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">包含：' + CRUD._esc(p.included) + '</div>';
+        html += '<div class="client-package-price"><span class="original">¥' + p.originalPrice + '</span>';
+        html += '<span class="current">¥' + p.price + '</span>';
+        html += '<span class="savings">省¥' + savings + '</span></div>';
+        html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px;">已售 ' + p.sales + ' 份</div>';
+        html += '</div>';
+        html += '<div class="client-package-actions">';
+        html += '<button class="btn btn-outline btn-sm" onclick="UI.toast.info(\'详情查看中\')">查看详情</button>';
+        html += '<button class="btn btn-primary btn-sm" onclick="UI.toast.success(\'已加入购物车\')">立即购买</button>';
+        html += '</div></div>';
+      });
+      return html;
+    },
+
+    orders: function() { return CRUD.builder('client_orders', CLIENT_ORDERS); },
+
+    progress: function() {
+      var items = DB.getAll('clientProgress');
+      var html = '<div class="breadcrumb">首页 / 商城 / <span>种植进度</span></div>';
+      if (items.length === 0) {
+        html += '<div class="card"><div style="padding:40px;text-align:center;color:var(--text-muted);">暂无进度记录</div></div>';
+        return html;
+      }
+      items.forEach(function(p) {
+        var stepNames = ['下单付款', '诊所预约', '种植手术', '基台安装', '牙冠修复'];
+        var steps = [p.step1, p.step2, p.step3, p.step4, p.step5];
+        var barColor = p.progress === 100 ? 'var(--success)' : 'var(--primary)';
+        html += '<div class="card">';
+        html += '<div class="card-header"><span class="card-title">📋 ' + p.no + '</span><span class="status-tag ' + p.status + '">' + (p.status === 'active' ? '已完成' : '进行中') + '</span></div>';
+        html += '<div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:13px;">';
+        html += '<span>诊所：' + CRUD._esc(p.clinic) + '</span>';
+        if (p.doctor) html += '<span>医生：' + CRUD._esc(p.doctor) + '</span>';
+        if (p.implantType) html += '<span>型号：' + CRUD._esc(p.implantType) + '</span>';
+        html += '</div>';
+        // Progress bar
+        html += '<div style="background:#f0f0f0;border-radius:8px;height:8px;margin-bottom:20px;overflow:hidden;">';
+        html += '<div style="width:' + p.progress + '%;height:100%;background:' + barColor + ';border-radius:8px;transition:width 0.3s;"></div></div>';
+        // Steps
+        html += '<div class="client-progress-steps">';
+        for (var i = 0; i < 5; i++) {
+          var done = steps[i] === '已完成' || steps[i] === '已发货' || steps[i] === '已签收';
+          var active = steps[i] === '进行中';
+          var cls = done ? 'done' : (active ? 'current' : 'pending');
+          html += '<div class="client-progress-step ' + cls + '">';
+          html += '<div class="step-circle">' + (done ? '✓' : (i + 1)) + '</div>';
+          html += '<div class="step-label">' + stepNames[i] + '</div>';
+          html += '<div class="step-status">' + (steps[i] || '待开始') + '</div>';
+          html += '</div>';
+        }
+        html += '</div>';
+        if (p.nextDate) {
+          html += '<div style="margin-top:16px;padding:12px;background:var(--primary-light);border-radius:8px;font-size:13px;">';
+          html += '📅 下次预约：<strong>' + p.nextDate + '</strong> — ' + CRUD._esc(p.current);
+          html += '</div>';
+        }
+        html += '</div>';
+      });
+      return html;
+    },
+
+    profile: function() {
+      var totalSpent = DB.getAll('clientTransactions').reduce(function(s,t){ return s + (t.amount || 0); }, 0);
+      var orderCount = DB.getAll('clientOrders').length;
+      var cardCount = DB.getAll('clientCards').length;
+      var reviewCount = DB.getAll('clientReviews').length;
+      return `
+<div class="breadcrumb">首页 / 我的 / <span>个人中心</span></div>
+<div class="card">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+    <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;">周</div>
+    <div>
+      <div style="font-size:18px;font-weight:700;">周小明</div>
+      <div style="font-size:13px;color:var(--text-muted);">📱 138-0011-2233</div>
+      <div style="font-size:12px;color:var(--primary-dark);margin-top:4px;">⭐ 会员等级：银卡会员</div>
+    </div>
+  </div>
+</div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">累计消费</span></div><div class="stat-card-value">¥` + totalSpent.toLocaleString() + `</div></div>
+  <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">订单数</span></div><div class="stat-card-value">` + orderCount + `</div></div>
+  <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">实体卡</span></div><div class="stat-card-value">` + cardCount + `</div></div>
+  <div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">评价数</span></div><div class="stat-card-value">` + reviewCount + `</div></div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">个人信息</span></div>
+  <div style="padding:20px;max-width:500px;">
+    <div class="form-group"><label>姓名</label><input type="text" value="周小明" placeholder="姓名"></div>
+    <div class="form-group"><label>手机号</label><input type="text" value="138-0011-2233" placeholder="手机号"></div>
+    <div class="form-group"><label>所在地区</label><input type="text" value="浙江杭州" placeholder="所在地区"></div>
+    <div class="form-group"><label>邮箱</label><input type="text" value="zhouxm@example.com" placeholder="邮箱"></div>
+    <button class="btn btn-primary" onclick="UI.toast.success('个人信息已保存')">保存修改</button>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">邀请好友</span></div>
+  <div style="padding:20px;text-align:center;">
+    <div style="font-size:48px;margin-bottom:12px;">🎁</div>
+    <p style="color:var(--text-muted);margin-bottom:16px;">邀请码：<strong style="color:var(--primary-dark);font-size:18px;">ZHOU2025</strong></p>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">好友注册得100积分，好友完成种植再得200积分</p>
+    <button class="btn btn-primary" onclick="UI.toast.success('邀请码已复制')">复制邀请码</button>
+  </div>
+</div>`;
+    },
+
+    points: function() {
+      var points = DB.getAll('clientPoints');
+      var totalPoints = points.length > 0 ? points[0].balance : 0;
+      var html = '<div class="breadcrumb">首页 / 我的 / <span>我的积分</span></div>';
+      html += '<div class="card" style="background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;text-align:center;padding:30px;">';
+      html += '<div style="font-size:14px;opacity:0.9;">当前积分</div>';
+      html += '<div style="font-size:36px;font-weight:700;margin:8px 0;">' + totalPoints + '</div>';
+      html += '<div style="font-size:13px;opacity:0.8;">满500分可兑换商品 · 满1000分免费做一颗种植牙</div>';
+      html += '</div>';
+      html += '<div class="card"><div class="card-header"><span class="card-title">积分明细</span></div>';
+      html += '<table class="data-table"><thead><tr><th>日期</th><th>类型</th><th>来源</th><th>积分变动</th><th>余额</th></tr></thead><tbody>';
+      points.forEach(function(p) {
+        var sign = p.points > 0 ? '+' : '';
+        var color = p.points > 0 ? 'var(--success)' : 'var(--danger)';
+        html += '<tr><td>' + CRUD._esc(p.date) + '</td><td>' + CRUD._esc(p.type) + '</td><td>' + CRUD._esc(p.source) + '</td>';
+        html += '<td style="color:' + color + ';font-weight:600;">' + sign + p.points + '</td><td>' + p.balance + '</td></tr>';
+      });
+      html += '</tbody></table></div>';
+      html += '<div class="card"><div class="card-header"><span class="card-title">积分规则</span></div>';
+      html += '<div style="padding:12px 0;font-size:13px;line-height:2;">';
+      html += '<div>✅ 消费获得：1元 = 1积分</div>';
+      html += '<div>✅ 邀请奖励：好友注册并下单得100积分</div>';
+      html += '<div>✅ 老带新奖励：好友完成种植再得200积分</div>';
+      html += '<div>✅ 积分兑换：满500分可兑换商品</div>';
+      html += '<div>✅ 积种植牙：满1000分免费做一颗种植牙</div>';
+      html += '</div></div>';
+      return html;
+    },
+
+    cards: function() { return CRUD.builder('client_cards', CLIENT_CARDS); },
+    reviews: function() { return CRUD.builder('client_reviews', CLIENT_REVIEWS); },
+    transactions: function() { return CRUD.builder('client_transactions', CLIENT_TRANSACTIONS); },
+    service: function() { return CRUD.builder('client_service', CLIENT_SERVICE); },
+
+    faq: function() {
+      var faqs = DB.getAll('clientFAQ');
+      var categories = [];
+      faqs.forEach(function(f){ if(categories.indexOf(f.category) === -1) categories.push(f.category); });
+      var html = '<div class="breadcrumb">首页 / 我的 / <span>常见问题</span></div>';
+      html += '<div class="card"><div class="card-header"><span class="card-title">❓ 常见问题</span></div>';
+      categories.forEach(function(cat) {
+        html += '<div style="margin-bottom:16px;"><div style="font-size:14px;font-weight:600;color:var(--primary-dark);margin-bottom:8px;">[' + CRUD._esc(cat) + ']</div>';
+        faqs.filter(function(f){ return f.category === cat; }).forEach(function(f) {
+          html += '<div class="client-faq-item">';
+          html += '<div class="client-faq-q">Q：' + CRUD._esc(f.q) + '</div>';
+          html += '<div class="client-faq-a">A：' + CRUD._esc(f.a) + '</div>';
+          html += '</div>';
+        });
+        html += '</div>';
+      });
+      html += '</div>';
+      html += '<div class="card" style="text-align:center;padding:30px;">';
+      html += '<div style="font-size:36px;margin-bottom:8px;">💬</div>';
+      html += '<p style="color:var(--text-muted);margin-bottom:16px;">没有找到答案？联系客服获取帮助</p>';
+      html += '<button class="btn btn-primary" onclick="UI.toast.info(\'客服热线：400-888-XXXX\')">联系客服</button>';
+      html += '</div>';
+      return html;
+    }
   }
 
 };
