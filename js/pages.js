@@ -731,11 +731,11 @@ var FACTORY_FINANCE = Object.assign({}, CLINIC_FINANCE, {
 
 // ==================== 客户端 CRUD 配置 ====================
 
-// ---- 客户端：商品分类 ----
+// ---- 客户端：商品兑换 ----
 var CLIENT_PRODUCTS = {
   entity: 'clientProducts',
-  title: '商品列表',
-  breadcrumb: '首页 / 商城',
+  title: '商品兑换',
+  breadcrumb: '首页 / 小唯商场',
   pageSize: 6,
   searchFields: ['name', 'category', 'desc'],
   searchPlaceholder: '搜索商品名称、分类...',
@@ -776,7 +776,7 @@ var CLIENT_PRODUCTS = {
 var CLIENT_ORDERS = {
   entity: 'clientOrders',
   title: '我的订单',
-  breadcrumb: '首页 / 商城',
+  breadcrumb: '首页 / 我的',
   pageSize: 5,
   searchFields: ['no', 'item', 'clinic'],
   searchPlaceholder: '搜索订单号、商品...',
@@ -1076,18 +1076,20 @@ var SIDEBAR_MENUS = {
     { title: '概览', items: [
       { key: 'home', icon: '🏠', name: '首页' }
     ]},
-    { title: '种植服务', items: [
-      { key: 'plant', icon: '🦷', name: '我要种植' },
-      { key: 'scan', icon: '📷', name: '扫码激活' }
+    { title: '小唯学院', items: [
+      { key: 'knowledge', icon: '📚', name: '种植常识' },
+      { key: 'about', icon: 'ℹ️', name: '关于小唯' }
     ]},
-    { title: '商城', items: [
-      { key: 'mall', icon: '🛒', name: '商品分类' },
-      { key: 'packages', icon: '📦', name: '种植卡套餐' },
-      { key: 'orders', icon: '📋', name: '我的订单' },
-      { key: 'progress', icon: '📊', name: '种植进度' }
+    { title: '我要种植', items: [
+      { key: 'plant', icon: '🦷', name: '我要种植' }
+    ]},
+    { title: '小唯商场', items: [
+      { key: 'mall', icon: '🛒', name: '商品兑换' }
     ]},
     { title: '我的', items: [
       { key: 'profile', icon: '👤', name: '个人中心' },
+      { key: 'orders', icon: '📋', name: '我的订单' },
+      { key: 'progress', icon: '📊', name: '种植进度' },
       { key: 'points', icon: '🎁', name: '我的积分', badge: '1268' },
       { key: 'cards', icon: '💳', name: '实体卡绑定' },
       { key: 'reviews', icon: '⭐', name: '我的评价' },
@@ -1816,8 +1818,8 @@ _homeStats([
 ]) + `
 <div class="quick-grid">
   <div class="quick-item" onclick="navigateTo('plant')"><div class="icon green">🦷</div><div class="name">我要种植</div><div class="desc">附近诊所</div></div>
-  <div class="quick-item" onclick="navigateTo('mall')"><div class="icon blue">🛒</div><div class="name">商品商城</div><div class="desc">分类选购</div></div>
-  <div class="quick-item" onclick="navigateTo('packages')"><div class="icon orange">📦</div><div class="name">种植套餐</div><div class="desc">一价全包</div></div>
+  <div class="quick-item" onclick="navigateTo('mall')"><div class="icon blue">🛒</div><div class="name">商品兑换</div><div class="desc">积分兑换</div></div>
+  <div class="quick-item" onclick="navigateTo('knowledge')"><div class="icon orange">📚</div><div class="name">种植常识</div><div class="desc">小唯学院</div></div>
   <div class="quick-item" onclick="navigateTo('orders')"><div class="icon teal">📋</div><div class="name">我的订单</div><div class="desc">` + orders.length + ` 笔</div></div>
   <div class="quick-item" onclick="navigateTo('points')"><div class="icon purple">🎁</div><div class="name">积分中心</div><div class="desc">` + totalPoints + ` 分</div></div>
 </div>
@@ -1831,9 +1833,103 @@ _homeStats([
 </div>`;
     },
 
+    knowledge: function() {
+      return `
+<div class="breadcrumb">首页 / 小唯学院 / <span>种植常识</span></div>
+<div class="card">
+  <div class="card-header"><span class="card-title">📚 种植常识</span></div>
+  <div style="padding:16px 0;">
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：什么是种植牙？</div>
+      <div class="client-faq-a">A：种植牙是将人工牙根（种植体）植入牙槽骨中，待骨结合后安装基台和牙冠，恢复牙齿功能的一种修复方式。被誉为人类的"第三副牙齿"。</div>
+    </div>
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：种植牙的优势是什么？</div>
+      <div class="client-faq-a">A：相比传统假牙，种植牙具有咀嚼力强、不伤邻牙、美观自然、使用寿命长等优势。小唯种植体采用钛合金材质，生物相容性好，骨结合更快。</div>
+    </div>
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：种植牙的流程是怎样的？</div>
+      <div class="client-faq-a">A：1. 术前检查评估 → 2. 植入种植体（手术约30分钟）→ 3. 骨愈合期（2-3个月）→ 4. 安装基台 → 5. 安装牙冠。全程在专业医生指导下完成。</div>
+    </div>
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：种植牙疼吗？</div>
+      <div class="client-faq-a">A：种植手术在局部麻醉下进行，过程中不会感到疼痛。术后可能有轻微肿胀和不适，2-3天内会自然消退。小唯采用微创种植技术，创口更小，恢复更快。</div>
+    </div>
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：什么人适合种植牙？</div>
+      <div class="client-faq-a">A：一般而言，单颗、多颗或全口缺牙，牙槽骨条件良好，无严重全身性疾病的患者均可考虑种植牙。具体需由专业医生评估后确定方案。</div>
+    </div>
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：种植牙能用多久？</div>
+      <div class="client-faq-a">A：小唯钛合金种植体临床使用寿命可达15-20年以上。保持良好口腔卫生习惯，定期复查，可延长种植牙使用寿命。我们提供长期质保服务。</div>
+    </div>
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：种植牙术后如何护理？</div>
+      <div class="client-faq-a">A：术后24小时内避免刷牙漱口，饮食以温凉软食为主；一周内避免剧烈运动；保持口腔清洁，使用软毛牙刷；定期回诊所复查，确保种植体健康。</div>
+    </div>
+    <div class="client-faq-item">
+      <div class="client-faq-q">Q：种植体有哪些型号？</div>
+      <div class="client-faq-a">A：小唯种植体系列包含：XW-TI-3510（直径3.5mm，畅销款）、XW-TI-4200（直径4.2mm，高强度）、XW-TI-4212（亲水表面，新品）、XW-TI-3508（短款，适合骨量不足）等。医生会根据您的骨质情况推荐合适的型号。</div>
+    </div>
+  </div>
+</div>`;
+    },
+
+    about: function() {
+      return `
+<div class="breadcrumb">首页 / 小唯学院 / <span>关于小唯</span></div>
+<div class="card" style="text-align:center;padding:40px 20px;">
+  <div style="width:80px;height:80px;background:linear-gradient(135deg,#008B8B,#16a085);border-radius:20px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:36px;font-weight:700;margin:0 auto 16px;">V</div>
+  <h2 style="font-size:24px;font-weight:700;margin-bottom:8px;">VMicro 小唯</h2>
+  <p style="color:var(--text-muted);font-size:14px;margin-bottom:24px;">Oral health, trust in Vmicro / 小唯</p>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">🏢 关于我们</span></div>
+  <div style="padding:12px 0;font-size:14px;line-height:1.8;">
+    <p style="margin-bottom:12px;">小唯（VMicro）是一家专注于口腔种植体研发、生产和销售的科技创新企业。我们致力于为患者提供高品质、可信赖的种植体产品，让更多人享受健康口腔带来的美好生活。</p>
+    <p style="margin-bottom:12px;">小唯种植体采用医用钛合金材质，经过精密加工和表面处理技术，具有优异的生物相容性和骨结合能力。我们的产品涵盖多种规格型号，满足不同临床需求。</p>
+    <p>小唯精密制造有限公司位于广东省东莞市松山湖科技产业园，拥有现代化的生产车间和严格的质量管理体系，月产能达12,000颗。</p>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">⭐ 小唯优势</span></div>
+  <div style="padding:12px 0;">
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:20px;">🔬</span>
+      <div><strong>自主研发</strong><div style="font-size:13px;color:var(--text-muted);">拥有核心技术和专利，持续创新</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:20px;">✅</span>
+      <div><strong>品质保障</strong><div style="font-size:13px;color:var(--text-muted);">严格质检流程，每颗种植体可溯源</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:20px;">💰</span>
+      <div><strong>一价全包</strong><div style="font-size:13px;color:var(--text-muted);">透明定价，种植体+基台+手术费全包</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <span style="font-size:20px;">🏥</span>
+      <div><strong>合作诊所</strong><div style="font-size:13px;color:var(--text-muted);">全国数百家合作口腔诊所，就近服务</div></div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:8px 0;">
+      <span style="font-size:20px;">🛡️</span>
+      <div><strong>长期质保</strong><div style="font-size:13px;color:var(--text-muted);">种植卡绑定后享受长期质保服务</div></div>
+    </div>
+  </div>
+</div>
+<div class="card">
+  <div class="card-header"><span class="card-title">📞 联系我们</span></div>
+  <div style="padding:12px 0;font-size:14px;line-height:1.8;">
+    <div>📍 地址：广东省东莞市松山湖科技产业园</div>
+    <div>📞 客服热线：400-888-XXXX</div>
+    <div>📧 邮箱：service@vmicro.com</div>
+    <div>🕐 服务时间：周一至周日 9:00-18:00</div>
+  </div>
+</div>`;
+    },
+
     plant: function() {
       var clinics = DB.getAll('clientClinics');
-      var html = '<div class="breadcrumb">首页 / 种植服务 / <span>我要种植</span></div>';
+      var html = '<div class="breadcrumb">首页 / 我要种植 / <span>附近诊所</span></div>';
       html += '<div class="card"><div class="card-header"><span class="card-title">🏥 附近诊所</span></div>';
       html += '<div style="padding:12px;color:var(--text-muted);font-size:13px;">📍 当前定位：浙江杭州 · 按距离排序</div>';
       clinics.forEach(function(c) {
@@ -1860,56 +1956,13 @@ _homeStats([
       return html;
     },
 
-    scan: function() {
-      return `
-<div class="breadcrumb">首页 / 种植服务 / <span>扫码激活</span></div>
-<div class="card" style="text-align:center;padding:40px 20px;">
-  <div style="font-size:64px;margin-bottom:16px;">📷</div>
-  <h3 style="margin-bottom:8px;">扫码激活种植卡</h3>
-  <p style="color:var(--text-muted);margin-bottom:24px;">扫描实体卡上的二维码，激活您的种植体卡</p>
-  <button class="btn btn-primary" style="padding:12px 32px;font-size:15px;" onclick="UI.toast.info('扫码功能开发中')">📷 打开扫码</button>
-  <div style="margin-top:24px;padding:16px;background:var(--primary-light);border-radius:8px;font-size:13px;color:var(--text-muted);text-align:left;">
-    <strong style="color:var(--primary-dark);">使用说明：</strong><br>
-    1. 购买种植体后，您将获得一张实体卡<br>
-    2. 卡上有专属二维码，点击上方按钮扫码<br>
-    3. 扫码成功后，卡将自动绑定到您的账户<br>
-    4. 绑定后可查看种植体进度和质保信息
-  </div>
-</div>`;
-    },
-
     mall: function() { return CRUD.builder('client_mall', CLIENT_PRODUCTS); },
-
-    packages: function() {
-      var pkgs = DB.getAll('clientPackages');
-      var html = '<div class="breadcrumb">首页 / 商城 / <span>种植卡套餐</span></div>';
-      html += '<div style="color:var(--text-muted);font-size:13px;margin-bottom:16px;">💡 套餐包含种植体+手术费用，一价全包无隐形消费</div>';
-      pkgs.forEach(function(p) {
-        var savings = p.originalPrice - p.price;
-        html += '<div class="client-package-card">';
-        html += '<div class="client-package-header"><span class="client-package-icon">' + p.icon + '</span>';
-        html += '<div><strong style="font-size:16px;">' + CRUD._esc(p.name) + '</strong>';
-        html += '<div style="font-size:13px;color:var(--text-muted);">' + CRUD._esc(p.desc) + '</div></div></div>';
-        html += '<div class="client-package-body">';
-        html += '<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">包含：' + CRUD._esc(p.included) + '</div>';
-        html += '<div class="client-package-price"><span class="original">¥' + p.originalPrice + '</span>';
-        html += '<span class="current">¥' + p.price + '</span>';
-        html += '<span class="savings">省¥' + savings + '</span></div>';
-        html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px;">已售 ' + p.sales + ' 份</div>';
-        html += '</div>';
-        html += '<div class="client-package-actions">';
-        html += '<button class="btn btn-outline btn-sm" onclick="UI.toast.info(\'详情查看中\')">查看详情</button>';
-        html += '<button class="btn btn-primary btn-sm" onclick="UI.toast.success(\'已加入购物车\')">立即购买</button>';
-        html += '</div></div>';
-      });
-      return html;
-    },
 
     orders: function() { return CRUD.builder('client_orders', CLIENT_ORDERS); },
 
     progress: function() {
       var items = DB.getAll('clientProgress');
-      var html = '<div class="breadcrumb">首页 / 商城 / <span>种植进度</span></div>';
+      var html = '<div class="breadcrumb">首页 / 我的 / <span>种植进度</span></div>';
       if (items.length === 0) {
         html += '<div class="card"><div style="padding:40px;text-align:center;color:var(--text-muted);">暂无进度记录</div></div>';
         return html;
