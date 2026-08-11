@@ -73,6 +73,127 @@
         pharmacy / 123456 → 药店端<br>
         factory / 123456 → 工厂端
       </div>
+      <div class="register-link">
+        还没有账号？<a href="javascript:void(0)" onclick="showRegister()">立即注册</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 注册页 ========== -->
+  <div id="registerPage" class="login-page" style="display:none;">
+    <div class="login-left">
+      <div class="login-logo">
+        <svg class="brand-logo-svg" viewBox="0 0 240 52" xmlns="http://www.w3.org/2000/svg" aria-label="VMicro 小唯">
+          <g font-family="Inter, sans-serif" font-weight="700" text-rendering="geometricPrecision">
+            <text x="0" y="42" font-size="40" fill="#008B8B">V</text>
+            <text x="33" y="42" font-size="40" fill="#008B8B">M</text>
+            <text x="69" y="42" font-size="53" fill="#008B8B">ı</text>
+            <text x="82" y="42" font-size="55" fill="#008B8B">c</text>
+            <text x="116" y="42" font-size="55" fill="#008B8B">r</text>
+            <text x="139" y="42" font-size="55" fill="#D2691E">o</text>
+            <text x="176" y="20" font-size="12" font-weight="400" fill="#008B8B">®</text>
+          </g>
+          <circle cx="76" cy="10" r="3" fill="none" stroke="#D2691E" stroke-width="1.8"/>
+          <text x="188" y="42" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="25" font-weight="600" fill="#008B8B">小唯</text>
+        </svg>
+      </div>
+      <div class="login-desc">
+        Oral health, trust in Vmicro / 小唯<br><br>
+        欢迎加入小唯生态系统<br>
+        请上传营业资质完成注册申请
+      </div>
+      <div class="login-features">
+        <div class="login-feature"><span>✓</span> 在线提交注册申请</div>
+        <div class="login-feature"><span>✓</span> 营业资质安全上传</div>
+        <div class="login-feature"><span>✓</span> 平台审核快速响应</div>
+      </div>
+    </div>
+    <div class="login-right register-right">
+      <h3>账号注册</h3>
+      <div class="login-sub">诊所 / 药店入驻申请</div>
+      <div class="register-form">
+        <!-- 注册类型选择 -->
+        <div class="form-group">
+          <label>注册类型 <span class="reg-required">*</span></label>
+          <div class="reg-type-tabs">
+            <div class="reg-type-tab active" id="tabClinic" onclick="switchRegType('clinic')">
+              <span class="icon">🏥</span> 诊所注册
+            </div>
+            <div class="reg-type-tab" id="tabPharmacy" onclick="switchRegType('pharmacy')">
+              <span class="icon">💊</span> 药店注册
+            </div>
+          </div>
+        </div>
+
+        <!-- 基本信息 -->
+        <div class="reg-section-title">基本信息</div>
+        <div class="form-group">
+          <label>账号 <span class="reg-required">*</span></label>
+          <input type="text" id="regAccount" placeholder="请设置登录账号（字母或数字）">
+        </div>
+        <div class="form-group">
+          <label>密码 <span class="reg-required">*</span></label>
+          <input type="password" id="regPassword" placeholder="请设置密码（至少6位）">
+        </div>
+        <div class="form-group">
+          <label>确认密码 <span class="reg-required">*</span></label>
+          <input type="password" id="regPasswordConfirm" placeholder="请再次输入密码">
+        </div>
+
+        <!-- 诊所/药店信息 -->
+        <div class="reg-section-title" id="regOrgTitle">诊所信息</div>
+        <div class="form-group">
+          <label id="regOrgNameLabel">诊所名称 <span class="reg-required">*</span></label>
+          <input type="text" id="regOrgName" placeholder="请输入完整名称">
+        </div>
+        <div class="form-group">
+          <label id="regPersonLabel">负责人姓名 <span class="reg-required">*</span></label>
+          <input type="text" id="regPerson" placeholder="请输入负责人姓名">
+        </div>
+        <div class="form-group">
+          <label>联系电话 <span class="reg-required">*</span></label>
+          <input type="text" id="regPhone" placeholder="请输入手机号">
+        </div>
+        <div class="form-group">
+          <label>所在地区 <span class="reg-required">*</span></label>
+          <input type="text" id="regRegion" placeholder="如：浙江杭州">
+        </div>
+        <div class="form-group">
+          <label>详细地址</label>
+          <input type="text" id="regAddress" placeholder="请输入详细地址">
+        </div>
+
+        <!-- 营业资质上传 -->
+        <div class="reg-section-title">营业资质上传 <span class="reg-required">*</span></div>
+        <div class="form-group">
+          <label>请上传营业执照照片或电子档</label>
+          <div class="upload-area" id="uploadArea" onclick="document.getElementById('regLicenseFile').click()">
+            <div class="upload-placeholder" id="uploadPlaceholder">
+              <div class="upload-icon">📄</div>
+              <div class="upload-text">点击或拖拽文件到此处</div>
+              <div class="upload-hint">支持 JPG、PNG、PDF 格式，文件不超过 5MB</div>
+            </div>
+            <div class="upload-preview" id="uploadPreview" style="display:none;">
+              <img id="licensePreviewImg" src="" alt="营业执照预览">
+              <div class="upload-file-info" id="uploadFileInfo"></div>
+              <button class="btn btn-outline btn-sm upload-reupload" onclick="event.stopPropagation(); document.getElementById('regLicenseFile').click()">重新上传</button>
+            </div>
+          </div>
+          <input type="file" id="regLicenseFile" accept="image/*,.pdf" style="display:none;" onchange="handleFileUpload(this)">
+        </div>
+
+        <div id="regError" class="login-error" style="display:none;"></div>
+        <button class="login-btn" onclick="doRegister()">提交注册申请</button>
+        <div class="register-link">
+          已有账号？<a href="javascript:void(0)" onclick="showLogin()">返回登录</a>
+        </div>
+        <div class="login-hint">
+          <strong>注册流程：</strong><br>
+          1. 填写基本信息并上传营业资质<br>
+          2. 提交申请，等待平台审核<br>
+          3. 审核通过后即可登录使用
+        </div>
+      </div>
     </div>
   </div>
 </div>

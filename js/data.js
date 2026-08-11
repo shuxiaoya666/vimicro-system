@@ -150,6 +150,12 @@ var SEED_DATA = {
     {id:2, cardNo:'XW-2025-08002', patient:'吴丽红', type:'种植体植入', doctor:'李医生', time:'2025-08-03 10:15'},
     {id:3, cardNo:'XW-2025-07995', patient:'冯小明', type:'基台安装', doctor:'王医生', time:'2025-08-02 16:45'},
     {id:4, cardNo:'XW-2025-07990', patient:'褚伟杰', type:'种植体植入', doctor:'李医生', time:'2025-08-01 11:20'}
+  ],
+
+  // ---------- 注册申请 ----------
+  registrations: [
+    {id:1, type:'clinic', account:'brightdental', orgName:'明皓口腔诊所', person:'钱伟', phone:'138-6677-8899', region:'浙江宁波', address:'宁波市海曙区中山东路88号', licenseName:'营业执照_明皓口腔.jpg', licenseData:'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22280%22%3E%3Crect%20width%3D%22400%22%20height%3D%22280%22%20fill%3D%22%23f8f9fa%22%20stroke%3D%22%23ddd%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%20fill%3D%22%2395a5a6%22%20text-anchor%3D%22middle%22%3E%E8%90%A5%E4%B8%9A%E6%89%A7%E7%85%A7%E7%A4%BA%E4%BE%8B%E5%9B%BE%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22160%22%20font-family%3D%22sans-serif%22%20font-size%3D%2213%22%20fill%3D%22%23bbb%22%20text-anchor%3D%22middle%22%3E%E6%98%8E%E7%9A%93%E5%8F%A3%E8%85%94%E8%AF%8A%E6%89%80%3C/text%3E%3C/svg%3E', status:'pending', submittedAt:'2025-08-10'},
+    {id:2, type:'pharmacy', account:'healthpharma', orgName:'康健大药房', person:'杨芳', phone:'139-8899-0011', region:'江苏苏州', address:'苏州市姑苏区人民路120号', licenseName:'营业执照_康健药房.png', licenseData:'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22400%22%20height%3D%22280%22%3E%3Crect%20width%3D%22400%22%20height%3D%22280%22%20fill%3D%22%23f8f9fa%22%20stroke%3D%22%23ddd%22/%3E%3Ctext%20x%3D%22200%22%20y%3D%22130%22%20font-family%3D%22sans-serif%22%20font-size%3D%2216%22%20fill%3D%22%2395a5a6%22%20text-anchor%3D%22middle%22%3E%E8%90%A5%E4%B8%9A%E6%89%A7%E7%85%A7%E7%A4%BA%E4%BE%8B%E5%9B%BE%3C/text%3E%3Ctext%20x%3D%22200%22%20y%3D%22160%22%20font-family%3D%22sans-serif%22%20font-size%3D%2213%22%20fill%3D%22%23bbb%22%20text-anchor%3D%22middle%22%3E%E5%BA%B7%E5%81%A5%E5%A4%A7%E8%8D%AF%E6%88%BF%3C/text%3E%3C/svg%3E', status:'pending', submittedAt:'2025-08-10'}
   ]
 
 };

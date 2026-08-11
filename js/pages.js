@@ -751,6 +751,7 @@ var SIDEBAR_MENUS = {
     ]},
     { title: '系统', items: [
       { key: 'permissions', icon: '⚙️', name: '权限配置' },
+      { key: 'regreview', icon: '📋', name: '注册审核', badge: '待审' },
       { key: 'notifications', icon: '📢', name: '消息通知' }
     ]}
   ],
@@ -866,6 +867,161 @@ function _barChart(values, labels) {
   }
   html += '</div>';
   return html;
+}
+
+// 渲染注册审核卡片
+function _renderRegCard(r) {
+  var typeLabel = r.type === 'clinic'
+    ? '<span class="reg-review-type-badge clinic">🏥 诊所注册</span>'
+    : '<span class="reg-review-type-badge pharmacy">💊 药店注册</span>';
+  var personLabel = r.type === 'clinic' ? '负责人' : '店长';
+  var orgLabel = r.type === 'clinic' ? '诊所名称' : '药店名称';
+
+  // 营业资质预览
+  var licenseHtml = '';
+  if (r.licenseData) {
+    if (r.licenseData.indexOf('pdf') !== -1 || r.licenseData.indexOf('PDF') !== -1) {
+      licenseHtml = '<div class="reg-review-license"><div class="pdf-icon">📄</div><div style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:4px;">' + CRUD._esc(r.licenseName || '营业执照.pdf') + '</div></div>';
+    } else {
+      licenseHtml = '<div class="reg-review-license"><div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">营业执照（点击查看大图）：</div><img src="' + r.licenseData + '" alt="营业执照" onclick="viewLicenseImage(\'' + r.id + '\')" style="cursor:pointer;"></div>';
+    }
+  } else {
+    licenseHtml = '<div class="reg-review-license"><div style="color:var(--text-muted);font-size:13px;">未上传资质文件</div></div>';
+  }
+
+  var html = '<div class="reg-review-card">';
+  html += '<div class="reg-review-header">';
+  html += '<div><strong style="font-size:15px;">' + CRUD._esc(r.orgName) + '</strong> &nbsp;' + typeLabel + '</div>';
+  html += '<span class="status-tag pending">待审核</span>';
+  html += '</div>';
+  html += '<div class="reg-review-info">';
+  html += '<div><span class="label">登录账号：</span><span class="value">' + CRUD._esc(r.account) + '</span></div>';
+  html += '<div><span class="label">' + orgLabel + '：</span><span class="value">' + CRUD._esc(r.orgName) + '</span></div>';
+  html += '<div><span class="label">' + personLabel + '：</span><span class="value">' + CRUD._esc(r.person) + '</span></div>';
+  html += '<div><span class="label">联系电话：</span><span class="value">' + CRUD._esc(r.phone) + '</span></div>';
+  html += '<div><span class="label">所在地区：</span><span class="value">' + CRUD._esc(r.region) + '</span></div>';
+  html += '<div><span class="label">详细地址：</span><span class="value">' + CRUD._esc(r.address || '—') + '</span></div>';
+  html += '<div><span class="label">提交日期：</span><span class="value">' + CRUD._esc(r.submittedAt) + '</span></div>';
+  html += '</div>';
+  html += licenseHtml;
+  html += '<div class="reg-review-actions">';
+  html += '<button class="btn btn-danger btn-sm" onclick="rejectReg(' + r.id + ')">拒绝</button>';
+  html += '<button class="btn btn-primary btn-sm" onclick="approveReg(' + r.id + ')">通过审核</button>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+// 查看营业执照大图
+function viewLicenseImage(id) {
+  var r = DB.getById('registrations', parseInt(id));
+  if (!r || !r.licenseData) { UI.toast.error('资质文件不存在'); return; }
+  UI.modal({
+    title: '营业执照查看 - ' + (r.orgName || ''),
+    body: '<img src="' + r.licenseData + '" alt="营业执照" style="width:100%;">',
+    size: 'large',
+    footer: '<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>'
+  });
+}
+
+// 查看注册详情
+function viewRegDetail(id) {
+  var r = DB.getById('registrations', id);
+  if (!r) { UI.toast.error('记录不存在'); return; }
+  var typeLabel = r.type === 'clinic' ? '诊所注册' : '药店注册';
+  var personLabel = r.type === 'clinic' ? '负责人' : '店长';
+  var statusLabel = r.status === 'approved' ? '已通过' : (r.status === 'rejected' ? '已拒绝' : '待审核');
+
+  var body = '<table class="ui-detail-table">';
+  body += '<tr><td class="ui-detail-label">注册类型</td><td class="ui-detail-value">' + typeLabel + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">登录账号</td><td class="ui-detail-value">' + CRUD._esc(r.account) + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">名称</td><td class="ui-detail-value">' + CRUD._esc(r.orgName) + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">' + personLabel + '</td><td class="ui-detail-value">' + CRUD._esc(r.person) + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">联系电话</td><td class="ui-detail-value">' + CRUD._esc(r.phone) + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">所在地区</td><td class="ui-detail-value">' + CRUD._esc(r.region) + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">详细地址</td><td class="ui-detail-value">' + CRUD._esc(r.address || '—') + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">提交日期</td><td class="ui-detail-value">' + CRUD._esc(r.submittedAt) + '</td></tr>';
+  body += '<tr><td class="ui-detail-label">审核状态</td><td class="ui-detail-value">' + statusLabel + '</td></tr>';
+  body += '</table>';
+
+  if (r.licenseData) {
+    body += '<div style="margin-top:16px;"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">营业资质：</div>';
+    if (r.licenseData.indexOf('pdf') !== -1 || r.licenseData.indexOf('PDF') !== -1) {
+      body += '<div style="text-align:center;font-size:48px;">📄</div>';
+    } else {
+      body += '<img src="' + r.licenseData + '" alt="营业执照" style="width:100%;border-radius:8px;border:1px solid var(--border);">';
+    }
+    body += '</div>';
+  }
+
+  UI.modal({
+    title: '注册详情',
+    body: body,
+    size: 'large',
+    footer: '<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>'
+  });
+}
+
+// 审核通过
+function approveReg(id) {
+  var r = DB.getById('registrations', id);
+  if (!r) { UI.toast.error('记录不存在'); return; }
+  UI.confirm(
+    '确定通过「' + r.orgName + '」的注册申请吗？通过后该账号即可登录使用。',
+    function() {
+      DB.update('registrations', id, { status: 'approved' });
+      // 将注册用户添加到对应的数据表中
+      if (r.type === 'clinic') {
+        DB.add('clinics', {
+          name: r.orgName,
+          owner: r.person,
+          phone: r.phone,
+          region: r.region,
+          implantsUsed: 0,
+          status: 'active'
+        });
+      } else if (r.type === 'pharmacy') {
+        DB.add('pharmacies', {
+          name: r.orgName,
+          manager: r.person,
+          phone: r.phone,
+          region: r.region,
+          cardSales: 0,
+          status: 'active'
+        });
+      }
+      // 添加到可登录账号
+      if (typeof ACCOUNTS !== 'undefined') {
+        var port = r.type === 'clinic' ? 'clinic' : 'pharmacy';
+        var avatarChar = r.person ? r.person.charAt(0) : '新';
+        ACCOUNTS[r.account] = {
+          password: r.password,
+          name: r.person,
+          avatar: avatarChar,
+          role: port,
+          ports: [port]
+        };
+      }
+      UI.toast.success('已通过审核，账号 ' + r.account + ' 现可登录');
+      loadPage();
+    },
+    '确认通过审核'
+  );
+}
+
+// 审核拒绝
+function rejectReg(id) {
+  var r = DB.getById('registrations', id);
+  if (!r) { UI.toast.error('记录不存在'); return; }
+  UI.confirm(
+    '确定拒绝「' + r.orgName + '」的注册申请吗？',
+    function() {
+      DB.update('registrations', id, { status: 'rejected' });
+      UI.toast.info('已拒绝该注册申请');
+      loadPage();
+    },
+    '确认拒绝'
+  );
 }
 
 
@@ -1020,7 +1176,66 @@ _barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月'
     },
 
     permissions: function() { return CRUD.builder('platform_permissions', PLATFORM_PERMISSIONS); },
-    notifications: function() { return CRUD.builder('platform_notifications', PLATFORM_NOTIFICATIONS); }
+    notifications: function() { return CRUD.builder('platform_notifications', PLATFORM_NOTIFICATIONS); },
+
+    regreview: function() {
+      var regs = DB.getAll('registrations');
+      var pending = regs.filter(function(r){ return r.status === 'pending'; });
+      var approved = regs.filter(function(r){ return r.status === 'approved'; });
+      var rejected = regs.filter(function(r){ return r.status === 'rejected'; });
+
+      var html = '<div class="breadcrumb">首页 / 系统 / <span>注册审核</span></div>';
+      html += _homeStats([
+        { label:'待审核', value: pending.length, icon:'⏳', color:'orange' },
+        { label:'已通过', value: approved.length, icon:'✅', color:'green' },
+        { label:'已拒绝', value: rejected.length, icon:'❌', color:'red' },
+        { label:'总申请', value: regs.length, icon:'📋', color:'blue' }
+      ]);
+
+      if (regs.length === 0) {
+        html += '<div class="card"><div style="padding:40px;text-align:center;color:var(--text-muted);">';
+        html += '<div style="font-size:40px;margin-bottom:12px;">📋</div>';
+        html += '<div style="font-size:14px;">暂无注册申请</div>';
+        html += '</div></div>';
+        return html;
+      }
+
+      // 渲染待审核的卡片
+      if (pending.length > 0) {
+        html += '<div class="card"><div class="card-header"><span class="card-title">待审核申请（' + pending.length + '）</span></div>';
+        pending.forEach(function(r) {
+          html += _renderRegCard(r);
+        });
+        html += '</div>';
+      }
+
+      // 已处理的记录
+      var processed = approved.concat(rejected);
+      if (processed.length > 0) {
+        html += '<div class="card"><div class="card-header"><span class="card-title">已处理记录（' + processed.length + '）</span></div>';
+        html += '<table class="data-table"><thead><tr><th>账号</th><th>类型</th><th>名称</th><th>负责人</th><th>电话</th><th>地区</th><th>状态</th><th>提交日期</th><th>操作</th></tr></thead><tbody>';
+        processed.forEach(function(r) {
+          var typeLabel = r.type === 'clinic' ? '<span class="reg-review-type-badge clinic">诊所</span>' : '<span class="reg-review-type-badge pharmacy">药店</span>';
+          var statusLabel = r.status === 'approved'
+            ? '<span class="status-tag active">已通过</span>'
+            : '<span class="status-tag inactive">已拒绝</span>';
+          html += '<tr>';
+          html += '<td>' + CRUD._esc(r.account) + '</td>';
+          html += '<td>' + typeLabel + '</td>';
+          html += '<td>' + CRUD._esc(r.orgName) + '</td>';
+          html += '<td>' + CRUD._esc(r.person) + '</td>';
+          html += '<td>' + CRUD._esc(r.phone) + '</td>';
+          html += '<td>' + CRUD._esc(r.region) + '</td>';
+          html += '<td>' + statusLabel + '</td>';
+          html += '<td>' + CRUD._esc(r.submittedAt) + '</td>';
+          html += '<td><button class="btn btn-outline btn-sm" onclick="viewRegDetail(' + r.id + ')">查看</button></td>';
+          html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+
+      return html;
+    }
   },
 
   // ================================================================

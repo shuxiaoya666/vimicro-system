@@ -599,3 +599,166 @@ body {
   .login-page { flex-direction: column; }
   .login-right { width: 100%; }
 }
+
+/* ===== 注册页 ===== */
+.register-link {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.register-link a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.register-link a:hover { text-decoration: underline; }
+
+.register-right {
+  overflow-y: auto;
+  max-height: 100vh;
+}
+.register-form .form-group { margin-bottom: 14px; }
+.reg-required { color: var(--danger); }
+
+.reg-type-tabs {
+  display: flex;
+  gap: 8px;
+}
+.reg-type-tab {
+  flex: 1;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.reg-type-tab .icon { font-size: 16px; }
+.reg-type-tab:hover { border-color: var(--primary); color: var(--primary); }
+.reg-type-tab.active {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.reg-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 16px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* 文件上传区域 */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fafbfc;
+}
+.upload-area:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+.upload-area.dragover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+.upload-placeholder {
+  pointer-events: none;
+}
+.upload-icon { font-size: 36px; margin-bottom: 8px; }
+.upload-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.upload-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.upload-preview {
+  position: relative;
+}
+.upload-preview img {
+  max-width: 100%;
+  max-height: 200px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.upload-file-info {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+.upload-reupload {
+  margin-top: 8px;
+}
+
+/* 注册审核页 */
+.reg-review-card {
+  background: var(--card-bg);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.reg-review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.reg-review-type-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.reg-review-type-badge.clinic { background: #e8f4fd; color: #3498db; }
+.reg-review-type-badge.pharmacy { background: #f0e6ff; color: #8e44ad; }
+.reg-review-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+}
+.reg-review-info .label { color: var(--text-muted); }
+.reg-review-info .value { color: var(--text); font-weight: 500; }
+.reg-review-license {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.reg-review-license img {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.reg-review-license .pdf-icon {
+  font-size: 48px;
+  text-align: center;
+}
+.reg-review-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
