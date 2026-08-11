@@ -976,6 +976,9 @@ var SIDEBAR_MENUS = {
       { key: 'cards', icon: '💳', name: '种植体卡管理' },
       { key: 'mall', icon: '🛒', name: '商场管理' }
     ]},
+    { title: '病历中心', items: [
+      { key: 'patientQuery', icon: '🗂️', name: '病人病历查询' }
+    ]},
     { title: '财务', items: [
       { key: 'settlement', icon: '💰', name: '结算中心' },
       { key: 'reports', icon: '📊', name: '财务报表' }
@@ -995,6 +998,7 @@ var SIDEBAR_MENUS = {
     { title: '业务', items: [
       { key: 'verify', icon: '📋', name: '核销登记', badge: '3' },
       { key: 'patients', icon: '👤', name: '患者建档' },
+      { key: 'patientQuery', icon: '🗂️', name: '病人信息查询' },
       { key: 'orders', icon: '📄', name: '加工单管理' },
       { key: 'tracking', icon: '📦', name: '订单跟踪' },
       { key: 'implants', icon: '🦷', name: '植体管理' }
@@ -1063,6 +1067,9 @@ var SIDEBAR_MENUS = {
       { key: 'quality', icon: '✅', name: '质检记录' },
       { key: 'exception', icon: '⚠️', name: '异常反馈' }
     ]},
+    { title: '病历', items: [
+      { key: 'patientQuery', icon: '🗂️', name: '病人病历查询' }
+    ]},
     { title: '沟通', items: [
       { key: 'service', icon: '💬', name: '客服中心' }
     ]},
@@ -1099,6 +1106,175 @@ var SIDEBAR_MENUS = {
     ]}
   ]
 };
+
+
+// ==================== 病人信息查询（共享渲染器） ====================
+// mode: 'full' = 诊所端（完整信息+病历），'restricted' = 工厂端/平台端（仅病历信息）
+
+function _patientQueryPage(mode) {
+  var patients = DB.getAll('patients');
+  var isFull = mode === 'full';
+  var pageTitle = isFull ? '病人信息查询' : '病人病历查询';
+  var pageDesc = isFull ? '查看患者完整信息及病历记录' : '查看患者病历信息（仅病历数据，不含联系方式）';
+
+  var html = '<div class="breadcrumb">首页 / <span>' + pageTitle + '</span></div>';
+
+  // 统计卡片
+  var totalPatients = patients.length;
+  var implantPatients = patients.filter(function(p){ return p.implants > 0; }).length;
+  var totalImplants = patients.reduce(function(s,p){ return s + (p.implants||0); }, 0);
+  var surgeryDone = patients.filter(function(p){ return p.surgeryDate; }).length;
+
+  html += '<div class="stats-grid">';
+  html += '<div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">患者总数</span><div class="stat-card-icon blue">👤</div></div><div class="stat-card-value">' + totalPatients + '</div></div>';
+  html += '<div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">种植患者</span><div class="stat-card-icon green">🦷</div></div><div class="stat-card-value">' + implantPatients + '</div></div>';
+  html += '<div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">种植体总数</span><div class="stat-card-icon orange">📋</div></div><div class="stat-card-value">' + totalImplants + '</div></div>';
+  html += '<div class="stat-card"><div class="stat-card-header"><span class="stat-card-label">已手术</span><div class="stat-card-icon red">✅</div></div><div class="stat-card-value">' + surgeryDone + '</div></div>';
+  html += '</div>';
+
+  // 搜索栏
+  html += '<div class="card">';
+  html += '<div class="card-header"><span class="card-title">🗂️ ' + pageTitle + '</span></div>';
+  html += '<div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">';
+  html += '<input type="text" id="patientSearchInput" placeholder="搜索患者姓名、诊断、医生..." style="flex:1;min-width:200px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;" oninput="filterPatientQuery(this.value)">';
+  html += '<select id="patientFilterType" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;" onchange="filterPatientQuery()">';
+  html += '<option value="">全部类型</option>';
+  html += '<option value="种植">种植</option>';
+  html += '<option value="修复">修复</option>';
+  html += '<option value="正畸">正畸</option>';
+  html += '</select>';
+  html += '</div>';
+  html += '<p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">' + pageDesc + '</p>';
+
+  // 患者列表
+  html += '<div id="patientQueryList" data-full="' + (isFull ? '1' : '0') + '">';
+  html += _renderPatientCards(patients, isFull);
+  html += '</div>';
+
+  html += '</div>';
+  return html;
+}
+
+function _renderPatientCards(patients, isFull) {
+  if (patients.length === 0) {
+    return '<div style="padding:40px;text-align:center;color:var(--text-muted);">未找到匹配的患者记录</div>';
+  }
+  var html = '';
+  patients.forEach(function(p) {
+    var genderIcon = p.gender === '男' ? '👨' : '👩';
+    var typeColor = p.treatmentType === '种植' ? 'green' : (p.treatmentType === '修复' ? 'blue' : 'orange');
+    html += '<div class="patient-query-card" onclick="viewPatientDetail(' + p.id + ', ' + isFull + ')">';
+    html += '<div class="patient-query-header">';
+    html += '<div style="display:flex;align-items:center;gap:8px;">';
+    html += '<span style="font-size:24px;">' + genderIcon + '</span>';
+    html += '<div>';
+    html += '<strong style="font-size:15px;">' + CRUD._esc(p.name) + '</strong>';
+    html += ' <span style="font-size:12px;color:var(--text-muted);">' + p.gender + ' · ' + p.age + '岁</span>';
+    html += '</div></div>';
+    html += '<span class="status-tag ' + typeColor + '">' + CRUD._esc(p.treatmentType) + '</span>';
+    html += '</div>';
+    html += '<div class="patient-query-body">';
+    html += '<div class="patient-query-info-row"><span class="patient-query-label">诊断：</span>' + CRUD._esc(p.diagnosis || '—') + '</div>';
+    if (p.implantModel) {
+      html += '<div class="patient-query-info-row"><span class="patient-query-label">种植体型号：</span>' + CRUD._esc(p.implantModel) + '</div>';
+    }
+    if (p.surgeryDate) {
+      html += '<div class="patient-query-info-row"><span class="patient-query-label">手术日期：</span>' + CRUD._esc(p.surgeryDate) + '</div>';
+    }
+    html += '<div class="patient-query-info-row"><span class="patient-query-label">主治医生：</span>' + CRUD._esc(p.doctor || '—') + '</div>';
+    if (isFull) {
+      html += '<div class="patient-query-info-row"><span class="patient-query-label">联系电话：</span>' + CRUD._esc(p.phone) + '</div>';
+    }
+    html += '</div>';
+    html += '<div style="text-align:right;font-size:12px;color:var(--primary);margin-top:8px;">点击查看详情 →</div>';
+    html += '</div>';
+  });
+  return html;
+}
+
+function filterPatientQuery(keyword) {
+  if (typeof keyword === 'string') {
+    window._patientSearchKW = keyword;
+  } else {
+    keyword = window._patientSearchKW || '';
+  }
+  var typeFilter = '';
+  var sel = document.getElementById('patientFilterType');
+  if (sel) typeFilter = sel.value;
+
+  var patients = DB.getAll('patients');
+  var kw = keyword.toLowerCase().trim();
+  var filtered = patients.filter(function(p) {
+    var matchKW = !kw ||
+      (p.name && p.name.toLowerCase().indexOf(kw) >= 0) ||
+      (p.diagnosis && p.diagnosis.toLowerCase().indexOf(kw) >= 0) ||
+      (p.doctor && p.doctor.toLowerCase().indexOf(kw) >= 0) ||
+      (p.implantModel && p.implantModel.toLowerCase().indexOf(kw) >= 0);
+    var matchType = !typeFilter || p.treatmentType === typeFilter;
+    return matchKW && matchType;
+  });
+
+  var list = document.getElementById('patientQueryList');
+  if (list) {
+    var isFull = list.getAttribute('data-full') === '1';
+    list.innerHTML = _renderPatientCards(filtered, isFull);
+  }
+}
+
+function viewPatientDetail(id, isFull) {
+  var p = DB.getById('patients', id);
+  if (!p) return;
+
+  var genderIcon = p.gender === '男' ? '👨' : '👩';
+  var typeColor = p.treatmentType === '种植' ? 'green' : (p.treatmentType === '修复' ? 'blue' : 'orange');
+
+  var html = '<div class="patient-detail-modal">';
+  // 头部
+  html += '<div class="patient-detail-header">';
+  html += '<div style="display:flex;align-items:center;gap:12px;">';
+  html += '<span style="font-size:36px;">' + genderIcon + '</span>';
+  html += '<div>';
+  html += '<h3 style="margin-bottom:4px;">' + CRUD._esc(p.name) + '</h3>';
+  html += '<span style="font-size:13px;color:var(--text-muted);">' + p.gender + ' · ' + p.age + '岁 · 建档于 ' + CRUD._esc(p.createdAt) + '</span>';
+  html += '</div></div>';
+  html += '<span class="status-tag ' + typeColor + '">' + CRUD._esc(p.treatmentType) + '</span>';
+  html += '</div>';
+
+  // 基本信息区（仅诊所端完整模式显示联系方式）
+  html += '<div class="patient-detail-section">';
+  html += '<div class="patient-detail-section-title">📋 基本信息</div>';
+  html += '<div class="patient-detail-grid">';
+  html += '<div class="patient-detail-item"><div class="patient-detail-label">姓名</div><div class="patient-detail-value">' + CRUD._esc(p.name) + '</div></div>';
+  html += '<div class="patient-detail-item"><div class="patient-detail-label">性别</div><div class="patient-detail-value">' + CRUD._esc(p.gender) + '</div></div>';
+  html += '<div class="patient-detail-item"><div class="patient-detail-label">年龄</div><div class="patient-detail-value">' + p.age + ' 岁</div></div>';
+  html += '<div class="patient-detail-item"><div class="patient-detail-label">治疗类型</div><div class="patient-detail-value">' + CRUD._esc(p.treatmentType) + '</div></div>';
+  html += '<div class="patient-detail-item"><div class="patient-detail-label">种植体数量</div><div class="patient-detail-value">' + (p.implants||0) + ' 颗</div></div>';
+  if (isFull) {
+    html += '<div class="patient-detail-item"><div class="patient-detail-label">联系电话</div><div class="patient-detail-value"><a href="tel:' + p.phone + '" style="color:var(--primary);font-weight:600;">' + CRUD._esc(p.phone) + '</a></div></div>';
+  }
+  html += '</div></div>';
+
+  // 病历信息区（所有端都显示）
+  html += '<div class="patient-detail-section">';
+  html += '<div class="patient-detail-section-title">🩺 病历信息</div>';
+  html += '<div class="patient-detail-medical">';
+  html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">🔍</span><div><div class="patient-detail-label">诊断</div><div class="patient-detail-value">' + CRUD._esc(p.diagnosis || '—') + '</div></div></div>';
+  html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">📝</span><div><div class="patient-detail-label">治疗方案</div><div class="patient-detail-value">' + CRUD._esc(p.treatmentPlan || '—') + '</div></div></div>';
+  if (p.surgeryDate) {
+    html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">📅</span><div><div class="patient-detail-label">手术日期</div><div class="patient-detail-value">' + CRUD._esc(p.surgeryDate) + '</div></div></div>';
+  }
+  if (p.implantModel) {
+    html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">🦷</span><div><div class="patient-detail-label">种植体型号</div><div class="patient-detail-value">' + CRUD._esc(p.implantModel) + '</div></div></div>';
+  }
+  html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">👨‍⚕️</span><div><div class="patient-detail-label">主治医生</div><div class="patient-detail-value">' + CRUD._esc(p.doctor || '—') + '</div></div></div>';
+  html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">⚠️</span><div><div class="patient-detail-label">过敏史</div><div class="patient-detail-value">' + CRUD._esc(p.allergy || '无') + '</div></div></div>';
+  html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">📋</span><div><div class="patient-detail-label">既往病史</div><div class="patient-detail-value">' + CRUD._esc(p.medicalHistory || '无特殊') + '</div></div></div>';
+  html += '<div class="patient-detail-med-row"><span class="patient-detail-med-icon">💬</span><div><div class="patient-detail-label">备注</div><div class="patient-detail-value">' + CRUD._esc(p.notes || '—') + '</div></div></div>';
+  html += '</div></div>';
+  html += '</div>';
+
+  UI.modal({ title: '病人详细信息', body: html, size: 'large' });
+}
 
 
 // ==================== 动态首页生成器 ====================
@@ -1494,7 +1670,9 @@ _barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月'
       }
 
       return html;
-    }
+    },
+
+    patientQuery: function() { return _patientQueryPage('restricted'); }
   },
 
   // ================================================================
@@ -1526,6 +1704,7 @@ _homeStats([
 
     verify: function() { return CRUD.builder('clinic_verify', CLINIC_VERIFY); },
     patients: function() { return CRUD.builder('clinic_patients', CLINIC_PATIENTS); },
+    patientQuery: function() { return _patientQueryPage('full'); },
     orders: function() { return CRUD.builder('clinic_orders', CLINIC_ORDERS); },
 
     tracking: function() {
@@ -1795,7 +1974,8 @@ _homeStats([
 </div>`;
     },
 
-    finance: function() { return CRUD.builder('factory_finance', FACTORY_FINANCE); }
+    finance: function() { return CRUD.builder('factory_finance', FACTORY_FINANCE); },
+    patientQuery: function() { return _patientQueryPage('restricted'); }
   },
 
   // ================================================================

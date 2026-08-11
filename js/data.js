@@ -95,15 +95,22 @@ var SEED_DATA = {
     {id:7, time:'2025-07-30 15:20', title:'新经销商签约', content:'赵新民（华中区域）提交了经销商签约申请。', read:true}
   ],
 
-  // ---------- 患者 ----------
+  // ---------- 患者（含病历信息） ----------
   patients: [
-    {id:1, name:'周小明', gender:'男', age:35, phone:'138-0011-2233', treatmentType:'种植', implants:2, createdAt:'2025-08-01'},
-    {id:2, name:'吴丽红', gender:'女', age:42, phone:'139-5566-7788', treatmentType:'种植', implants:1, createdAt:'2025-08-01'},
-    {id:3, name:'郑国强', gender:'男', age:56, phone:'137-2233-4455', treatmentType:'种植', implants:3, createdAt:'2025-07-30'},
-    {id:4, name:'冯小明', gender:'男', age:28, phone:'136-8899-0011', treatmentType:'修复', implants:1, createdAt:'2025-07-28'},
-    {id:5, name:'褚伟杰', gender:'男', age:45, phone:'135-6677-8899', treatmentType:'种植', implants:2, createdAt:'2025-07-25'},
-    {id:6, name:'孙丽娟', gender:'女', age:38, phone:'133-4455-6677', treatmentType:'种植', implants:1, createdAt:'2025-07-22'},
-    {id:7, name:'王大伟', gender:'男', age:50, phone:'132-9988-7766', treatmentType:'正畸', implants:0, createdAt:'2025-07-18'}
+    {id:1, name:'周小明', gender:'男', age:35, phone:'138-0011-2233', treatmentType:'种植', implants:2, createdAt:'2025-08-01',
+     diagnosis:'右下后牙缺失', treatmentPlan:'种植体植入+基台+牙冠修复', surgeryDate:'2025-08-03', implantModel:'XW-TI-3510', doctor:'李医生', allergy:'青霉素', medicalHistory:'无高血压、糖尿病等慢性病', notes:'骨量充足，手术顺利，恢复良好'},
+    {id:2, name:'吴丽红', gender:'女', age:42, phone:'139-5566-7788', treatmentType:'种植', implants:1, createdAt:'2025-08-01',
+     diagnosis:'左上中切牙缺失', treatmentPlan:'即刻种植+临时冠', surgeryDate:'2025-08-03', implantModel:'XW-TI-4200', doctor:'张医生', allergy:'无', medicalHistory:'轻度贫血，已纠正', notes:'前牙美学区，需注意软组织处理'},
+    {id:3, name:'郑国强', gender:'男', age:56, phone:'137-2233-4455', treatmentType:'种植', implants:3, createdAt:'2025-07-30',
+     diagnosis:'多颗牙缺失（上下颌）', treatmentPlan:'分段种植+All-on-4方案', surgeryDate:'2025-08-05', implantModel:'XW-TI-4200', doctor:'李医生', allergy:'磺胺类', medicalHistory:'高血压（控制良好），糖尿病（饮食控制）', notes:'需术前评估骨密度，术中注意出血控制'},
+    {id:4, name:'冯小明', gender:'男', age:28, phone:'136-8899-0011', treatmentType:'修复', implants:1, createdAt:'2025-07-28',
+     diagnosis:'右上前牙外伤性缺失', treatmentPlan:'种植体植入+骨粉填充', surgeryDate:'2025-08-02', implantModel:'XW-TI-4212', doctor:'王医生', allergy:'无', medicalHistory:'无特殊', notes:'唇侧骨板薄，需GBR骨增量'},
+    {id:5, name:'褚伟杰', gender:'男', age:45, phone:'135-6677-8899', treatmentType:'种植', implants:2, createdAt:'2025-07-25',
+     diagnosis:'左下磨牙缺失', treatmentPlan:'种植体植入', surgeryDate:'2025-08-01', implantModel:'XW-TI-3510', doctor:'李医生', allergy:'无', medicalHistory:'吸烟史20年', notes:'建议戒烟，术后注意口腔卫生维护'},
+    {id:6, name:'孙丽娟', gender:'女', age:38, phone:'133-4455-6677', treatmentType:'种植', implants:1, createdAt:'2025-07-22',
+     diagnosis:'右下第二磨牙缺失', treatmentPlan:'种植体植入+基台+牙冠', surgeryDate:'2025-07-25', implantModel:'XW-TI-4200', doctor:'张医生', allergy:'头孢类', medicalHistory:'无特殊', notes:'手术顺利，骨结合良好'},
+    {id:7, name:'王大伟', gender:'男', age:50, phone:'132-9988-7766', treatmentType:'正畸', implants:0, createdAt:'2025-07-18',
+     diagnosis:'牙列拥挤', treatmentPlan:'正畸治疗', surgeryDate:'', implantModel:'', doctor:'王医生', allergy:'无', medicalHistory:'无特殊', notes:'正畸治疗中，暂不需要种植'}
   ],
 
   // ---------- 加工单 ----------
