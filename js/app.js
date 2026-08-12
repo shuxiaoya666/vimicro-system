@@ -221,8 +221,8 @@ function doRegister() {
     return;
   }
 
-  // 保存注册申请
-  DB.add('registrations', {
+  // 构建注册数据
+  var regData = {
     type: regType,
     account: account,
     password: password,
@@ -235,15 +235,40 @@ function doRegister() {
     licenseData: regLicenseData,
     status: 'pending',
     submittedAt: DB._today()
+  };
+
+  // 尝试通过 API 注册，失败则降级到本地存储
+  var _apiBase = (typeof API_CONFIG !== 'undefined') ? API_CONFIG.baseUrl.replace(/\/api$/, '') : 'http://localhost:3000';
+  fetch(_apiBase + '/api/auth/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(regData)
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('API注册失败');
+    return res.json();
+  })
+  .then(function(data) {
+    // API 注册成功
+    console.log('[Auth] API注册成功:', data);
+    showRegSuccess();
+  })
+  .catch(function(err) {
+    // API 不可用，降级到本地存储
+    console.warn('[Auth] API不可用，使用本地存储注册:', err.message);
+    DB.add('registrations', regData);
+    showRegSuccess();
   });
 
-  // 显示成功提示并返回登录
-  if (typeof UI !== 'undefined' && UI.toast) {
-    UI.toast.success('注册申请已提交，请等待平台审核');
+  function showRegSuccess() {
+    // 显示成功提示并返回登录
+    if (typeof UI !== 'undefined' && UI.toast) {
+      UI.toast.success('注册申请已提交，请等待平台审核');
+    }
+    setTimeout(function() {
+      showLogin();
+    }, 1500);
   }
-  setTimeout(function() {
-    showLogin();
-  }, 1500);
 }
 
 // ===== 登录 =====
@@ -259,29 +284,65 @@ function doLogin() {
     return;
   }
 
-  const user = ACCOUNTS[account];
-  if (!user || user.password !== password) {
-    errorEl.textContent = '账号或密码错误，请重试';
-    errorEl.style.display = 'block';
-    refreshCaptcha();
-    return;
-  }
+  // 尝试 API 登录
+  var _apiBase = (typeof API_CONFIG !== 'undefined') ? API_CONFIG.baseUrl.replace(/\/api$/, '') : 'http://localhost:3000';
+  fetch(_apiBase + '/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ account: account, password: password })
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('API登录失败');
+    return res.json();
+  })
+  .then(function(data) {
+    // API 登录成功
+    DB._token = data.token;
+    localStorage.setItem('xiaowei_token', data.token);
+    // 启用 API 模式（异步从 API 加载数据到缓存）
+    DB.enableApiMode(data.token);
+    loginUser(data.user, account);
+  })
+  .catch(function(err) {
+    // API 不可用，降级到本地账号验证
+    console.warn('[Auth] API不可用，使用本地账号验证:', err.message);
+    var user = ACCOUNTS[account];
+    if (!user || user.password !== password) {
+      errorEl.textContent = '账号或密码错误，请重试';
+      errorEl.style.display = 'block';
+      refreshCaptcha();
+      return;
+    }
+    loginUser(user, account);
+  });
+}
 
-  // 登录成功
-  currentUser = { ...user, account };
-  currentPort = user.ports[0]; // 默认进入第一个可用端口
+/**
+ * 登录成功后的通用处理（API 登录和本地登录共用）
+ * @param {Object} user - 用户信息对象，需包含 name, avatar, role, ports
+ * @param {string} account - 账号名
+ */
+function loginUser(user, account) {
+  currentUser = {
+    name: user.name,
+    avatar: user.avatar,
+    role: user.role,
+    ports: user.ports || [],
+    account: account
+  };
+  currentPort = currentUser.ports[0]; // 默认进入第一个可用端口
   currentPage = 'home';
 
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
-  
+
   // 更新用户信息
   document.getElementById('userAvatar').textContent = currentUser.avatar;
   document.getElementById('userName').textContent = currentUser.name + ' ▼';
-  
+
   // 更新端口切换器（只显示有权限的端口）
   updatePortMenu();
-  
+
   // 加载页面
   loadPort();
 }
@@ -296,6 +357,10 @@ function doLogout() {
   document.getElementById('loginPassword').value = '';
   document.getElementById('loginCaptcha').value = '';
   document.getElementById('loginError').style.display = 'none';
+
+  // 清除 token 并禁用 API 模式，切回 localStorage 模式
+  DB.disableApiMode();
+  localStorage.removeItem('xiaowei_token');
 }
 
 function refreshCaptcha() {
@@ -460,4 +525,32 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+});
+
+// ===== 自动登录检查 =====
+// 页面加载时检查 localStorage 中是否有 token，如果有则尝试自动登录
+document.addEventListener('DOMContentLoaded', function() {
+  var token = localStorage.getItem('xiaowei_token');
+  if (!token) return;
+
+  // 用 token 请求 /api/auth/me 验证是否仍然有效
+  var _apiBase = (typeof API_CONFIG !== 'undefined') ? API_CONFIG.baseUrl.replace(/\/api$/, '') : 'http://localhost:3000';
+  fetch(_apiBase + '/api/auth/me', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+  .then(function(res) {
+    if (!res.ok) throw new Error('token无效');
+    return res.json();
+  })
+  .then(function(data) {
+    // token 有效，自动登录
+    DB._token = token;
+    DB.enableApiMode(token);
+    loginUser(data.user, data.user.account || data.account || '');
+  })
+  .catch(function(err) {
+    // token 无效或 API 不可用，清除 token
+    console.warn('[Auth] 自动登录失败:', err.message);
+    localStorage.removeItem('xiaowei_token');
+  });
 });

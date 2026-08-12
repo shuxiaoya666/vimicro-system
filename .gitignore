@@ -18,3 +18,9 @@ npm-debug.log*
 # 构建输出
 dist/
 build/
+
+# 后端环境变量（含密码，不可提交）
+backend/.env
+
+# 上传文件目录
+backend/uploads/

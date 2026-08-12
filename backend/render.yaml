@@ -1,0 +1,25 @@
+# Render.com 部署配置文件
+# 使用方法：将整个仓库推送到 GitHub，在 Render 中创建 Blueprint 并选择此文件
+# 文档: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: xiaowei-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: xiaowei_dental_implant_system_secret_key_2025
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: DATABASE_URL
+        sync: false
+        # 在 Render 控制台手动填入 PlanetScale 连接字符串
+      - key: PORT
+        value: 3000

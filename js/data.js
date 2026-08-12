@@ -263,6 +263,10 @@ var SEED_DATA = {
 // ==================== DB 数据访问对象 ====================
 var DB = {
   _store: 'xiaowei_db',  // localStorage 存储键名
+  _apiMode: false,       // 是否使用 API 模式（true=API，false=localStorage）
+  _cache: null,          // 内存缓存（API 模式下所有数据缓存在此）
+  _apiBase: (typeof API_CONFIG !== 'undefined' && API_CONFIG.baseUrl) ? API_CONFIG.baseUrl : 'http://localhost:3000/api',  // 后端 API 基础地址
+  _token: null,          // JWT token（登录后设置，每次 API 请求带上）
 
   // ---------- 内部工具方法 ----------
 
@@ -325,10 +329,98 @@ var DB = {
     return result;
   },
 
+  // ---------- API 相关方法 ----------
+
+  /**
+   * 发起 API 请求（内部使用）
+   * @param {string} method - HTTP 方法：GET/POST/PUT/DELETE
+   * @param {string} path - 请求路径，如 '/data/clinics'
+   * @param {Object} body - 请求体（POST/PUT 时传入）
+   * @returns {Promise} 返回 Promise，resolve 为响应数据，reject 为错误
+   */
+  _apiRequest: function(method, path, body) {
+    var self = this;
+    var url = this._apiBase + path;
+    var headers = { 'Content-Type': 'application/json' };
+    if (this._token) {
+      headers['Authorization'] = 'Bearer ' + this._token;
+    }
+    return fetch(url, {
+      method: method,
+      headers: headers,
+      body: body ? JSON.stringify(body) : undefined
+    }).then(function(res) {
+      if (!res.ok) throw new Error('API请求失败 (' + res.status + '): ' + path);
+      return res.json();
+    });
+  },
+
+  /**
+   * 启用 API 模式（登录成功后调用）
+   * 1. 设置 token
+   * 2. 用 localStorage 数据初始化缓存（保证立即可用）
+   * 3. 异步从 API 加载所有实体数据覆盖缓存
+   * @param {string} token - JWT token
+   */
+  enableApiMode: function(token) {
+    this._token = token;
+    this._apiMode = true;
+
+    // 先用 localStorage 数据初始化缓存，确保 API 数据加载完成前也能正常读取
+    var lsData = this._read();
+    this._cache = this._clone(lsData || SEED_DATA);
+
+    // 后台异步从 API 同步所有实体数据
+    this._syncFromApi();
+  },
+
+  /**
+   * 禁用 API 模式，切回 localStorage 模式（登出时调用）
+   */
+  disableApiMode: function() {
+    this._apiMode = false;
+    this._token = null;
+    this._cache = null;
+  },
+
+  /**
+   * 异步从 API 加载所有实体数据到内存缓存
+   * 加载完成后覆盖缓存中对应的实体数据
+   */
+  _syncFromApi: function() {
+    var self = this;
+    var entities = Object.keys(SEED_DATA);
+
+    entities.forEach(function(entity) {
+      self._apiRequest('GET', '/data/' + entity)
+        .then(function(res) {
+          // API 返回可能是数组或 {data: [...]} 格式，统一处理
+          var data = Array.isArray(res) ? res : (res.data || res);
+          if (Array.isArray(data)) {
+            self._cache[entity] = self._clone(data);
+          }
+        })
+        .catch(function(err) {
+          // 单个实体加载失败不影响其他实体，保留 localStorage 中的数据
+          console.warn('[DB] 从API加载 ' + entity + ' 失败，使用本地数据:', err.message);
+        });
+    });
+  },
+
+  /**
+   * 将缓存数据同步写回 localStorage（用于 API 模式下备份）
+   */
+  _persistCache: function() {
+    if (this._cache) {
+      this._write(this._cache);
+    }
+  },
+
   // ---------- 公开 API ----------
 
   /**
    * 初始化：如果 localStorage 没有数据，用 SEED_DATA 初始化
+   * 同时尝试从 localStorage 恢复 token
    * 页面加载时调用一次即可
    */
   init: function() {
@@ -338,6 +430,12 @@ var DB = {
       this._write(data);
       console.log('[DB] 已用种子数据初始化');
     }
+
+    // 尝试从 localStorage 恢复 token（为后续 API 模式做准备）
+    var token = localStorage.getItem('xiaowei_token');
+    if (token) {
+      this._token = token;
+    }
   },
 
   /**
@@ -346,6 +444,13 @@ var DB = {
    * @returns {Array} 数据数组（返回副本，修改不影响存储）
    */
   getAll: function(entity) {
+    // API 模式：从内存缓存读取
+    if (this._apiMode && this._cache) {
+      if (!this._cache[entity]) return [];
+      return this._clone(this._cache[entity]);
+    }
+
+    // localStorage 模式：从 localStorage 读取
     var data = this._read();
     if (!data || !data[entity]) return [];
     return this._clone(data[entity]);
@@ -372,6 +477,41 @@ var DB = {
    * @returns {Object} 新增后的完整记录（含 id 和 createdAt）
    */
   add: function(entity, item) {
+    // API 模式：更新缓存 + 异步同步到 API（乐观更新）
+    if (this._apiMode && this._cache) {
+      if (!this._cache[entity]) this._cache[entity] = [];
+      var cacheList = this._cache[entity];
+      var newItem = this._merge({}, item);
+      newItem.id = this._nextId(cacheList);
+      if (!newItem.createdAt) {
+        newItem.createdAt = this._today();
+      }
+      cacheList.push(newItem);
+
+      // 异步调用 API 新增（不阻塞 UI，乐观更新）
+      var self = this;
+      this._apiRequest('POST', '/data/' + entity, newItem)
+        .then(function(created) {
+          // API 返回的记录可能 id 不同，用 API 返回的数据更新缓存
+          if (created && created.id !== undefined) {
+            for (var i = cacheList.length - 1; i >= 0; i--) {
+              if (cacheList[i].id === newItem.id) {
+                cacheList[i] = self._merge(newItem, created);
+                cacheList[i].id = created.id;
+                break;
+              }
+            }
+          }
+        })
+        .catch(function(err) {
+          console.error('[DB] API新增失败 (' + entity + '):', err.message);
+          // 失败不影响缓存中的数据（已在缓存中）
+        });
+
+      return this._clone(newItem);
+    }
+
+    // localStorage 模式
     var data = this._read();
     if (!data) {
       this.init();
@@ -400,6 +540,29 @@ var DB = {
    * @returns {Object|null} 更新后的完整记录，未找到返回 null
    */
   update: function(entity, id, patch) {
+    // API 模式：更新缓存 + 异步同步到 API（乐观更新）
+    if (this._apiMode && this._cache) {
+      if (!this._cache[entity]) return null;
+      var cacheList = this._cache[entity];
+      for (var ci = 0; ci < cacheList.length; ci++) {
+        if (cacheList[ci].id === id) {
+          cacheList[ci] = this._merge(cacheList[ci], patch);
+          cacheList[ci].id = id; // 确保 id 不被覆盖
+          var updated = this._clone(cacheList[ci]);
+
+          // 异步调用 API 更新（不阻塞 UI）
+          this._apiRequest('PUT', '/data/' + entity + '/' + id, patch)
+            .catch(function(err) {
+              console.error('[DB] API更新失败 (' + entity + '/' + id + '):', err.message);
+            });
+
+          return updated;
+        }
+      }
+      return null;
+    }
+
+    // localStorage 模式
     var data = this._read();
     if (!data || !data[entity]) return null;
 
@@ -422,6 +585,27 @@ var DB = {
    * @returns {boolean} 删除成功返回 true，未找到返回 false
    */
   delete: function(entity, id) {
+    // API 模式：从缓存删除 + 异步同步到 API（乐观更新）
+    if (this._apiMode && this._cache) {
+      if (!this._cache[entity]) return false;
+      var cacheList = this._cache[entity];
+      for (var ci = 0; ci < cacheList.length; ci++) {
+        if (cacheList[ci].id === id) {
+          cacheList.splice(ci, 1);
+
+          // 异步调用 API 删除（不阻塞 UI）
+          this._apiRequest('DELETE', '/data/' + entity + '/' + id)
+            .catch(function(err) {
+              console.error('[DB] API删除失败 (' + entity + '/' + id + '):', err.message);
+            });
+
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // localStorage 模式
     var data = this._read();
     if (!data || !data[entity]) return false;
 
@@ -525,10 +709,15 @@ var DB = {
 
   /**
    * 重置为种子数据：清除 localStorage 并重新初始化
+   * 如果处于 API 模式，同时重置内存缓存
    */
   reset: function() {
     localStorage.removeItem(this._store);
     this.init();
+    // 如果处于 API 模式，用种子数据重置缓存
+    if (this._apiMode) {
+      this._cache = this._clone(SEED_DATA);
+    }
     console.log('[DB] 数据已重置为种子数据');
   }
 };
