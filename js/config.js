@@ -5,9 +5,8 @@
 var API_CONFIG = {
 
   // 后端 API 基础地址
-  // 部署到 Render 后，将此地址改为你的 Render 服务地址
-  // 格式: https://你的服务名.onrender.com/api
-  baseUrl: 'https://xiaowei-backend.onrender.com/api',
+  // 已部署到 Railway，使用 Railway 生成的域名
+  baseUrl: 'https://xiaowei-backend-production.up.railway.app/api',
 
   // 是否启用 API 模式（true=连接后端，false=仅用 localStorage）
   enabled: true,
