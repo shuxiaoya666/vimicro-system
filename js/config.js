@@ -5,8 +5,8 @@
 var API_CONFIG = {
 
   // 后端 API 基础地址
-  // 已部署到 Railway，使用 Railway 生成的域名
-  baseUrl: 'https://xiaowei-backend-production.up.railway.app/api',
+  // 连接本地 MySQL 数据库，通过 localtunnel 内网穿透暴露
+  baseUrl: 'https://xiaowei-backend.loca.lt/api',
 
   // 是否启用 API 模式（true=连接后端，false=仅用 localStorage）
   enabled: true,
