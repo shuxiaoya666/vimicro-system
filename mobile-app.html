@@ -961,9 +961,9 @@ html, body {
       <div class="splash-feature-text">进度跟踪</div>
     </div>
   </div>
-  <div class="swipe-hint" id="swipeHint">
-    <div class="swipe-hint-icon">↑</div>
-    <div class="swipe-hint-text">上滑进入小程序</div>
+  <div class="swipe-hint" id="swipeHint" onclick="enterApp()" style="cursor:pointer;">
+    <div class="swipe-hint-icon">👆</div>
+    <div class="swipe-hint-text">点击进入小程序</div>
   </div>
 </div>
 
@@ -1399,35 +1399,45 @@ function saveApiBase() {
   document.getElementById('apiSettingBox').style.display = 'none';
 }
 
-// ===== 开场页上滑手势 =====
+// ===== 开场页 - 点击/触摸进入 =====
 var splashScreen = document.getElementById('splashScreen');
-var startY = 0;
-var isSliding = false;
+var touchStartY = 0;
 
 splashScreen.addEventListener('touchstart', function(e) {
-  startY = e.touches[0].clientY;
-  isSliding = true;
-});
-
-splashScreen.addEventListener('touchmove', function(e) {
-  if (!isSliding) return;
-  var deltaY = startY - e.touches[0].clientY;
-  if (deltaY > 60) {
-    enterApp();
-    isSliding = false;
+  if (e.touches && e.touches.length > 0) {
+    touchStartY = e.touches[0].clientY;
   }
-});
+}, { passive: true });
 
-splashScreen.addEventListener('click', function() {
+splashScreen.addEventListener('touchend', function(e) {
+  var endY = touchStartY;
+  if (e.changedTouches && e.changedTouches.length > 0) {
+    endY = e.changedTouches[0].clientY;
+  }
+  var deltaY = touchStartY - endY;
+  if (deltaY > 30 || Math.abs(deltaY) < 10) {
+    enterApp();
+  }
+}, { passive: true });
+
+splashScreen.addEventListener('click', function(e) {
   enterApp();
 });
 
 function enterApp() {
+  if (splashScreen.classList.contains('slide-up')) return;
   splashScreen.classList.add('slide-up');
   setTimeout(function() {
     splashScreen.style.display = 'none';
   }, 500);
 }
+
+// 3秒后自动进入（防止卡在开场页）
+setTimeout(function() {
+  if (!splashScreen.classList.contains('slide-up')) {
+    enterApp();
+  }
+}, 3000);
 
 // ===== API请求 =====
 function apiRequest(url, method, data) {
@@ -1487,7 +1497,7 @@ function doLogin() {
     .catch(function(err) {
       btn.disabled = false;
       btn.textContent = '登 录';
-      showToast('登录失败：' + (err.message || '网络错误'));
+      showToast('登录失败，可点击「免登录体验」');
     });
 }
 
