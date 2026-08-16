@@ -287,34 +287,84 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
     <button class="login-btn" id="loginBtn" type="button">登 录</button>
 <script>
 (function(){
+  var PORTS={
+    platform:{name:'小唯平台端',icon:'🏠',color:'#1abc9c',desc:'系统管理、业务总览、财务结算'},
+    clinic:{name:'诊所端',icon:'🏥',color:'#3498db',desc:'患者管理、加工订单、核销登记'},
+    dealer:{name:'经销商端',icon:'👤',color:'#f39c12',desc:'客户管理、销售活动、佣金提现'},
+    pharmacy:{name:'药店端',icon:'💊',color:'#8e44ad',desc:'种植卡管理、采购库存、客户管理'},
+    factory:{name:'工厂端',icon:'🏭',color:'#0097a7',desc:'订单生产、质检记录、收发货管理'}
+  };
+  var ACCOUNTS={
+    admin:{password:'123456',name:'超级管理员',avatar:'管',ports:['platform','clinic','dealer','pharmacy','factory']},
+    clinic:{password:'123456',name:'李医生',avatar:'李',ports:['clinic']},
+    dealer:{password:'123456',name:'张经理',avatar:'张',ports:['dealer']},
+    pharmacy:{password:'123456',name:'周店长',avatar:'周',ports:['pharmacy']},
+    factory:{password:'123456',name:'孙厂长',avatar:'孙',ports:['factory']}
+  };
   var btn=document.getElementById('loginBtn');
   var acc=document.getElementById('loginAccount');
   var pwd=document.getElementById('loginPassword');
+  var loginPage=document.getElementById('loginPage');
+
+  function showPortSelect(user){
+    loginPage.style.display='none';
+    var ps=document.getElementById('portSelectPage');
+    if(!ps){location.reload();return}
+    ps.classList.remove('hidden');
+    ps.style.display='flex';
+    var titleEl=document.getElementById('portSelectUser');
+    if(titleEl)titleEl.textContent='欢迎，'+user.name+'，请选择要进入的管理端口';
+    var grid=document.getElementById('portGrid');
+    if(!grid){return}
+    var html='';
+    Object.keys(PORTS).forEach(function(key){
+      var p=PORTS[key];
+      var enabled=user.ports.indexOf(key)>=0;
+      html+='<div class="port-card'+(enabled?'':' disabled')+'" '+(enabled?('onclick="enterPort(\''+key+'\')'):'')+' style="cursor:'+(enabled?'pointer':'not-allowed')+'">';
+      html+='<div class="pc-icon" style="background:'+p.color+'20">'+p.icon+'</div>';
+      html+='<div class="pc-info"><div class="pc-name">'+p.name+'</div><div class="pc-desc">'+(enabled?p.desc:'无访问权限')+'</div></div>';
+      html+='<div class="pc-arrow">›</div></div>';
+    });
+    grid.innerHTML=html;
+  }
+
+  window.enterPort=function(port){
+    localStorage.setItem('adminPort',port);
+    location.reload();
+  };
+
   function handleLogin(){
     var a=acc.value.trim(),p=pwd.value.trim();
     if(!a||!p){alert('请输入账号和密码');return}
     btn.disabled=true;btn.textContent='登录中...';
-    var accounts={
-      admin:{password:'123456',name:'超级管理员',avatar:'管',role:'super',ports:['platform','clinic','dealer','pharmacy','factory']},
-      clinic:{password:'123456',name:'李医生',avatar:'李',role:'clinic',ports:['clinic']},
-      dealer:{password:'123456',name:'张经理',avatar:'张',role:'dealer',ports:['dealer']},
-      pharmacy:{password:'123456',name:'周店长',avatar:'周',role:'pharmacy',ports:['pharmacy']},
-      factory:{password:'123456',name:'孙厂长',avatar:'孙',role:'factory',ports:['factory']}
-    };
-    var user=accounts[a];
-    if(user&&user.password===p){
+    var u=ACCOUNTS[a];
+    if(u&&u.password===p){
+      var userInfo={id:0,name:u.name,avatar:u.avatar,role:a,ports:u.ports,account:a};
       localStorage.setItem('adminToken','local_'+a+'_'+Date.now());
-      localStorage.setItem('adminUserInfo',JSON.stringify({id:0,name:user.name,avatar:user.avatar,role:user.role,ports:user.ports,account:a}));
-      localStorage.setItem('adminPort',user.ports[0]);
-      location.reload();
+      localStorage.setItem('adminUserInfo',JSON.stringify(userInfo));
+      btn.disabled=false;btn.textContent='登 录';
+      showPortSelect(userInfo);
     }else{
       btn.disabled=false;btn.textContent='登 录';
       alert('账号或密码错误');
     }
   }
+
   btn.addEventListener('click',function(e){e.preventDefault();handleLogin()});
   btn.addEventListener('touchend',function(e){e.preventDefault();handleLogin()});
   pwd.addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();handleLogin()}});
+
+  var savedToken=localStorage.getItem('adminToken');
+  var savedUser=localStorage.getItem('adminUserInfo');
+  var savedPort=localStorage.getItem('adminPort');
+  if(savedToken&&savedUser&&savedPort){
+    try{
+      var u=JSON.parse(savedUser);
+      if(u&&u.ports&&u.ports.indexOf(savedPort)>=0){
+        loginPage.style.display='none';
+      }
+    }catch(e){}
+  }
 })();
 </script>
     <div class="login-hint">测试账号: <b>admin</b> / <b>clinic</b> / <b>dealer</b> / <b>pharmacy</b> / <b>factory</b> 密码: <b>123456</b></div>
@@ -945,7 +995,7 @@ function buildSidebar(){
     html+='<div class="sidebar-group">';
     html+='<div class="sidebar-group-title">'+group.group+'</div>';
     group.items.forEach(function(item){
-      html+='<div class="sidebar-item'+(currentPage===item.key?' active':'')}" onclick="navigateTo(\''+item.key+'\')">';
+      html+='<div class="sidebar-item'+(currentPage===item.key?' active':'')+'" onclick="navigateTo(\''+item.key+'\')">';
       html+='<span class="si-icon">'+item.icon+'</span><span>'+item.name+'</span>';
       html+='</div>';
     });
