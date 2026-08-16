@@ -332,7 +332,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',-apple-syst
         </div>
         <div class="qg">
           <div class="qg-item" onclick="switchTab('plant')"><div class="qg-icon" style="background:#e8f8f5;">🦷</div><div class="qg-name">我要种植</div></div>
-          <div class="qg-item" onclick="switchTab('mall')"><div class="qg-icon" style="background:#e8f4fd;">🛒</div><div class="qg-name">商品兑换</div></div>
+          <div class="qg-item" onclick="switchTab('mall')"><div class="qg-icon" style="background:#fef3e2;">🎁</div><div class="qg-name">兑换商城</div></div>
           <div class="qg-item" onclick="openSubpage('knowledge')"><div class="qg-icon" style="background:#fef3e2;">📚</div><div class="qg-name">种植常识</div></div>
           <div class="qg-item" onclick="switchTab('orders')"><div class="qg-icon" style="background:#fee8e8;">📋</div><div class="qg-name">我的订单</div></div>
           <div class="qg-item" onclick="openSubpage('points')"><div class="qg-icon" style="background:#f0e6ff;">🎁</div><div class="qg-name">积分中心</div></div>
@@ -358,13 +358,11 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',-apple-syst
 
       <!-- MALL -->
       <div class="page" id="page-mall">
-        <div class="search-box"><span>🔍</span><input type="text" id="mallSearch" placeholder="搜索商品名称、分类..." oninput="renderMall()"></div>
+        <div class="search-box"><span>🔍</span><input type="text" id="mallSearch" placeholder="搜索兑换商品..." oninput="renderMall()"></div>
         <div class="filter-row" id="mallFilters">
           <div class="filter-chip active" onclick="filterMall('all',this)">全部</div>
-          <div class="filter-chip" onclick="filterMall('种植体',this)">种植体</div>
-          <div class="filter-chip" onclick="filterMall('配件',this)">配件</div>
-          <div class="filter-chip" onclick="filterMall('耗材',this)">耗材</div>
-          <div class="filter-chip" onclick="filterMall('工具',this)">工具</div>
+          <div class="filter-chip" onclick="filterMall('口护用品',this)">口护用品</div>
+          <div class="filter-chip" onclick="filterMall('种植体医疗服务',this)">种植体医疗服务</div>
         </div>
         <div class="mgrid" id="mallGrid"></div>
         <div style="height:20px;"></div>
@@ -441,7 +439,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',-apple-syst
 
     <div class="tabbar">
       <div class="tab active" onclick="switchTab('home')"><div class="tab-icon">🏠</div><div class="tab-text">首页</div></div>
-      <div class="tab" onclick="switchTab('mall')"><div class="tab-icon">🛒</div><div class="tab-text">商城</div></div>
+      <div class="tab" onclick="switchTab('mall')"><div class="tab-icon">🎁</div><div class="tab-text">兑换</div></div>
       <div class="tab tab-center" onclick="switchTab('plant')"><div class="tab-icon">🦷</div><div class="tab-text">种植</div></div>
       <div class="tab" onclick="switchTab('orders')"><div class="tab-icon">📋</div><div class="tab-text">订单</div></div>
       <div class="tab" onclick="switchTab('profile')"><div class="tab-icon">👤</div><div class="tab-text">我的</div></div>
@@ -478,14 +476,18 @@ var mallFilter='all', orderFilter='all';
 
 // Mock data
 var mockProducts=[
-  {id:1,name:'韩国奥齿泰种植体',category:'种植体',price:2980,stock:50,sales:128,desc:'进口品牌 终身质保',status:'active',icon:'🦷'},
-  {id:2,name:'瑞士ITI种植体',category:'种植体',price:9800,stock:30,sales:89,desc:'高端进口 稳定性强',status:'active',icon:'🦷'},
-  {id:3,name:'钛合金基台',category:'配件',price:980,stock:100,sales:200,desc:'医用钛合金 精密加工',status:'active',icon:'⚙️'},
-  {id:4,name:'全瓷牙冠',category:'配件',price:1980,stock:60,sales:156,desc:'美观自然 生物相容',status:'active',icon:'✨'},
-  {id:5,name:'骨粉材料',category:'耗材',price:580,stock:80,sales:95,desc:'人工骨粉 填充修复',status:'active',icon:'💊'},
-  {id:6,name:'缝合线套装',category:'耗材',price:128,stock:200,sales:300,desc:'可吸收缝合线 无需拆线',status:'active',icon:'🧵'},
-  {id:7,name:'种植手术工具包',category:'工具',price:3800,stock:15,sales:32,desc:'全套种植工具 消毒包装',status:'active',icon:'🔧'},
-  {id:8,name:'印模托盘',category:'工具',price:88,stock:150,sales:180,desc:'一次性印模工具',status:'active',icon:'📋'}
+ {id:1,name:'软毛牙刷套装',category:'口护用品',points:500,stock:50,sales:128,desc:'德国进口软毛 温和不伤牙龈',status:'active',icon:'🪥'},
+ {id:2,name:'冲牙器(洁牙仪)',category:'口护用品',points:1200,stock:30,sales:89,desc:'便携式冲牙器 清洁牙缝残留',status:'active',icon:'💧'},
+ {id:3,name:'漱口水(500ml×2瓶)',category:'口护用品',points:800,stock:100,sales:200,desc:'杀菌清新口气 48小时持久',status:'active',icon:'🧴'},
+ {id:4,name:'牙线棒(100支装)',category:'口护用品',points:300,stock:60,sales:156,desc:'超细牙线 轻松清洁牙缝',status:'active',icon:'🧵'},
+ {id:5,name:'口腔护理套装(全年)',category:'口护用品',points:2000,stock:20,sales:45,desc:'全年12次洗牙+口腔检查',status:'active',icon:'🎁'},
+ {id:6,name:'儿童护齿套装',category:'口护用品',points:600,stock:80,sales:95,desc:'含氟牙膏+儿童软毛牙刷',status:'active',icon:'🧒'},
+ {id:7,name:'XW-TI-4212种植体医疗服务',category:'种植体医疗服务',points:5000,stock:15,sales:32,desc:'亲水表面种植体 一价全包手术',status:'active',icon:'🦷'},
+ {id:8,name:'XW-TI-4200种植体医疗服务',category:'种植体医疗服务',points:4800,stock:20,sales:28,desc:'高强度种植体 一价全包手术',status:'active',icon:'🦷'},
+ {id:9,name:'XW-TI-3510种植体医疗服务',category:'种植体医疗服务',points:3800,stock:25,sales:56,desc:'畅销款种植体 一价全包手术',status:'active',icon:'🦷'},
+ {id:10,name:'种植术后复查套餐',category:'种植体医疗服务',points:1000,stock:40,sales:68,desc:'术后3次复查+维护保养',status:'active',icon:'📋'},
+ {id:11,name:'种植体终身质保服务',category:'种植体医疗服务',points:3000,stock:10,sales:18,desc:'种植体终身质保 免费更换',status:'active',icon:'🛡️'},
+ {id:12,name:'牙齿美白护理服务',category:'种植体医疗服务',points:1500,stock:30,sales:42,desc:'冷光美白 一次见效',status:'active',icon:'✨'}
 ];
 var mockOrders=[
   {id:1,no:'ORD20260816-001',type:'种植套餐',item:'韩国奥齿泰种植体',clinic:'杭州口腔医院',amount:2980,status:'processing',createdAt:'2026-08-14',icon:'🦷'},
@@ -614,10 +616,10 @@ function switchTab(tab){
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});
   var map={home:0,mall:1,plant:2,orders:3,profile:4};
   var tabs=document.querySelectorAll('.tab');if(tabs[map[tab]])tabs[map[tab]].classList.add('active');
-  var titles={home:'首页',mall:'商品兑换',plant:'我要种植',orders:'我的订单',profile:'个人中心'};
+  var titles={home:'首页',mall:'兑换商城',plant:'我要种植',orders:'我的订单',profile:'个人中心'};
   document.getElementById('topbarTitle').textContent=titles[tab];
   document.getElementById('contentArea').scrollTop=0;
-  document.getElementById('cartFab').style.display=(tab==='mall')?'flex':'none';
+  document.getElementById('cartFab').style.display='none';
   if(tab==='plant')renderPlantStep();
 }
 
@@ -665,10 +667,11 @@ function renderMall(){
     var matchF=mallFilter==='all'||p.category===mallFilter;
     return matchS&&matchF;
   });
-  if(list.length===0){document.getElementById('mallGrid').innerHTML='<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">📦</div>暂无商品</div>';return}
+  if(list.length===0){document.getElementById('mallGrid').innerHTML='<div class="empty" style="grid-column:1/-1;"><div class="empty-icon">📦</div>暂无可兑换商品</div>';return}
   var h='';
   list.forEach(function(p){
-    h+='<div class="mcard"><div class="mcard-img" onclick="showProductDetail('+p.id+')">'+p.icon+'</div><div class="mcard-info"><div class="mcard-name">'+p.name+'</div><div class="mcard-desc">'+p.desc+'</div><div class="mcard-row"><div class="mcard-price">¥'+p.price+'</div><button class="mcard-add" onclick="addToCart('+p.id+')">+</button></div></div></div>';
+    var canAfford=mockPoints.balance>=p.points;
+    h+='<div class="mcard"><div class="mcard-img" onclick="showProductDetail('+p.id+')">'+p.icon+'</div><div class="mcard-info"><div class="mcard-name">'+p.name+'</div><div class="mcard-desc">'+p.desc+'</div><div class="mcard-row"><div style="font-size:15px;font-weight:700;color:var(--accent);">🎁 '+p.points+'积分</div><button class="btn '+(canAfford?'btn-primary':'btn-outline')+' btn-sm" style="font-size:12px;height:24px;padding:0 10px;" onclick="redeemItem('+p.id+')" '+(canAfford?'':'disabled style="opacity:.5;"')+'>'+(canAfford?'兑换':'积分不足')+'</button></div></div></div>';
   });
   document.getElementById('mallGrid').innerHTML=h;
 }
@@ -871,43 +874,39 @@ function renderAboutPage(){
 // Product detail
 function showProductDetail(id){
   var p=allProducts.find(function(x){return x.id===id});if(!p)return;
+  var canAfford=mockPoints.balance>=p.points;
   var h='<div style="text-align:center;font-size:60px;height:160px;display:flex;align-items:center;justify-content:center;background:#f5f7fa;border-radius:10px;margin-bottom:12px;">'+p.icon+'</div>';
   h+='<div style="font-size:18px;font-weight:700;">'+p.name+'</div>';
-  h+='<div style="font-size:22px;font-weight:700;color:var(--primary);margin:6px 0;">¥'+p.price+'</div>';
+  h+='<div style="font-size:24px;font-weight:700;color:var(--accent);margin:6px 0;">🎁 '+p.points+' 积分</div>';
   h+='<div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">'+p.desc+'</div>';
   h+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;"><span class="tag tag-active">正品保障</span><span class="tag tag-processing">专业操作</span><span class="tag tag-active">全程跟踪</span><span class="tag tag-active">售后无忧</span></div>';
   h+='<div class="list-row"><span class="list-label">分类</span><span class="list-val">'+p.category+'</span></div>';
   h+='<div class="list-row"><span class="list-label">库存</span><span class="list-val">'+p.stock+'</span></div>';
-  h+='<div class="list-row"><span class="list-label">销量</span><span class="list-val">'+p.sales+'</span></div>';
-  h+='<button class="btn btn-primary" style="width:100%;height:44px;margin-top:12px;" onclick="addToCart('+p.id+');closeModal()">加入购物车</button>';
-  document.getElementById('modalTitle').textContent='商品详情';
+  h+='<div class="list-row"><span class="list-label">已兑</span><span class="list-val">'+p.sales+'件</span></div>';
+  h+='<div class="list-row"><span class="list-label">当前积分</span><span class="list-val" style="font-weight:700;color:var(--primary);">'+mockPoints.balance+'</span></div>';
+  if(canAfford){
+    h+='<button class="btn btn-primary" style="width:100%;height:46px;margin-top:12px;border-radius:23px;" onclick="redeemItem('+p.id+');closeModal()">立即兑换</button>';
+  }else{
+    h+='<div style="text-align:center;padding:10px;margin-top:12px;background:#fee8e8;border-radius:8px;color:var(--danger);font-size:13px;font-weight:600;">积分不足，还差'+(p.points-mockPoints.balance)+'积分</div>';
+    h+='<button class="btn btn-outline" style="width:100%;height:46px;margin-top:8px;border-radius:23px;opacity:.5;" disabled>积分不足</button>';
+  }
+  document.getElementById('modalTitle').textContent='兑换详情';
   document.getElementById('modalBody').innerHTML=h;
   document.getElementById('modalBg').classList.add('on');
 }
 
-// Cart
-function addToCart(id){
+// Redeem
+function redeemItem(id){
   var p=allProducts.find(function(x){return x.id===id});if(!p)return;
-  var e=cart.find(function(x){return x.id===id});
-  if(e)e.qty++;else cart.push({id:p.id,name:p.name,price:p.price,icon:p.icon,qty:1});
-  localStorage.setItem('cart',JSON.stringify(cart));updateCartBadge();showToast('已加入购物车')
+  if(mockPoints.balance<p.points){showToast('积分不足');return}
+  mockPoints.balance-=p.points;
+  mockPoints.history.unshift({date:new Date().toISOString().slice(0,10),type:'兑换',source:'兑换 '+p.name,change:'-'+p.points,balance:mockPoints.balance});
+  p.sales++;p.stock--;
+  renderHomeStats();renderMall();
+  showToast('兑换成功！消耗'+p.points+'积分');
 }
-function updateCartBadge(){var c=cart.reduce(function(s,i){return s+i.qty},0);var b=document.getElementById('cartBadge');if(c>0){b.textContent=c;b.style.display='flex'}else{b.style.display='none'}}
-function openCart(){
-  if(cart.length===0){document.getElementById('modalBody').innerHTML='<div class="empty"><div class="empty-icon">🛒</div>购物车空空如也</div>'}
-  else{
-    var total=0,h='';
-    cart.forEach(function(i){total+=i.price*i.qty;
-      h+='<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);"><div style="width:40px;height:40px;border-radius:8px;background:#f5f7fa;display:flex;align-items:center;justify-content:center;font-size:20px;">'+i.icon+'</div><div style="flex:1;"><div style="font-size:13px;font-weight:600;">'+i.name+'</div><div style="font-size:15px;font-weight:700;color:var(--primary);margin:2px 0;">¥'+i.price+'</div><div style="display:flex;align-items:center;gap:6px;"><button class="btn btn-outline btn-sm" style="width:26px;height:26px;padding:0;" onclick="changeQty('+i.id+',-1)">-</button><span style="font-size:13px;font-weight:600;">'+i.qty+'</span><button class="btn btn-outline btn-sm" style="width:26px;height:26px;padding:0;" onclick="changeQty('+i.id+',1)">+</button></div></div></div>';
-    });
-    h+='<div style="padding:12px 0;display:flex;justify-content:space-between;align-items:center;"><span style="font-size:14px;">合计 <span style="font-size:20px;font-weight:700;color:var(--primary);">¥'+total+'</span></span><button class="btn btn-primary" style="width:100px;height:42px;" onclick="checkout()">去结算</button></div>';
-    document.getElementById('modalBody').innerHTML=h;
-  }
-  document.getElementById('modalTitle').textContent='购物车';
-  document.getElementById('modalBg').classList.add('on');
-}
-function changeQty(id,d){var i=cart.find(function(x){return x.id===id});if(!i)return;i.qty+=d;if(i.qty<=0){cart=cart.filter(function(x){return x.id!==id})}localStorage.setItem('cart',JSON.stringify(cart));updateCartBadge();openCart()}
-function checkout(){if(!cart.length)return;showToast('订单已提交');cart=[];localStorage.setItem('cart','[]');updateCartBadge();closeModal();switchTab('orders')}
+function updateCartBadge(){}
+function openCart(){}
 
 function closeModal(){document.getElementById('modalBg').classList.remove('on')}
 document.getElementById('modalBg').addEventListener('click',function(e){if(e.target===this)closeModal()});
@@ -927,11 +926,11 @@ function loadMock(){
 function loadAll(){
   renderHomeStats();renderMall();renderOrders();updateCartBadge();
   if(token==='demo'){loadMock();return}
-  apiRequest('/data/clientProducts').then(function(d){if(Array.isArray(d)&&d.length)allProducts=d.map(function(p){return{id:p.id,name:p.name||p.product_name||'商品',category:p.category||'种植体',price:parseFloat(p.price||0),stock:p.stock||0,sales:p.sales||0,desc:p.description||p.spec||'',status:p.status||'active',icon: getCategoryIcon(p.category||'种植体')}});renderMall()}).catch(function(){});
+  apiRequest('/data/clientProducts').then(function(d){if(Array.isArray(d)&&d.length)allProducts=d.map(function(p){return{id:p.id,name:p.name||p.product_name||'商品',category:p.category||'口护用品',points:parseInt(p.points||p.price||0),stock:p.stock||0,sales:p.sales||0,desc:p.description||p.spec||'',status:p.status||'active',icon: getCategoryIcon(p.category||'口护用品')}});renderMall()}).catch(function(){});
   apiRequest('/data/clientOrders').then(function(d){if(Array.isArray(d)&&d.length)allOrders=d.map(function(o){return{id:o.id,no:o.no||o.order_no,item:o.item||o.product_name||'商品',clinic:o.clinic||'',amount:parseFloat(o.amount||0),status:o.status||'processing',createdAt:o.created_at||o.createdAt||'',type:o.type||'商品购买',icon:'🦷'}});renderOrders();renderHomeStats()}).catch(function(){});
   apiRequest('/data/clientProgress').then(function(d){if(Array.isArray(d)&&d.length)allProgress=d}).catch(function(){});
 }
-function getCategoryIcon(cat){var m={'种植体':'🦷','配件':'⚙️','耗材':'💊','工具':'🔧'};return m[cat]||'🦷'}
+function getCategoryIcon(cat){var m={'口护用品':'🪥','种植体医疗服务':'🦷'};return m[cat]||'🎁'}
 
 // Init
 if(token&&userInfo){showMain();if(token==='demo')loadMock();else loadAll()}
