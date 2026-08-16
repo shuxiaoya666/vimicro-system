@@ -268,21 +268,8 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
 </head>
 <body>
 
-<!-- Splash -->
-<div class="splash" id="splash">
-  <div class="splash-logo">🦷</div>
-  <div class="splash-title">小唯管理系统</div>
-  <div class="splash-sub">口腔种植体产业链综合管理平台</div>
-</div>
-<script>
-setTimeout(function(){
-  var s=document.getElementById('splash');
-  if(s){s.classList.add('up');setTimeout(function(){s.style.display='none';var t=localStorage.getItem('adminToken');var u=localStorage.getItem('adminUserInfo');if(t&&u){var ps=document.getElementById('portSelectPage');var la=document.getElementById('loginPage');if(ps&&la){ps.classList.remove('hidden');la.classList.add('hidden')}}else{var la=document.getElementById('loginPage');if(la)la.classList.remove('hidden')}},500)}
-},1200);
-</script>
-
 <!-- Login -->
-<div class="login hidden" id="loginPage">
+<div class="login" id="loginPage">
   <div class="login-card">
     <div class="login-logo">
       <div class="ll-icon">🦷</div>
@@ -1922,7 +1909,12 @@ function getPortSettings(){
 
 // ==================== Init ====================
 (function init(){
-  // Enter key on login
+  generateCaptcha();
+  if(token&&userInfo){
+    showPortSelect();
+  }else{
+    showLogin();
+  }
   document.getElementById('loginPassword').addEventListener('keypress',function(e){
     if(e.key==='Enter')doLogin();
   });
