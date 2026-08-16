@@ -284,7 +284,39 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
       <label>密码</label>
       <input type="password" id="loginPassword" placeholder="请输入密码" value="123456">
     </div>
-    <button class="login-btn" id="loginBtn" onclick="doLogin()">登 录</button>
+    <button class="login-btn" id="loginBtn" type="button">登 录</button>
+<script>
+(function(){
+  var btn=document.getElementById('loginBtn');
+  var acc=document.getElementById('loginAccount');
+  var pwd=document.getElementById('loginPassword');
+  function handleLogin(){
+    var a=acc.value.trim(),p=pwd.value.trim();
+    if(!a||!p){alert('请输入账号和密码');return}
+    btn.disabled=true;btn.textContent='登录中...';
+    var accounts={
+      admin:{password:'123456',name:'超级管理员',avatar:'管',role:'super',ports:['platform','clinic','dealer','pharmacy','factory']},
+      clinic:{password:'123456',name:'李医生',avatar:'李',role:'clinic',ports:['clinic']},
+      dealer:{password:'123456',name:'张经理',avatar:'张',role:'dealer',ports:['dealer']},
+      pharmacy:{password:'123456',name:'周店长',avatar:'周',role:'pharmacy',ports:['pharmacy']},
+      factory:{password:'123456',name:'孙厂长',avatar:'孙',role:'factory',ports:['factory']}
+    };
+    var user=accounts[a];
+    if(user&&user.password===p){
+      localStorage.setItem('adminToken','local_'+a+'_'+Date.now());
+      localStorage.setItem('adminUserInfo',JSON.stringify({id:0,name:user.name,avatar:user.avatar,role:user.role,ports:user.ports,account:a}));
+      localStorage.setItem('adminPort',user.ports[0]);
+      location.reload();
+    }else{
+      btn.disabled=false;btn.textContent='登 录';
+      alert('账号或密码错误');
+    }
+  }
+  btn.addEventListener('click',function(e){e.preventDefault();handleLogin()});
+  btn.addEventListener('touchend',function(e){e.preventDefault();handleLogin()});
+  pwd.addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();handleLogin()}});
+})();
+</script>
     <div class="login-hint">测试账号: <b>admin</b> / <b>clinic</b> / <b>dealer</b> / <b>pharmacy</b> / <b>factory</b> 密码: <b>123456</b></div>
     <div class="api-settings">
       <div class="api-toggle" onclick="toggleApiConfig()">⚙ API地址设置</div>
@@ -1902,9 +1934,13 @@ function getPortSettings(){
   }else{
     showLogin();
   }
-  document.getElementById('loginPassword').addEventListener('keypress',function(e){
-    if(e.key==='Enter')doLogin();
-  });
+  var lp=document.getElementById('loginPassword');
+  if(lp)lp.addEventListener('keypress',function(e){if(e.key==='Enter')doLogin()});
+  var lb=document.getElementById('loginBtn');
+  if(lb){
+    lb.addEventListener('click',function(e){e.preventDefault();doLogin()});
+    lb.addEventListener('touchend',function(e){e.preventDefault();doLogin()});
+  }
 })();
 </script>
 </body>
