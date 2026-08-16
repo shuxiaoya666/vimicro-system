@@ -473,8 +473,8 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter',-apple-syst
 <div class="toast" id="toast"></div>
 
 <script>
-var APP_VERSION='v20260816d';
-var DEFAULT_API='https://heavy-dingo-56.loca.lt/api';
+var APP_VERSION='v20260816e';
+var DEFAULT_API='https://xiaowei-backend.loca.lt/api';
 if(localStorage.getItem('appVersion')!==APP_VERSION){
   localStorage.removeItem('apiBase');
   localStorage.setItem('appVersion',APP_VERSION);
@@ -599,29 +599,42 @@ function apiRequest(url,method,data){
     x.onreadystatechange=function(){if(x.readyState===4){if(x.status===200||x.status===201){try{resolve(JSON.parse(x.responseText))}catch(e){reject(e)}}else if(x.status===401){localStorage.removeItem('token');localStorage.removeItem('userInfo');token=null;userInfo=null;showLogin();reject(new Error('401'))}else{reject(new Error(x.status))}}};
     x.ontimeout=function(){reject(new Error('timeout'))};
     x.onerror=function(){reject(new Error('network'))};
-    x.timeout=8000;
+    x.timeout=5000;
     x.send(data?JSON.stringify(data):null)
   })
 }
 
-// Login
+// Login - 先尝试API，失败后用内置账号
+var LOCAL_ACCOUNTS={
+  'admin':{password:'123456',name:'超级管理员',avatar:'管',role:'super'},
+  'client':{password:'123456',name:'周小明',avatar:'周',role:'client'},
+  'clinic':{password:'123456',name:'诊所管理员',avatar:'诊',role:'clinic'},
+  'dealer':{password:'123456',name:'经销商',avatar:'经',role:'dealer'},
+  'pharmacy':{password:'123456',name:'药房管理员',avatar:'药',role:'pharmacy'},
+  'factory':{password:'123456',name:'工厂管理员',avatar:'厂',role:'factory'}
+};
 function doLogin(){
   var a=document.getElementById('loginAccount').value.trim(),p=document.getElementById('loginPassword').value.trim();
   if(!a||!p){showToast('请输入账号和密码');return}
   var btn=document.getElementById('loginBtn');btn.disabled=true;btn.textContent='登录中...';
+
+  // 先尝试API登录
   apiRequest('/auth/login','POST',{account:a,password:p}).then(function(res){
     token=res.token;userInfo=res.user;
     localStorage.setItem('token',token);localStorage.setItem('userInfo',JSON.stringify(userInfo));
     showMain();loadAll();showToast('登录成功')
-  }).catch(function(err){
-    btn.disabled=false;btn.textContent='登 录';
-    var msg='登录失败';
-    if(err&&err.message==='timeout')msg='连接超时，后端可能未运行';
-    else if(err&&err.message==='network')msg='网络错误，API: '+API_BASE;
-    else if(err&&err.message==='401')msg='账号或密码错误';
-    else msg='登录失败，可点免登录体验';
-    showToast(msg);
-    console.log('Login error:',err,'API:',API_BASE);
+  }).catch(function(){
+    // API失败，用内置账号登录
+    var acc=LOCAL_ACCOUNTS[a];
+    if(acc&&acc.password===p){
+      token='local_'+a+'_'+Date.now();
+      userInfo={id:0,name:acc.name,avatar:acc.avatar,role:acc.role};
+      localStorage.setItem('token',token);localStorage.setItem('userInfo',JSON.stringify(userInfo));
+      showMain();loadMock();showToast('登录成功（本地模式）')
+    }else{
+      btn.disabled=false;btn.textContent='登 录';
+      showToast('账号或密码错误')
+    }
   })
 }
 function enterDemoMode(){
@@ -967,7 +980,7 @@ function loadAll(){
 function getCategoryIcon(cat){var m={'口护用品':'🪥','种植体医疗服务':'🦷'};return m[cat]||'🎁'}
 
 // Init
-if(token&&userInfo){showMain();if(token==='demo')loadMock();else loadAll()}
+if(token&&userInfo){showMain();if(token==='demo'||token.indexOf('local_')===0)loadMock();else loadAll()}
 else showLogin();
 document.getElementById('cartFab').style.display='none';
 </script>
