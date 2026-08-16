@@ -990,6 +990,9 @@ html, body {
       </div>
       <button class="login-btn" id="loginBtn" onclick="doLogin()">登 录</button>
       <div class="login-hint">测试账号：client / 123456</div>
+      <div style="text-align:center;margin-top:12px;">
+        <a href="javascript:void(0)" onclick="enterDemoMode()" style="font-size:13px;color:var(--primary);text-decoration:none;font-weight:500;">免登录体验 →</a>
+      </div>
       <div style="text-align:center;margin-top:20px;">
         <a href="javascript:void(0)" onclick="toggleApiSetting()" style="font-size:12px;color:var(--text-muted);text-decoration:none;">⚙ API地址设置</a>
       </div>
@@ -1321,7 +1324,7 @@ html, body {
 
 <script>
 // ===== 配置 =====
-var API_BASE = localStorage.getItem('apiBase') || 'https://cowardly-bird-18.loca.lt/api';
+var API_BASE = localStorage.getItem('apiBase') || 'https://fat-pug-37.loca.lt/api';
 var token = localStorage.getItem('token');
 var userInfo = JSON.parse(localStorage.getItem('userInfo') || 'null');
 var cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -1349,6 +1352,27 @@ var mockOrders = [
 var allProducts = [];
 var currentMallFilter = 'all';
 var currentOrderFilter = 'all';
+
+// ===== 体验模式 =====
+function enterDemoMode() {
+  userInfo = { id: 0, name: '体验用户', avatar: '体', role: 'client' };
+  token = 'demo';
+  localStorage.setItem('token', 'demo');
+  localStorage.setItem('userInfo', JSON.stringify(userInfo));
+  showMainApp();
+  allProducts = mockProducts;
+  window.allOrders = mockOrders;
+  renderHotProducts();
+  renderMall();
+  renderOrders();
+  updateOrderStats();
+  document.getElementById('statPoints').textContent = '2580';
+  document.getElementById('profilePoints').textContent = '2580';
+  document.getElementById('statCards').textContent = '2';
+  document.getElementById('profileCards').textContent = '2';
+  updateCartBadge();
+  showToast('已进入体验模式');
+}
 
 // ===== API地址设置 =====
 function toggleApiSetting() {
@@ -1909,7 +1933,21 @@ allProducts = mockProducts;
 
 if (token && userInfo) {
   showMainApp();
-  loadAllData();
+  if (token === 'demo') {
+    allProducts = mockProducts;
+    window.allOrders = mockOrders;
+    renderHotProducts();
+    renderMall();
+    renderOrders();
+    updateOrderStats();
+    updateCartBadge();
+    document.getElementById('statPoints').textContent = '2580';
+    document.getElementById('profilePoints').textContent = '2580';
+    document.getElementById('statCards').textContent = '2';
+    document.getElementById('profileCards').textContent = '2';
+  } else {
+    loadAllData();
+  }
 } else {
   showLoginPage();
 }
