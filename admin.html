@@ -9,7 +9,7 @@
 :root{--primary:#1abc9c;--primary-dark:#16a085;--primary-light:#e8f8f5;--blue:#3498db;--orange:#f39c12;--purple:#8e44ad;--teal:#0097a7;--danger:#e74c3c;--success:#27ae60;--bg:#f0f2f5;--card-bg:#fff;--text:#2c3e50;--text-muted:#7f8c8d;--border:#ecf0f1;--shadow:0 1px 4px rgba(0,0,0,.06)}
 html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5}
 button{border:none;outline:none;cursor:pointer;font-family:inherit}
-input{font-family:inherit;font-size:14px;outline:none}
+input,select,textarea{font-family:inherit;font-size:14px;outline:none}
 ::-webkit-scrollbar{display:none}
 .hidden{display:none!important}
 .login{position:fixed;inset:0;background:linear-gradient(135deg,#1abc9c,#16a085);display:flex;align-items:center;justify-content:center;padding:30px;z-index:100}
@@ -44,9 +44,16 @@ input{font-family:inherit;font-size:14px;outline:none}
 .topbar.port-dealer{background:linear-gradient(90deg,#f39c12,#e67e22)}
 .topbar.port-pharmacy{background:linear-gradient(90deg,#8e44ad,#9b59b6)}
 .topbar.port-factory{background:linear-gradient(90deg,#0097a7,#00b8d4)}
+.topbar.port-client{background:linear-gradient(90deg,#2c3e50,#34495e)}
 .topbar-btn{width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer}
 .topbar-title{flex:1;font-size:16px;font-weight:600;text-align:center}
-.topbar-port-btn{background:rgba(255,255,255,.2);border-radius:14px;padding:3px 10px;font-size:11px;cursor:pointer}
+.topbar-port-btn{background:rgba(255,255,255,.2);border-radius:14px;padding:3px 10px;font-size:11px;cursor:pointer;display:flex;align-items:center;gap:3px}
+.port-switch-menu{position:fixed;top:48px;right:8px;background:#fff;border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.15);z-index:200;display:none;min-width:140px}
+.port-switch-menu.show{display:block}
+.port-switch-item{padding:10px 16px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.port-switch-item:last-child{border-bottom:none}
+.port-switch-item:active{background:#f5f5f5}
+.port-switch-item .psi-icon{font-size:16px}
 .sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:#fff;z-index:200;transform:translateX(-100%);transition:transform .3s;display:flex;flex-direction:column}
 .sidebar.show{transform:translateX(0)}
 .sidebar-mask{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150;opacity:0;pointer-events:none;transition:opacity .3s}
@@ -61,6 +68,7 @@ input{font-family:inherit;font-size:14px;outline:none}
 .sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:14px;cursor:pointer}
 .sidebar-item:active,.sidebar-item.active{background:var(--primary-light);color:var(--primary-dark)}
 .si-icon{font-size:18px;width:24px;text-align:center}
+.si-badge{background:var(--danger);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:auto}
 .content{flex:1;overflow-y:auto;padding-bottom:60px}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px}
 .stat-card{background:#fff;border-radius:10px;padding:14px;box-shadow:var(--shadow);display:flex;align-items:center;gap:10px}
@@ -72,7 +80,8 @@ input{font-family:inherit;font-size:14px;outline:none}
 .qg-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .qg-name{font-size:11px;text-align:center}
 .section{padding:12px}
-.section-title{font-size:13px;font-weight:600;margin-bottom:8px}
+.section-title{font-size:13px;font-weight:600;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.st-more{font-size:11px;color:var(--primary);font-weight:400;cursor:pointer}
 .card-list{display:flex;flex-direction:column;gap:8px;padding:0 12px}
 .data-card{background:#fff;border-radius:10px;padding:12px;box-shadow:var(--shadow)}
 .dc-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
@@ -81,16 +90,21 @@ input{font-family:inherit;font-size:14px;outline:none}
 .dc-body{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px}
 .dc-field{font-size:12px}
 .dc-field span{color:var(--text-muted)}
+.dc-footer{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.dc-actions{display:flex;gap:6px}
+.dc-actions button{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600}
 .badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
 .badge-success{background:#e8f8f0;color:#27ae60}
 .badge-warning{background:#fef5e7;color:#f39c12}
 .badge-danger{background:#fdeaea;color:#e74c3c}
 .badge-info{background:#e8f4fd;color:#3498db}
+.badge-muted{background:#f5f5f5;color:#95a5a6}
 .filter-bar{display:flex;gap:6px;padding:8px 12px;overflow-x:auto}
 .filter-chip{padding:4px 12px;border-radius:14px;font-size:12px;white-space:nowrap;cursor:pointer;background:#fff;border:1px solid var(--border);color:var(--text-muted)}
 .filter-chip.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.search-bar{padding:8px 12px}
-.search-bar input{width:100%;height:36px;border:1px solid var(--border);border-radius:18px;padding:0 16px;font-size:13px;background:#fff}
+.search-bar{padding:8px 12px;display:flex;gap:8px;align-items:center}
+.search-bar input{flex:1;height:36px;border:1px solid var(--border);border-radius:18px;padding:0 16px;font-size:13px;background:#fff}
+.add-btn{width:36px;height:36px;background:var(--primary);color:#fff;border-radius:50%;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .empty{text-align:center;padding:40px 20px;color:var(--text-muted)}
 .empty .em-icon{font-size:48px;margin-bottom:8px;opacity:.3}
 .tabbar{position:fixed;bottom:0;left:0;right:0;height:56px;background:#fff;display:flex;border-top:1px solid var(--border);z-index:100}
@@ -113,7 +127,9 @@ input{font-family:inherit;font-size:14px;outline:none}
 .modal-body{padding:16px}
 .form-group{margin-bottom:12px}
 .form-group label{display:block;font-size:12px;color:var(--text-muted);margin-bottom:4px}
-.form-group input,.form-group select{width:100%;height:40px;border:1px solid #ddd;border-radius:8px;padding:0 12px;font-size:13px}
+.form-group label .req{color:var(--danger)}
+.form-group input,.form-group select,.form-group textarea{width:100%;height:40px;border:1px solid #ddd;border-radius:8px;padding:0 12px;font-size:13px}
+.form-group textarea{height:80px;padding:8px 12px;resize:none}
 .form-actions{display:flex;gap:8px;padding-top:8px}
 .form-actions button{flex:1;height:42px;border-radius:8px;font-size:14px;font-weight:600}
 .btn-primary{background:var(--primary);color:#fff}
@@ -132,11 +148,18 @@ input{font-family:inherit;font-size:14px;outline:none}
 .settings-group{margin:12px;background:#fff;border-radius:10px;overflow:hidden}
 .settings-item{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer}
 .settings-item:last-child{border-bottom:none}
+.timeline{padding:12px}
+.timeline-item{display:flex;gap:10px;padding-bottom:16px;position:relative}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-item:before{content:'';position:absolute;left:15px;top:28px;bottom:0;width:2px;background:var(--border)}
+.timeline-item:last-child:before{display:none}
+.timeline-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;z-index:1}
+.timeline-dot.done{background:#e8f8f0;color:#27ae60}
+.timeline-dot.pending{background:#fef5e7;color:#f39c12}
 </style>
 </head>
 <body>
 
-<!-- Login -->
 <div class="login" id="loginPage">
   <div class="login-card">
     <div class="login-logo">
@@ -153,11 +176,10 @@ input{font-family:inherit;font-size:14px;outline:none}
       <input type="password" id="loginPassword" value="123456">
     </div>
     <button class="login-btn" id="loginBtn" type="button">登 录</button>
-    <div class="login-hint">测试账号: admin / clinic / dealer / pharmacy / factory 密码: 123456</div>
+    <div class="login-hint">账号: admin/clinic/dealer/pharmacy/factory/client<br>密码: 123456</div>
   </div>
 </div>
 
-<!-- Port selection -->
 <div class="port-select hidden" id="portSelectPage">
   <div class="port-select-header">
     <h2>选择管理端口</h2>
@@ -166,26 +188,25 @@ input{font-family:inherit;font-size:14px;outline:none}
   <div class="port-grid" id="portGrid"></div>
 </div>
 
-<!-- Main app -->
 <div class="app hidden" id="mainApp">
   <div class="topbar port-platform" id="topbar">
     <div class="topbar-btn" onclick="toggleSidebar()">☰</div>
     <div class="topbar-title" id="topbarTitle">首页</div>
-    <div class="topbar-port-btn" onclick="logout()">
-      <span id="topbarPortName">平台</span> 退出
+    <div class="topbar-port-btn" id="portSwitchBtn" onclick="togglePortSwitch()">
+      <span id="topbarPortName">平台</span> ▾
     </div>
   </div>
+  <div class="port-switch-menu" id="portSwitchMenu"></div>
   <div class="content" id="contentArea"></div>
   <div class="tabbar" id="tabbar">
-    <div class="tab active" onclick="switchTab('home')"><div class="t-icon">📊</div><div class="t-name">首页</div></div>
-    <div class="tab" onclick="switchTab('manage')"><div class="t-icon">📋</div><div class="t-name">管理</div></div>
-    <div class="tab" onclick="switchTab('medical')"><div class="t-icon">📋</div><div class="t-name">病历</div></div>
-    <div class="tab" onclick="switchTab('finance')"><div class="t-icon">💰</div><div class="t-name">财务</div></div>
-    <div class="tab" onclick="switchTab('mine')"><div class="t-icon">⚙️</div><div class="t-name">我的</div></div>
+    <div class="tab active" onclick="switchTab('home',this)"><div class="t-icon">📊</div><div class="t-name">首页</div></div>
+    <div class="tab" onclick="switchTab('manage',this)"><div class="t-icon">📋</div><div class="t-name">管理</div></div>
+    <div class="tab" onclick="switchTab('medical',this)"><div class="t-icon">📋</div><div class="t-name">病历</div></div>
+    <div class="tab" onclick="switchTab('finance',this)"><div class="t-icon">💰</div><div class="t-name">财务</div></div>
+    <div class="tab" onclick="switchTab('mine',this)"><div class="t-icon">⚙️</div><div class="t-name">我的</div></div>
   </div>
 </div>
 
-<!-- Sidebar -->
 <div class="sidebar-mask" id="sidebarMask" onclick="toggleSidebar()"></div>
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header" id="sidebarHeader">
@@ -196,7 +217,6 @@ input{font-family:inherit;font-size:14px;outline:none}
   <div class="sidebar-body" id="sidebarBody"></div>
 </div>
 
-<!-- Subpage -->
 <div class="subpage" id="subpage">
   <div class="subpage-header">
     <div class="sh-back" onclick="closeSubpage()">‹</div>
@@ -206,9 +226,8 @@ input{font-family:inherit;font-size:14px;outline:none}
   <div class="subpage-body" id="subpageBody"></div>
 </div>
 
-<!-- Modal -->
 <div class="modal-bg" id="modalBg">
-  <div class="modal" id="modal">
+  <div class="modal">
     <div class="modal-header">
       <div class="mh-title" id="modalTitle">编辑</div>
       <div class="mh-close" onclick="closeModal()">×</div>
@@ -217,10 +236,8 @@ input{font-family:inherit;font-size:14px;outline:none}
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Confirm -->
 <div class="confirm-bg" id="confirmBg">
   <div class="confirm-box">
     <div class="cb-msg" id="confirmMsg">确认？</div>
@@ -232,8 +249,7 @@ input{font-family:inherit;font-size:14px;outline:none}
 </div>
 
 <script>
-// ==================== Config ====================
-var APP_VERSION='v20260816ad3';
+var APP_VERSION='v20260816ad4';
 if(localStorage.getItem('adminAppVersion')!==APP_VERSION){
   localStorage.removeItem('adminToken');
   localStorage.removeItem('adminUserInfo');
@@ -245,71 +261,92 @@ var userInfo=null;
 try{userInfo=JSON.parse(localStorage.getItem('adminUserInfo')||'null')}catch(e){userInfo=null}
 var currentPort=localStorage.getItem('adminPort')||'';
 var currentPage='home';
-var currentTab='home';
 
-// ==================== Port Config ====================
+var ACCOUNTS={
+  admin:{password:'123456',name:'超级管理员',avatar:'管',role:'super',ports:['platform','clinic','dealer','pharmacy','factory','client']},
+  clinic:{password:'123456',name:'李医生',avatar:'李',role:'clinic',ports:['clinic']},
+  dealer:{password:'123456',name:'张经理',avatar:'张',role:'dealer',ports:['dealer']},
+  pharmacy:{password:'123456',name:'周店长',avatar:'周',role:'pharmacy',ports:['pharmacy']},
+  factory:{password:'123456',name:'孙厂长',avatar:'孙',role:'factory',ports:['factory']},
+  client:{password:'123456',name:'周小明',avatar:'周',role:'client',ports:['client']}
+};
+
 var PORT_CONFIG={
   platform:{name:'小唯平台端',short:'平台',icon:'🏠',color:'#1abc9c',desc:'系统管理、业务总览、财务结算'},
   clinic:{name:'诊所端',short:'诊所',icon:'🏥',color:'#3498db',desc:'患者管理、加工订单、核销登记'},
   dealer:{name:'经销商端',short:'经销',icon:'👤',color:'#f39c12',desc:'客户管理、销售活动、佣金提现'},
   pharmacy:{name:'药店端',short:'药店',icon:'💊',color:'#8e44ad',desc:'种植卡管理、采购库存、客户管理'},
-  factory:{name:'工厂端',short:'工厂',icon:'🏭',color:'#0097a7',desc:'订单生产、质检记录、收发货管理'}
+  factory:{name:'工厂端',short:'工厂',icon:'🏭',color:'#0097a7',desc:'订单生产、质检记录、收发货管理'},
+  client:{name:'客户端',short:'客户',icon:'📱',color:'#2c3e50',desc:'积分商城、订单管理、种植进度'}
 };
 
-// ==================== Port Menus ====================
 var PORT_MENUS={
   platform:[
     {group:'概览',items:[{key:'home',name:'首页',icon:'📊'}]},
     {group:'业务管理',items:[
-      {key:'clinics',name:'诊所管理',icon:'🏥'},
-      {key:'pharmacies',name:'药店管理',icon:'💊'},
-      {key:'factories',name:'工厂详情',icon:'🏭'},
-      {key:'dealers',name:'经销商管理',icon:'👤'}
+      {key:'clinics',name:'诊所管理',icon:'🏥',badge:12},
+      {key:'pharmacy',name:'药店管理',icon:'💊'},
+      {key:'factory',name:'工厂详情',icon:'🏭'},
+      {key:'dealers',name:'经销商管理',icon:'👤'},
+      {key:'cards',name:'种植体卡管理',icon:'💳'},
+      {key:'mall',name:'商场管理',icon:'🛍️'}
     ]},
-    {group:'产品',items:[
-      {key:'cards',name:'种植卡管理',icon:'💳'},
-      {key:'products',name:'商场管理',icon:'🛍️'}
-    ]},
-    {group:'病历',items:[{key:'patientQuery',name:'病人病历查询',icon:'📋',restricted:true}]},
-    {group:'财务',items:[{key:'finance',name:'结算中心',icon:'💰'},{key:'reports',name:'财务报表',icon:'📈'}]},
-    {group:'系统',items:[{key:'permissions',name:'权限配置',icon:'🔐'},{key:'review',name:'注册审核',icon:'✅'},{key:'notifications',name:'消息通知',icon:'🔔'}]}
+    {group:'病历中心',items:[{key:'patientQuery',name:'病人病历查询',icon:'📋',restricted:true}]},
+    {group:'财务',items:[{key:'settlement',name:'结算中心',icon:'💰'},{key:'reports',name:'财务报表',icon:'📈'}]},
+    {group:'系统',items:[{key:'permissions',name:'权限配置',icon:'🔐'},{key:'regreview',name:'注册审核',icon:'✅',badge:2},{key:'notifications',name:'消息通知',icon:'🔔'}]}
   ],
   clinic:[
     {group:'概览',items:[{key:'home',name:'首页',icon:'📊'}]},
     {group:'业务',items:[
-      {key:'verification',name:'核销登记',icon:'✓'},
+      {key:'verify',name:'核销登记',icon:'✓',badge:3},
       {key:'patients',name:'患者建档',icon:'👥'},
       {key:'patientQuery',name:'病人信息查询',icon:'📋'},
       {key:'orders',name:'加工单管理',icon:'📦'},
-      {key:'tracking',name:'订单跟踪',icon:'🚚'}
+      {key:'tracking',name:'订单跟踪',icon:'🚚'},
+      {key:'implants',name:'植体管理',icon:'🦷'}
     ]},
     {group:'财务',items:[{key:'finance',name:'收支明细',icon:'💰'},{key:'withdraw',name:'提现申请',icon:'💸'}]},
     {group:'系统',items:[{key:'settings',name:'诊所设置',icon:'⚙️'}]}
   ],
   dealer:[
     {group:'概览',items:[{key:'home',name:'首页',icon:'📊'}]},
-    {group:'客户',items:[{key:'clinics',name:'诊所管理',icon:'🏥'},{key:'pharmacies',name:'药房管理',icon:'💊'}]},
-    {group:'销售',items:[{key:'sales',name:'销售活动',icon:'📈'},{key:'commission',name:'佣金明细',icon:'💰'},{key:'withdraw',name:'提现申请',icon:'💸'}]},
+    {group:'客户',items:[{key:'clinics',name:'诊所管理',icon:'🏥',badge:5},{key:'pharmacy',name:'药房管理',icon:'💊',badge:3}]},
+    {group:'收益',items:[{key:'sales',name:'销售活动',icon:'📈'},{key:'commission',name:'佣金明细',icon:'💰'},{key:'withdraw',name:'提现申请',icon:'💸'}]},
     {group:'系统',items:[{key:'settings',name:'个人设置',icon:'⚙️'}]}
   ],
   pharmacy:[
     {group:'概览',items:[{key:'home',name:'首页',icon:'📊'}]},
     {group:'商品',items:[{key:'cards',name:'种植卡管理',icon:'💳'},{key:'inventory',name:'库存查看',icon:'📦'},{key:'purchase',name:'采购管理',icon:'🛒'}]},
-    {group:'财务',items:[{key:'finance',name:'财务收支',icon:'💰'},{key:'withdraw',name:'提现/商城',icon:'💸'}]},
+    {group:'财务',items:[{key:'finance',name:'财务收支',icon:'💰'},{key:'mall',name:'提现/商城',icon:'💸'}]},
     {group:'客户',items:[{key:'customers',name:'客户管理',icon:'👥'}]},
     {group:'系统',items:[{key:'settings',name:'门店设置',icon:'⚙️'}]}
   ],
   factory:[
     {group:'概览',items:[{key:'home',name:'首页',icon:'📊'}]},
-    {group:'订单',items:[{key:'orders',name:'订单管理',icon:'📦'},{key:'shipping',name:'收发货管理',icon:'🚚'}]},
+    {group:'订单',items:[{key:'orders',name:'订单管理',icon:'📦',badge:8},{key:'shipping',name:'收发货管理',icon:'🚚'}]},
     {group:'生产',items:[{key:'production',name:'生产排产',icon:'🏭'},{key:'quality',name:'质检记录',icon:'✅'},{key:'exception',name:'异常反馈',icon:'⚠️'}]},
     {group:'病历',items:[{key:'patientQuery',name:'病人病历查询',icon:'📋',restricted:true}]},
     {group:'沟通',items:[{key:'service',name:'客服中心',icon:'🎧'}]},
     {group:'财务',items:[{key:'finance',name:'财务收支',icon:'💰'}]}
+  ],
+  client:[
+    {group:'概览',items:[{key:'home',name:'首页',icon:'📊'}]},
+    {group:'小唯学院',items:[{key:'knowledge',name:'种植常识',icon:'📚'},{key:'about',name:'关于小唯',icon:'ℹ️'}]},
+    {group:'我要种植',items:[{key:'plant',name:'我要种植',icon:'🦷'}]},
+    {group:'小唯商场',items:[{key:'mall',name:'商品兑换',icon:'🛍️'}]},
+    {group:'我的',items:[
+      {key:'profile',name:'个人中心',icon:'👤'},
+      {key:'orders',name:'我的订单',icon:'📦'},
+      {key:'progress',name:'种植进度',icon:'📊'},
+      {key:'points',name:'我的积分',icon:'⭐',badge:1268},
+      {key:'cards',name:'实体卡绑定',icon:'💳'},
+      {key:'reviews',name:'我的评价',icon:'⭐'},
+      {key:'transactions',name:'消费记录',icon:'💰'},
+      {key:'service',name:'售后质保',icon:'🔧'}
+    ]}
   ]
 };
 
-// ==================== Mock Data ====================
 var MOCK={
   clinics:[
     {id:1,name:'微笑口腔诊所',manager:'王医生',phone:'13800138001',address:'北京市朝阳区',status:'approved',patients:156,implants:89},
@@ -335,11 +372,11 @@ var MOCK={
     {id:3,name:'王经理',phone:'13600136003',region:'华南区',clinics:9,sales:1230000,status:'active'}
   ],
   patients:[
-    {id:1,name:'张三',gender:'男',age:45,phone:'13800000001',diagnosis:'牙齿缺失',doctor:'王医生',implantModel:'ITI',status:'completed',surgeryDate:'2026-07-15'},
-    {id:2,name:'李四',gender:'女',age:38,phone:'13800000002',diagnosis:'牙周病',doctor:'李医生',implantModel:'Nobel',status:'inProgress',surgeryDate:'2026-08-01'},
-    {id:3,name:'王五',gender:'男',age:52,phone:'13800000003',diagnosis:'外伤脱落',doctor:'王医生',implantModel:'ITI',status:'completed',surgeryDate:'2026-06-20'},
-    {id:4,name:'赵六',gender:'女',age:41,phone:'13800000004',diagnosis:'龋齿拔除',doctor:'陈医生',implantModel:'Dentium',status:'pending',surgeryDate:'2026-08-25'},
-    {id:5,name:'钱七',gender:'男',age:33,phone:'13800000005',diagnosis:'先天缺失',doctor:'刘院长',implantModel:'ITI',status:'completed',surgeryDate:'2026-07-30'}
+    {id:1,name:'张三',gender:'男',age:45,phone:'13800000001',diagnosis:'牙齿缺失',doctor:'王医生',implantModel:'ITI',status:'completed',surgeryDate:'2026-07-15',treatment:'种植修复',allergy:'无',history:'无',notes:'正常'},
+    {id:2,name:'李四',gender:'女',age:38,phone:'13800000002',diagnosis:'牙周病',doctor:'李医生',implantModel:'Nobel',status:'inProgress',surgeryDate:'2026-08-01',treatment:'种植修复',allergy:'青霉素',history:'高血压',notes:'定期复查'},
+    {id:3,name:'王五',gender:'男',age:52,phone:'13800000003',diagnosis:'外伤脱落',doctor:'王医生',implantModel:'ITI',status:'completed',surgeryDate:'2026-06-20',treatment:'种植修复',allergy:'无',history:'无',notes:'恢复良好'},
+    {id:4,name:'赵六',gender:'女',age:41,phone:'13800000004',diagnosis:'龋齿拔除',doctor:'陈医生',implantModel:'Dentium',status:'pending',surgeryDate:'2026-08-25',treatment:'种植修复',allergy:'无',history:'糖尿病',notes:'需控制血糖'},
+    {id:5,name:'钱七',gender:'男',age:33,phone:'13800000005',diagnosis:'先天缺失',doctor:'刘院长',implantModel:'ITI',status:'completed',surgeryDate:'2026-07-30',treatment:'种植修复',allergy:'无',history:'无',notes:'正常'}
   ],
   cards:[
     {id:'VC20260001',patient:'张三',clinic:'微笑口腔',type:'种植卡',value:2980,status:'used',date:'2026-07-10'},
@@ -363,58 +400,59 @@ var MOCK={
     {id:2,type:'expense',category:'采购成本',amount:15600,source:'小唯医疗',date:'2026-08-02'},
     {id:3,type:'income',category:'佣金收入',amount:4500,source:'张经理',date:'2026-08-03'},
     {id:4,type:'expense',category:'运营支出',amount:3200,source:'办公租金',date:'2026-08-05'}
+  ],
+  registrations:[
+    {id:1,type:'clinic',account:'newclinic1',name:'阳光口腔诊所',manager:'赵医生',phone:'13800138888',address:'南京市鼓楼区',status:'pending',date:'2026-08-10'},
+    {id:2,type:'pharmacy',account:'newpharma1',name:'康民大药房',manager:'钱店长',phone:'13900139999',address:'重庆市渝中区',status:'pending',date:'2026-08-12'}
   ]
 };
 
-// ==================== Local Accounts ====================
-var ACCOUNTS={
-  admin:{password:'123456',name:'超级管理员',avatar:'管',ports:['platform','clinic','dealer','pharmacy','factory']},
-  clinic:{password:'123456',name:'李医生',avatar:'李',ports:['clinic']},
-  dealer:{password:'123456',name:'张经理',avatar:'张',ports:['dealer']},
-  pharmacy:{password:'123456',name:'周店长',avatar:'周',ports:['pharmacy']},
-  factory:{password:'123456',name:'孙厂长',avatar:'孙',ports:['factory']}
+var CRUD_FIELDS={
+  clinics:[{key:'name',label:'诊所名称',type:'text',required:true},{key:'manager',label:'负责人',type:'text',required:true},{key:'phone',label:'电话',type:'text',required:true},{key:'address',label:'地址',type:'text'},{key:'status',label:'状态',type:'select',options:['approved','pending']}],
+  pharmacy:[{key:'name',label:'药店名称',type:'text',required:true},{key:'manager',label:'店长',type:'text',required:true},{key:'phone',label:'电话',type:'text',required:true},{key:'address',label:'地址',type:'text'},{key:'status',label:'状态',type:'select',options:['approved','pending']}],
+  dealers:[{key:'name',label:'经销商',type:'text',required:true},{key:'phone',label:'电话',type:'text',required:true},{key:'region',label:'区域',type:'text'},{key:'status',label:'状态',type:'select',options:['active','inactive']}],
+  cards:[{key:'id',label:'卡号',type:'text',required:true},{key:'patient',label:'患者',type:'text',required:true},{key:'clinic',label:'诊所',type:'text'},{key:'value',label:'面值',type:'number'},{key:'status',label:'状态',type:'select',options:['active','used']}],
+  products:[{key:'name',label:'商品名',type:'text',required:true},{key:'category',label:'分类',type:'text'},{key:'price',label:'价格',type:'number'},{key:'stock',label:'库存',type:'number'},{key:'status',label:'状态',type:'select',options:['active','inactive']}],
+  orders:[{key:'id',label:'订单号',type:'text',required:true},{key:'clinic',label:'诊所',type:'text'},{key:'items',label:'产品',type:'text'},{key:'amount',label:'金额',type:'number'},{key:'status',label:'状态',type:'select',options:['pending','production','shipped','completed']}]
 };
 
-// ==================== Helper Functions ====================
-function showToast(msg){
-  var t=document.getElementById('toast');
-  t.textContent=msg;
-  t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show')},2000);
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},2000)}
+function showConfirm(msg,cb){document.getElementById('confirmMsg').textContent=msg;document.getElementById('confirmBg').classList.add('show');document.getElementById('confirmOkBtn').onclick=function(){document.getElementById('confirmBg').classList.remove('show');cb()}}
+function closeConfirm(){document.getElementById('confirmBg').classList.remove('show')}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('show');document.getElementById('sidebarMask').classList.toggle('show')}
+function closeSubpage(){document.getElementById('subpage').classList.remove('active')}
+function closeModal(){document.getElementById('modalBg').classList.remove('show')}
+function badge(s){var m={approved:'success',active:'success',completed:'success',used:'info',pending:'warning',shipped:'info',production:'warning',inProgress:'warning',inactive:'danger',rejected:'danger'};var l={approved:'已审核',active:'正常',completed:'已完成',used:'已使用',pending:'待处理',shipped:'已发货',production:'生产中',inProgress:'进行中',inactive:'已停用',rejected:'已拒绝'};return '<span class="badge badge-'+(m[s]||'info')+'">'+(l[s]||s)+'</span>'}
+
+function togglePortSwitch(){
+  var menu=document.getElementById('portSwitchMenu');
+  if(menu.classList.contains('show')){menu.classList.remove('show');return}
+  var ports=userInfo?userInfo.ports:['platform'];
+  var html='';
+  Object.keys(PORT_CONFIG).forEach(function(key){
+    var p=PORT_CONFIG[key];
+    var enabled=ports.indexOf(key)>=0;
+    if(enabled){
+      html+='<div class="port-switch-item" onclick="switchPort(\''+key+'\')">';
+    }else{
+      html+='<div class="port-switch-item" style="opacity:.4;pointer-events:none">';
+    }
+    html+='<span class="psi-icon">'+p.icon+'</span><span>'+p.name+'</span>';
+    if(currentPort===key)html+='<span style="color:var(--primary);margin-left:auto">✓</span>';
+    html+='</div>';
+  });
+  html+='<div class="port-switch-item" style="border-top:2px solid var(--border);color:var(--danger)" onclick="logout()"><span class="psi-icon">🚪</span><span>退出登录</span></div>';
+  menu.innerHTML=html;
+  menu.classList.add('show');
 }
 
-function showConfirm(msg,cb){
-  document.getElementById('confirmMsg').textContent=msg;
-  document.getElementById('confirmBg').classList.add('show');
-  document.getElementById('confirmOkBtn').onclick=function(){
-    document.getElementById('confirmBg').classList.remove('show');
-    cb();
-  };
-}
-function closeConfirm(){
-  document.getElementById('confirmBg').classList.remove('show');
+function switchPort(port){
+  currentPort=port;
+  localStorage.setItem('adminPort',port);
+  document.getElementById('portSwitchMenu').classList.remove('show');
+  showMain();
 }
 
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('show');
-  document.getElementById('sidebarMask').classList.toggle('show');
-}
-
-function closeSubpage(){
-  document.getElementById('subpage').classList.remove('active');
-}
-
-function closeModal(){
-  document.getElementById('modalBg').classList.remove('show');
-}
-
-function badge(status){
-  var map={approved:'success',active:'success',completed:'success',used:'info',pending:'warning',shipped:'info',production:'warning',inProgress:'warning',inactive:'danger'};
-  var label={approved:'已审核',active:'正常',completed:'已完成',used:'已使用',pending:'待处理',shipped:'已发货',production:'生产中',inProgress:'进行中',inactive:'已停用'};
-  return '<span class="badge badge-'+(map[status]||'info')+'">'+(label[status]||status)+'</span>';
-}
-
-// ==================== Login ====================
 function showLogin(){
   document.getElementById('loginPage').classList.remove('hidden');
   document.getElementById('portSelectPage').classList.add('hidden');
@@ -429,23 +467,27 @@ function doLogin(){
   btn.disabled=true;btn.textContent='登录中...';
   var acc=ACCOUNTS[a];
   if(acc&&acc.password===p){
-    userInfo={name:acc.name,avatar:acc.avatar,ports:acc.ports,account:a};
+    userInfo={name:acc.name,avatar:acc.avatar,role:acc.role,ports:acc.ports,account:a};
     localStorage.setItem('adminToken','local_'+a+'_'+Date.now());
     localStorage.setItem('adminUserInfo',JSON.stringify(userInfo));
     btn.disabled=false;btn.textContent='登 录';
-    showPortSelect();
+    if(userInfo.ports.length>1){
+      showPortSelect();
+    }else{
+      currentPort=userInfo.ports[0];
+      localStorage.setItem('adminPort',currentPort);
+      showMain();
+    }
   }else{
     btn.disabled=false;btn.textContent='登 录';
     showToast('账号或密码错误');
   }
 }
 
-// ==================== Port Selection ====================
 function showPortSelect(){
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('mainApp').classList.add('hidden');
-  var ps=document.getElementById('portSelectPage');
-  ps.classList.remove('hidden');
+  document.getElementById('portSelectPage').classList.remove('hidden');
   document.getElementById('portSelectUser').textContent='欢迎，'+(userInfo?userInfo.name:'')+'，请选择要进入的管理端口';
   var ports=userInfo?userInfo.ports:['platform'];
   var html='';
@@ -476,34 +518,30 @@ function logout(){
   localStorage.removeItem('adminUserInfo');
   localStorage.removeItem('adminPort');
   userInfo=null;token=null;currentPort='';
+  document.getElementById('portSwitchMenu').classList.remove('show');
   showLogin();
 }
 
-// ==================== Main App ====================
 function showMain(){
   document.getElementById('loginPage').classList.add('hidden');
   document.getElementById('portSelectPage').classList.add('hidden');
-  var app=document.getElementById('mainApp');
-  app.classList.remove('hidden');
-  
+  document.getElementById('mainApp').classList.remove('hidden');
   var pc=PORT_CONFIG[currentPort];
   if(!pc){showToast('端口错误');return}
-  
   var tb=document.getElementById('topbar');
   tb.className='topbar port-'+currentPort;
   document.getElementById('topbarPortName').textContent=pc.short;
-  
   var sh=document.getElementById('sidebarHeader');
   sh.style.background='linear-gradient(135deg,'+pc.color+','+pc.color+'dd)';
   document.getElementById('sidebarAvatar').textContent=userInfo?userInfo.avatar:'?';
   document.getElementById('sidebarName').textContent=userInfo?userInfo.name:'';
   document.getElementById('sidebarRole').textContent=pc.name;
-  
   buildSidebar();
   currentPage='home';
-  currentTab='home';
   navigateTo('home');
-  updateTabs();
+  var tabs=document.querySelectorAll('.tab');
+  tabs.forEach(function(t){t.classList.remove('active')});
+  tabs[0].classList.add('active');
 }
 
 function buildSidebar(){
@@ -515,6 +553,7 @@ function buildSidebar(){
     group.items.forEach(function(item){
       html+='<div class="sidebar-item'+(currentPage===item.key?' active':'')+'" onclick="navigateTo(\''+item.key+'\')">';
       html+='<span class="si-icon">'+item.icon+'</span><span>'+item.name+'</span>';
+      if(item.badge)html+='<span class="si-badge">'+item.badge+'</span>';
       html+='</div>';
     });
     html+='</div>';
@@ -524,8 +563,7 @@ function buildSidebar(){
 
 function navigateTo(page){
   currentPage=page;
-  toggleSidebar();
-  
+  if(document.getElementById('sidebar').classList.contains('show'))toggleSidebar();
   var menus=PORT_MENUS[currentPort]||[];
   var title='首页';
   for(var i=0;i<menus.length;i++){
@@ -535,205 +573,139 @@ function navigateTo(page){
   }
   if(page==='home')title='首页';
   document.getElementById('topbarTitle').textContent=title;
-  
   var items=document.querySelectorAll('.sidebar-item');
   items.forEach(function(it){it.classList.remove('active')});
-  
   renderPage(page);
 }
 
-function updateTabs(){
+function switchTab(tab,el){
   var tabs=document.querySelectorAll('.tab');
   tabs.forEach(function(t){t.classList.remove('active')});
-  var activeTab=document.querySelector('.tab');
-  if(activeTab)activeTab.classList.add('active');
-}
-
-function switchTab(tab){
-  currentTab=tab;
-  var tabs=document.querySelectorAll('.tab');
-  tabs.forEach(function(t){t.classList.remove('active')});
-  event.currentTarget.classList.add('active');
-  
+  el.classList.add('active');
+  var menus=PORT_MENUS[currentPort]||[];
   if(tab==='home'){navigateTo('home')}
-  else if(tab==='manage'){navigateTo(getFirstManagePage())}
-  else if(tab==='medical'){navigateTo('patientQuery')}
+  else if(tab==='manage'){
+    for(var i=0;i<menus.length;i++){
+      for(var j=0;j<menus[i].items.length;j++){
+        var k=menus[i].items[j].key;
+        if(k!=='home'&&k!=='patientQuery'&&k!=='finance'&&k!=='settings'&&k!=='reports'&&k!=='regreview'&&k!=='notifications'&&k!=='profile'&&k!=='orders'&&k!=='points'&&k!==='knowledge'&&k!=='about'&&k!=='plant'&&k!=='progress'&&k!=='cards'&&k!=='reviews'&&k!=='transactions'&&k!=='service'&&k!=='mall'){navigateTo(k);return}
+      }
+    }
+    navigateTo(menus[1]?menus[1].items[0].key:'home');
+  }
+  else if(tab==='medical'){
+    for(var i=0;i<menus.length;i++){
+      for(var j=0;j<menus[i].items.length;j++){
+        if(menus[i].items[j].key==='patientQuery'){navigateTo('patientQuery');return}
+      }
+    }
+    showToast('当前端口无病历功能');
+  }
   else if(tab==='finance'){navigateTo('finance')}
   else if(tab==='mine'){navigateTo('settings')}
 }
 
-function getFirstManagePage(){
-  var menus=PORT_MENUS[currentPort]||[];
-  for(var i=0;i<menus.length;i++){
-    for(var j=0;j<menus[i].items.length;j++){
-      var key=menus[i].items[j].key;
-      if(key!=='home'&&key!=='patientQuery'&&key!=='finance'&&key!=='settings'&&key!=='reports'){
-        return key;
-      }
-    }
-  }
-  return 'home';
-}
-
-// ==================== Page Rendering ====================
 function renderPage(page){
   var content=document.getElementById('contentArea');
-  
-  if(page==='home'){
-    renderHome(content);
-  }else if(page==='clinics'){
-    renderList(content,'clinics','诊所管理',['name','manager','phone','address'],'name');
-  }else if(page==='pharmacies'){
-    renderList(content,'pharmacies','药店管理',['name','manager','phone','address'],'name');
-  }else if(page==='factories'){
-    renderList(content,'factories','工厂详情',['name','manager','phone','address'],'name');
-  }else if(page==='dealers'){
-    renderList(content,'dealers','经销商管理',['name','phone','region'],'name');
-  }else if(page==='cards'){
-    renderList(content,'cards','种植卡管理',['id','patient','clinic','value','date'],'id');
-  }else if(page==='products'){
-    renderList(content,'products','商场管理',['name','category','price','stock'],'name');
-  }else if(page==='orders'){
-    renderList(content,'orders','订单管理',['id','clinic','items','amount','date'],'id');
-  }else if(page==='patientQuery'){
-    renderPatientQuery(content);
-  }else if(page==='finance'){
-    renderFinance(content);
-  }else if(page==='reports'){
-    renderReports(content);
-  }else if(page==='review'){
-    renderReview(content);
-  }else if(page==='settings'){
-    renderSettings(content);
-  }else if(page==='production'){
-    renderProduction(content);
-  }else if(page==='sales'){
-    renderSales(content);
-  }else if(page==='service'){
-    renderService(content);
-  }else{
+  var pages=['home','clinics','pharmacy','factory','dealers','cards','mall','patientQuery','settlement','reports','permissions','regreview','notifications','verify','patients','orders','tracking','implants','finance','withdraw','settings','production','quality','exception','service','sales','commission','inventory','purchase','customers','knowledge','about','plant','profile','points','progress','reviews','transactions'];
+  if(page==='home'){renderHome(content)}
+  else if(page==='patientQuery'){renderPatientQuery(content)}
+  else if(page==='finance'){renderFinance(content)}
+  else if(page==='reports'){renderReports(content)}
+  else if(page==='regreview'){renderRegReview(content)}
+  else if(page==='settings'){renderSettings(content)}
+  else if(page==='production'){renderProduction(content)}
+  else if(page==='tracking'){renderTracking(content)}
+  else if(page==='factory'){renderFactoryDetail(content)}
+  else if(page==='service'){content.innerHTML='<div class="empty"><div class="em-icon">🎧</div><div class="em-text">客服中心<br>工作时间: 9:00-18:00<br>电话: 400-888-0000</div></div>'}
+  else if(page==='knowledge'){content.innerHTML='<div class="section"><div class="section-title">种植牙常识</div></div><div class="card-list"><div class="data-card"><div class="dc-title">什么是种植牙？</div><div class="dc-sub">种植牙是将人工牙根植入牙槽骨，待骨愈合后安装牙冠的修复方式</div></div><div class="data-card"><div class="dc-title">种植牙的优点</div><div class="dc-sub">不损伤邻牙、咀嚼力强、外观自然、使用寿命长</div></div></div>'}
+  else if(page==='about'){content.innerHTML='<div class="section"><div class="section-title">关于小唯</div></div><div class="card-list"><div class="data-card"><div class="dc-title">小唯医疗</div><div class="dc-sub">专业口腔种植系统服务商，提供种植体、基台、牙冠等全系列产品</div></div></div>'}
+  else if(page==='plant'){content.innerHTML='<div class="section"><div class="section-title">种植流程</div></div><div class="timeline"><div class="timeline-item"><div class="timeline-dot done">1</div><div><div style="font-weight:600">在线咨询</div><div style="font-size:12px;color:var(--text-muted)">了解种植方案和费用</div></div></div><div class="timeline-item"><div class="timeline-dot done">2</div><div><div style="font-weight:600">预约检查</div><div style="font-size:12px;color:var(--text-muted)">口腔检查和影像评估</div></div></div><div class="timeline-item"><div class="timeline-dot pending">3</div><div><div style="font-weight:600">种植手术</div><div style="font-size:12px;color:var(--text-muted)">植入人工牙根</div></div></div><div class="timeline-item"><div class="timeline-dot pending">4</div><div><div style="font-weight:600">安装牙冠</div><div style="font-size:12px;color:var(--text-muted)">骨愈合后安装牙冠</div></div></div><div class="timeline-item"><div class="timeline-dot pending">5</div><div><div style="font-weight:600">定期复查</div><div style="font-size:12px;color:var(--text-muted)">保持口腔健康</div></div></div></div>'}
+  else if(page==='profile'){renderSettings(content)}
+  else if(page==='points'){content.innerHTML='<div class="stats-grid"><div class="stat-card"><div class="sc-icon" style="background:#fef5e7">⭐</div><div><div class="sc-value">1268</div><div class="sc-label">当前积分</div></div></div></div>'}
+  else if(page==='progress'){renderTracking(content)}
+  else if(page==='withdraw'){content.innerHTML='<div class="section"><div class="section-title">提现申请</div></div><div class="card-list"><div class="data-card"><div class="dc-body"><div class="dc-field">可提现金额：<span>¥12,580</span></div></div><div class="dc-footer"><button class="btn-primary" style="padding:8px 20px;border-radius:8px" onclick="showToast(\'提现申请已提交\')">申请提现</button></div></div></div>'}
+  else if(CRUD_FIELDS[page]){
+    renderCRUD(content,page);
+  }
+  else if(MOCK[page]){
+    renderList(content,page);
+  }
+  else{
     content.innerHTML='<div class="empty"><div class="em-icon">📄</div><div class="em-text">页面开发中...</div></div>';
   }
 }
 
 function renderHome(content){
-  var pc=PORT_CONFIG[currentPort];
   var stats=getPortStats();
-  var html='';
-  
-  html+='<div class="stats-grid">';
+  var html='<div class="stats-grid">';
   stats.forEach(function(s){
     html+='<div class="stat-card"><div class="sc-icon" style="background:'+s.color+'20">'+s.icon+'</div><div><div class="sc-value">'+s.value+'</div><div class="sc-label">'+s.label+'</div></div></div>';
   });
   html+='</div>';
-  
-  html+='<div class="section"><div class="section-title">快捷功能</div></div>';
-  html+='<div class="qg">';
-  var quickActions=getQuickActions();
-  quickActions.forEach(function(q){
-    html+='<div class="qg-item" onclick="navigateTo(\''+q.key+'\')">';
-    html+='<div class="qg-icon" style="background:'+q.color+'20">'+q.icon+'</div>';
-    html+='<div class="qg-name">'+q.name+'</div>';
-    html+='</div>';
+  html+='<div class="section"><div class="section-title">快捷功能</div></div><div class="qg">';
+  var qa=getQuickActions();
+  qa.forEach(function(q){
+    html+='<div class="qg-item" onclick="navigateTo(\''+q.key+'\')"><div class="qg-icon" style="background:'+q.color+'20">'+q.icon+'</div><div class="qg-name">'+q.name+'</div></div>';
   });
   html+='</div>';
-  
-  html+='<div class="section"><div class="section-title">最近数据</div></div>';
+  html+='<div class="section"><div class="section-title">最近数据 <span class="st-more" onclick="navigateTo(\''+(qa[0]?qa[0].key:'home')+'\')">更多 ›</span></div></div>';
   html+='<div class="card-list">';
   var recent=MOCK.clinics.slice(0,3);
   recent.forEach(function(item){
-    html+='<div class="data-card">';
-    html+='<div class="dc-header"><div class="dc-title">'+item.name+'</div>'+badge(item.status)+'</div>';
-    html+='<div class="dc-sub">负责人：'+item.manager+' | 电话：'+item.phone+'</div>';
-    html+='<div class="dc-body"><div class="dc-field">患者：<span>'+item.patients+'</span></div><div class="dc-field">种植：<span>'+item.implants+'</span></div></div>';
-    html+='</div>';
+    html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+item.name+'</div>'+badge(item.status)+'</div><div class="dc-sub">负责人：'+item.manager+' | 电话：'+item.phone+'</div><div class="dc-body"><div class="dc-field">患者：<span>'+item.patients+'</span></div><div class="dc-field">种植：<span>'+item.implants+'</span></div></div></div>';
   });
   html+='</div>';
-  
   content.innerHTML=html;
 }
 
 function getPortStats(){
-  var statsByPort={
-    platform:[
-      {icon:'🏥',value:MOCK.clinics.length,label:'诊所总数',color:'#1abc9c'},
-      {icon:'💊',value:MOCK.pharmacies.length,label:'药店总数',color:'#8e44ad'},
-      {icon:'👤',value:MOCK.dealers.length,label:'经销商',color:'#f39c12'},
-      {icon:'💰',value:'89.7万',label:'本月营收',color:'#e74c3c'}
-    ],
-    clinic:[
-      {icon:'👥',value:'156',label:'患者总数',color:'#3498db'},
-      {icon:'🦷',value:'89',label:'种植数量',color:'#1abc9c'},
-      {icon:'📦',value:'23',label:'加工订单',color:'#f39c12'},
-      {icon:'💰',value:'45.2万',label:'本月收入',color:'#27ae60'}
-    ],
-    dealer:[
-      {icon:'🏥',value:'12',label:'诊所客户',color:'#3498db'},
-      {icon:'📈',value:'234万',label:'销售额',color:'#f39c12'},
-      {icon:'💰',value:'12.5万',label:'佣金',color:'#27ae60'},
-      {icon:'📋',value:'38',label:'订单数',color:'#1abc9c'}
-    ],
-    pharmacy:[
-      {icon:'💳',value:'234',label:'种植卡',color:'#8e44ad'},
-      {icon:'📦',value:'445',label:'库存数',color:'#f39c12'},
-      {icon:'👥',value:'189',label:'客户',color:'#3498db'},
-      {icon:'💰',value:'23.6万',label:'销售额',color:'#27ae60'}
-    ],
-    factory:[
-      {icon:'📦',value:'456',label:'订单总数',color:'#0097a7'},
-      {icon:'🏭',value:'28',label:'产品种类',color:'#1abc9c'},
-      {icon:'✅',value:'345',label:'已完成',color:'#27ae60'},
-      {icon:'⏳',value:'78',label:'生产中',color:'#f39c12'}
-    ]
+  var s={
+    platform:[{icon:'🏥',value:MOCK.clinics.length,label:'诊所总数',color:'#1abc9c'},{icon:'💊',value:MOCK.pharmacies.length,label:'药店总数',color:'#8e44ad'},{icon:'👤',value:MOCK.dealers.length,label:'经销商',color:'#f39c12'},{icon:'💰',value:'89.7万',label:'本月营收',color:'#e74c3c'}],
+    clinic:[{icon:'👥',value:'156',label:'患者总数',color:'#3498db'},{icon:'🦷',value:'89',label:'种植数量',color:'#1abc9c'},{icon:'📦',value:'23',label:'加工订单',color:'#f39c12'},{icon:'💰',value:'45.2万',label:'本月收入',color:'#27ae60'}],
+    dealer:[{icon:'🏥',value:'12',label:'诊所客户',color:'#3498db'},{icon:'📈',value:'234万',label:'销售额',color:'#f39c12'},{icon:'💰',value:'12.5万',label:'佣金',color:'#27ae60'},{icon:'📋',value:'38',label:'订单数',color:'#1abc9c'}],
+    pharmacy:[{icon:'💳',value:'234',label:'种植卡',color:'#8e44ad'},{icon:'📦',value:'445',label:'库存数',color:'#f39c12'},{icon:'👥',value:'189',label:'客户',color:'#3498db'},{icon:'💰',value:'23.6万',label:'销售额',color:'#27ae60'}],
+    factory:[{icon:'📦',value:'456',label:'订单总数',color:'#0097a7'},{icon:'🏭',value:'28',label:'产品种类',color:'#1abc9c'},{icon:'✅',value:'345',label:'已完成',color:'#27ae60'},{icon:'⏳',value:'78',label:'生产中',color:'#f39c12'}],
+    client:[{icon:'⭐',value:'1268',label:'积分',color:'#f39c12'},{icon:'📦',value:'3',label:'进行中订单',color:'#3498db'},{icon:'✅',value:'5',label:'已完成订单',color:'#27ae60'},{icon:'💳',value:'2',label:'实体卡',color:'#8e44ad'}]
   };
-  return statsByPort[currentPort]||statsByPort.platform;
+  return s[currentPort]||s.platform;
 }
 
 function getQuickActions(){
-  var actionsByPort={
-    platform:[{key:'clinics',name:'诊所',icon:'🏥',color:'#1abc9c'},{key:'pharmacies',name:'药店',icon:'💊',color:'#8e44ad'},{key:'dealers',name:'经销商',icon:'👤',color:'#f39c12'},{key:'finance',name:'财务',icon:'💰',color:'#27ae60'}],
+  var a={
+    platform:[{key:'clinics',name:'诊所',icon:'🏥',color:'#1abc9c'},{key:'pharmacy',name:'药店',icon:'💊',color:'#8e44ad'},{key:'dealers',name:'经销商',icon:'👤',color:'#f39c12'},{key:'finance',name:'财务',icon:'💰',color:'#27ae60'}],
     clinic:[{key:'patients',name:'建档',icon:'👥',color:'#3498db'},{key:'orders',name:'加工单',icon:'📦',color:'#f39c12'},{key:'tracking',name:'跟踪',icon:'🚚',color:'#1abc9c'},{key:'finance',name:'收支',icon:'💰',color:'#27ae60'}],
     dealer:[{key:'clinics',name:'诊所',icon:'🏥',color:'#3498db'},{key:'sales',name:'销售',icon:'📈',color:'#f39c12'},{key:'withdraw',name:'提现',icon:'💸',color:'#27ae60'},{key:'settings',name:'设置',icon:'⚙️',color:'#1abc9c'}],
     pharmacy:[{key:'cards',name:'种植卡',icon:'💳',color:'#8e44ad'},{key:'inventory',name:'库存',icon:'📦',color:'#f39c12'},{key:'purchase',name:'采购',icon:'🛒',color:'#3498db'},{key:'finance',name:'财务',icon:'💰',color:'#27ae60'}],
-    factory:[{key:'orders',name:'订单',icon:'📦',color:'#0097a7'},{key:'production',name:'排产',icon:'🏭',color:'#1abc9c'},{key:'quality',name:'质检',icon:'✅',color:'#27ae60'},{key:'shipping',name:'发货',icon:'🚚',color:'#f39c12'}]
+    factory:[{key:'orders',name:'订单',icon:'📦',color:'#0097a7'},{key:'production',name:'排产',icon:'🏭',color:'#1abc9c'},{key:'quality',name:'质检',icon:'✅',color:'#27ae60'},{key:'shipping',name:'发货',icon:'🚚',color:'#f39c12'}],
+    client:[{key:'mall',name:'商城',icon:'🛍️',color:'#f39c12'},{key:'orders',name:'订单',icon:'📦',color:'#3498db'},{key:'plant',name:'种植',icon:'🦷',color:'#1abc9c'},{key:'points',name:'积分',icon:'⭐',color:'#8e44ad'}]
   };
-  return actionsByPort[currentPort]||actionsByPort.platform;
+  return a[currentPort]||a.platform;
 }
 
-function renderList(content,dataKey,title,fields,titleField){
+function renderList(content,dataKey){
   var data=MOCK[dataKey]||[];
-  var html='';
-  html+='<div class="search-bar"><input type="text" placeholder="搜索'+title+'..." oninput="filterList(this,\''+dataKey+'\')"></div>';
-  html+='<div class="filter-bar">';
-  var statuses=['all','approved','pending','active','completed','used','shipped','production'];
-  statuses.forEach(function(s){
-    if(s==='all'||data.some(function(d){return d.status===s})){
-      html+='<div class="filter-chip'+(s==='all'?' active':'')+'" onclick="filterStatus(this,\''+dataKey+'\',\''+s+'\')">'+(s==='all'?'全部':s)+'</div>';
-    }
-  });
-  html+='</div>';
+  var titleField=Object.keys(data[0]||{name:''})[0];
+  var fields=Object.keys(data[0]||{}).slice(0,5);
+  var html='<div class="search-bar"><input type="text" placeholder="搜索..." oninput="filterList(this,\''+dataKey+'\')"></div>';
+  if(data[0]&&data[0].status){
+    html+='<div class="filter-bar"><div class="filter-chip active" onclick="filterStatus(this,\''+dataKey+'\',\'all\')">全部</div>';
+    var statuses={};
+    data.forEach(function(d){if(d.status)statuses[d.status]=1});
+    Object.keys(statuses).forEach(function(s){html+='<div class="filter-chip" onclick="filterStatus(this,\''+dataKey+'\',\''+s+'\')">'+s+'</div>'});
+    html+='</div>';
+  }
   html+='<div class="card-list" id="listContainer">';
-  data.forEach(function(item){
-    html+=renderCard(item,fields,titleField);
-  });
+  data.forEach(function(item){html+=renderCard(item,fields,titleField)});
   html+='</div>';
   content.innerHTML=html;
 }
 
 function renderCard(item,fields,titleField){
-  var html='<div class="data-card">';
-  html+='<div class="dc-header"><div class="dc-title">'+(item[titleField]||item.name||item.id)+'</div>'+(item.status?badge(item.status):'')+'</div>';
-  html+='<div class="dc-body">';
-  fields.forEach(function(f){
-    if(f!==titleField&&item[f]!==undefined){
-      html+='<div class="dc-field">'+f+'：<span>'+item[f]+'</span></div>';
-    }
-  });
+  var html='<div class="data-card"><div class="dc-header"><div class="dc-title">'+(item[titleField]||item.name||item.id)+'</div>'+(item.status?badge(item.status):'')+'</div><div class="dc-body">';
+  fields.forEach(function(f){if(f!==titleField&&item[f]!==undefined){html+='<div class="dc-field">'+f+'：<span>'+item[f]+'</span></div>'}});
   html+='</div>';
-  if(item.amount||item.value||item.price){
-    var val=item.amount||item.value||item.price;
-    html+='<div class="dc-footer"><div class="dc-field">金额：<span>¥'+val+'</span></div><div class="dc-field">'+(item.date||'')+'</div></div>';
-  }
+  if(item.amount||item.value||item.price){var v=item.amount||item.value||item.price;html+='<div class="dc-footer"><div class="dc-field">金额：<span>¥'+v+'</span></div><div class="dc-field">'+(item.date||'')+'</div></div>'}
   html+='</div>';
   return html;
 }
@@ -741,45 +713,144 @@ function renderCard(item,fields,titleField){
 function filterList(input,dataKey){
   var q=input.value.toLowerCase();
   var data=MOCK[dataKey]||[];
-  var container=document.getElementById('listContainer');
-  if(!container)return;
-  var filtered=data.filter(function(d){
-    return Object.values(d).some(function(v){return String(v).toLowerCase().indexOf(q)>=0});
-  });
+  var c=document.getElementById('listContainer');
+  if(!c)return;
+  var f=data.filter(function(d){return Object.values(d).some(function(v){return String(v).toLowerCase().indexOf(q)>=0})});
   var fields=Object.keys(data[0]||{}).slice(0,5);
-  var html='';
-  filtered.forEach(function(item){html+=renderCard(item,fields,fields[0])});
-  container.innerHTML=html||'<div class="empty"><div class="em-icon">🔍</div><div class="em-text">未找到匹配数据</div></div>';
+  var html='';f.forEach(function(i){html+=renderCard(i,fields,fields[0])});
+  c.innerHTML=html||'<div class="empty"><div class="em-icon">🔍</div><div class="em-text">未找到匹配数据</div></div>';
 }
 
 function filterStatus(chip,dataKey,status){
-  var chips=document.querySelectorAll('.filter-chip');
-  chips.forEach(function(c){c.classList.remove('active')});
+  chip.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});
   chip.classList.add('active');
   var data=MOCK[dataKey]||[];
-  var container=document.getElementById('listContainer');
-  if(!container)return;
-  var filtered=status==='all'?data:data.filter(function(d){return d.status===status});
+  var c=document.getElementById('listContainer');if(!c)return;
+  var f=status==='all'?data:data.filter(function(d){return d.status===status});
   var fields=Object.keys(data[0]||{}).slice(0,5);
-  var html='';
-  filtered.forEach(function(item){html+=renderCard(item,fields,fields[0])});
-  container.innerHTML=html||'<div class="empty"><div class="em-icon">📋</div><div class="em-text">暂无数据</div></div>';
+  var html='';f.forEach(function(i){html+=renderCard(i,fields,fields[0])});
+  c.innerHTML=html||'<div class="empty"><div class="em-icon">📋</div><div class="em-text">暂无数据</div></div>';
 }
 
-function renderPatientQuery(content){
-  var fullAccess=currentPort==='clinic'||currentPort==='platform';
-  var html='';
-  html+='<div class="search-bar"><input type="text" placeholder="搜索患者姓名/诊断/医生..." oninput="filterPatients(this,'+fullAccess+')"></div>';
-  html+='<div class="card-list" id="patientList">';
-  MOCK.patients.forEach(function(p){
-    html+=renderPatientCard(p,fullAccess);
+function renderCRUD(content,entity){
+  var data=MOCK[entity]||[];
+  var fields=CRUD_FIELDS[entity]||[];
+  var titleField=fields[0]?fields[0].key:'name';
+  var html='<div class="search-bar"><input type="text" placeholder="搜索..." oninput="filterCRUD(this,\''+entity+'\')"><div class="add-btn" onclick="openCRUDForm(\''+entity+'\')">+</div></div>';
+  if(data[0]&&data[0].status){
+    html+='<div class="filter-bar"><div class="filter-chip active" onclick="filterCRUDStatus(this,\''+entity+'\',\'all\')">全部</div>';
+    var st={};data.forEach(function(d){if(d.status)st[d.status]=1});
+    Object.keys(st).forEach(function(s){html+='<div class="filter-chip" onclick="filterCRUDStatus(this,\''+entity+'\',\''+s+'\')">'+s+'</div>'});
+    html+='</div>';
+  }
+  html+='<div class="card-list" id="crudList">';
+  data.forEach(function(item){
+    html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+(item[titleField]||item.name||item.id)+'</div>'+(item.status?badge(item.status):'')+'</div><div class="dc-body">';
+    fields.forEach(function(f){if(f.key!==titleField&&item[f.key]!==undefined){html+='<div class="dc-field">'+f.label+'：<span>'+item[f.key]+'</span></div>'}});
+    html+='</div><div class="dc-footer"><div class="dc-field">'+(item.date||'')+'</div><div class="dc-actions"><button class="btn-secondary" onclick="openCRUDForm(\''+entity+'\','+item.id+')">编辑</button><button class="btn-danger" onclick="deleteCRUD(\''+entity+'\','+item.id+')">删除</button></div></div></div>';
   });
   html+='</div>';
   content.innerHTML=html;
 }
 
-function renderPatientCard(p,fullAccess){
-  var html='<div class="data-card" onclick="showPatientDetail('+p.id+','+fullAccess+')">';
+function openCRUDForm(entity,id){
+  var fields=CRUD_FIELDS[entity]||[];
+  var item=id?MOCK[entity].find(function(x){return x.id===id||x.id===String(id)}):null;
+  var html='';
+  fields.forEach(function(f){
+    var val=item?item[f.key]||'':'';
+    var req=f.required?'<span class="req">*</span>':'';
+    html+='<div class="form-group"><label>'+f.label+' '+req+'</label>';
+    if(f.type==='select'){
+      html+='<select id="field_'+f.key+'">';
+      f.options.forEach(function(o){html+='<option value="'+o+'" '+(val===o?'selected':'')+'>'+o+'</option>'});
+      html+='</select>';
+    }else if(f.type==='textarea'){
+      html+='<textarea id="field_'+f.key+'">'+val+'</textarea>';
+    }else{
+      html+='<input type="'+f.type+'" id="field_'+f.key+'" value="'+val+'">';
+    }
+    html+='</div>';
+  });
+  html+='<div class="form-actions"><button class="btn-secondary" onclick="closeModal()">取消</button><button class="btn-primary" onclick="saveCRUD(\''+entity+'\','+(id||'null')+')">保存</button></div>';
+  document.getElementById('modalTitle').textContent=(id?'编辑':'新增')+'数据';
+  document.getElementById('modalBody').innerHTML=html;
+  document.getElementById('modalBg').classList.add('show');
+}
+
+function saveCRUD(entity,id){
+  var fields=CRUD_FIELDS[entity]||[];
+  var data={};
+  var valid=true;
+  fields.forEach(function(f){
+    var el=document.getElementById('field_'+f.key);
+    if(el){data[f.key]=el.value;if(f.required&&!el.value)valid=false}
+  });
+  if(!valid){showToast('请填写必填项');return}
+  if(id){
+    var item=MOCK[entity].find(function(x){return x.id===id||x.id===String(id)});
+    if(item)Object.keys(data).forEach(function(k){item[k]=data[k]});
+    showToast('修改成功');
+  }else{
+    data.id=Date.now();
+    MOCK[entity].unshift(data);
+    showToast('新增成功');
+  }
+  closeModal();
+  renderCRUD(document.getElementById('contentArea'),entity);
+}
+
+function deleteCRUD(entity,id){
+  showConfirm('确认删除？',function(){
+    var idx=MOCK[entity].findIndex(function(x){return x.id===id||x.id===String(id)});
+    if(idx>=0)MOCK[entity].splice(idx,1);
+    showToast('删除成功');
+    renderCRUD(document.getElementById('contentArea'),entity);
+  });
+}
+
+function filterCRUD(input,entity){
+  var q=input.value.toLowerCase();
+  var data=MOCK[entity]||[];
+  var c=document.getElementById('crudList');if(!c)return;
+  var f=data.filter(function(d){return Object.values(d).some(function(v){return String(v).toLowerCase().indexOf(q)>=0})});
+  var fields=CRUD_FIELDS[entity]||[];
+  var titleField=fields[0]?fields[0].key:'name';
+  var html='';f.forEach(function(item){
+    html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+(item[titleField]||item.name||item.id)+'</div>'+(item.status?badge(item.status):'')+'</div><div class="dc-body">';
+    fields.forEach(function(fd){if(fd.key!==titleField&&item[fd.key]!==undefined){html+='<div class="dc-field">'+fd.label+'：<span>'+item[fd.key]+'</span></div>'}});
+    html+='</div><div class="dc-footer"><div class="dc-field">'+(item.date||'')+'</div><div class="dc-actions"><button class="btn-secondary" onclick="openCRUDForm(\''+entity+'\','+item.id+')">编辑</button><button class="btn-danger" onclick="deleteCRUD(\''+entity+'\','+item.id+')">删除</button></div></div></div>';
+  });
+  c.innerHTML=html||'<div class="empty"><div class="em-icon">🔍</div><div class="em-text">未找到数据</div></div>';
+}
+
+function filterCRUDStatus(chip,entity,status){
+  chip.parentNode.querySelectorAll('.filter-chip').forEach(function(c){c.classList.remove('active')});
+  chip.classList.add('active');
+  var data=MOCK[entity]||[];
+  var c=document.getElementById('crudList');if(!c)return;
+  var f=status==='all'?data:data.filter(function(d){return d.status===status});
+  var fields=CRUD_FIELDS[entity]||[];
+  var titleField=fields[0]?fields[0].key:'name';
+  var html='';f.forEach(function(item){
+    html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+(item[titleField]||item.name||item.id)+'</div>'+(item.status?badge(item.status):'')+'</div><div class="dc-body">';
+    fields.forEach(function(fd){if(fd.key!==titleField&&item[fd.key]!==undefined){html+='<div class="dc-field">'+fd.label+'：<span>'+item[fd.key]+'</span></div>'}});
+    html+='</div><div class="dc-footer"><div class="dc-field">'+(item.date||'')+'</div><div class="dc-actions"><button class="btn-secondary" onclick="openCRUDForm(\''+entity+'\','+item.id+')">编辑</button><button class="btn-danger" onclick="deleteCRUD(\''+entity+'\','+item.id+')">删除</button></div></div></div>';
+  });
+  c.innerHTML=html||'<div class="empty"><div class="em-icon">📋</div><div class="em-text">暂无数据</div></div>';
+}
+
+function renderPatientQuery(content){
+  var fullAccess=currentPort==='clinic';
+  var html='<div class="search-bar"><input type="text" placeholder="搜索姓名/诊断/医生/型号..." oninput="filterPatients(this,'+fullAccess+')"></div>';
+  html+='<div class="card-list" id="patientList">';
+  MOCK.patients.forEach(function(p){html+=renderPatientCard(p,fullAccess)});
+  html+='</div>';
+  content.innerHTML=html;
+}
+
+function renderPatientCard(p,full){
+  var html='<div class="data-card" onclick="showPatientDetail('+p.id+','+full+')">';
   html+='<div class="dc-header"><div class="dc-title">'+p.name+'</div>'+badge(p.status)+'</div>';
   html+='<div class="dc-body">';
   html+='<div class="dc-field">性别：<span>'+p.gender+'</span></div>';
@@ -787,64 +858,41 @@ function renderPatientCard(p,fullAccess){
   html+='<div class="dc-field">诊断：<span>'+p.diagnosis+'</span></div>';
   html+='<div class="dc-field">医生：<span>'+p.doctor+'</span></div>';
   html+='<div class="dc-field">型号：<span>'+p.implantModel+'</span></div>';
-  if(fullAccess){
-    html+='<div class="dc-field">电话：<span>'+p.phone+'</span></div>';
-  }
+  if(full)html+='<div class="dc-field">电话：<span>'+p.phone+'</span></div>';
   html+='</div></div>';
   return html;
 }
 
-function showPatientDetail(id,fullAccess){
-  var p=MOCK.patients.find(function(x){return x.id===id});
-  if(!p)return;
+function showPatientDetail(id,full){
+  var p=MOCK.patients.find(function(x){return x.id===id});if(!p)return;
   document.getElementById('subpageTitle').textContent='患者详情';
-  var html='<div class="card-list" style="padding:12px">';
-  html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+p.name+'</div>'+badge(p.status)+'</div>';
-  html+='<div class="dc-body">';
-  html+='<div class="dc-field">性别：<span>'+p.gender+'</span></div>';
-  html+='<div class="dc-field">年龄：<span>'+p.age+'</span></div>';
-  html+='<div class="dc-field">诊断：<span>'+p.diagnosis+'</span></div>';
-  html+='<div class="dc-field">医生：<span>'+p.doctor+'</span></div>';
-  html+='<div class="dc-field">种植型号：<span>'+p.implantModel+'</span></div>';
-  html+='<div class="dc-field">手术日期：<span>'+p.surgeryDate+'</span></div>';
-  if(fullAccess){
-    html+='<div class="dc-field">联系电话：<span><a href="tel:'+p.phone+'">'+p.phone+'</a></span></div>';
-  }
+  var html='<div class="card-list" style="padding:12px"><div class="data-card"><div class="dc-header"><div class="dc-title">'+p.name+'</div>'+badge(p.status)+'</div><div class="dc-body">';
+  html+='<div class="dc-field">性别：<span>'+p.gender+'</span></div><div class="dc-field">年龄：<span>'+p.age+'</span></div><div class="dc-field">诊断：<span>'+p.diagnosis+'</span></div><div class="dc-field">治疗方案：<span>'+p.treatment+'</span></div><div class="dc-field">种植型号：<span>'+p.implantModel+'</span></div><div class="dc-field">手术日期：<span>'+p.surgeryDate+'</span></div><div class="dc-field">主治医生：<span>'+p.doctor+'</span></div><div class="dc-field">过敏史：<span>'+p.allergy+'</span></div><div class="dc-field">既往病史：<span>'+p.history+'</span></div><div class="dc-field">备注：<span>'+p.notes+'</span></div>';
+  if(full)html+='<div class="dc-field">联系电话：<span><a href="tel:'+p.phone+'">'+p.phone+'</a></span></div>';
   html+='</div></div></div>';
   document.getElementById('subpageBody').innerHTML=html;
   document.getElementById('subpage').classList.add('active');
 }
 
-function filterPatients(input,fullAccess){
+function filterPatients(input,full){
   var q=input.value.toLowerCase();
-  var data=MOCK.patients.filter(function(p){
-    return p.name.toLowerCase().indexOf(q)>=0||p.diagnosis.indexOf(q)>=0||p.doctor.indexOf(q)>=0||p.implantModel.toLowerCase().indexOf(q)>=0;
-  });
-  var container=document.getElementById('patientList');
-  if(!container)return;
-  var html='';
-  data.forEach(function(p){html+=renderPatientCard(p,fullAccess)});
-  container.innerHTML=html||'<div class="empty"><div class="em-icon">🔍</div><div class="em-text">未找到患者</div></div>';
+  var data=MOCK.patients.filter(function(p){return p.name.toLowerCase().indexOf(q)>=0||p.diagnosis.indexOf(q)>=0||p.doctor.indexOf(q)>=0||p.implantModel.toLowerCase().indexOf(q)>=0});
+  var c=document.getElementById('patientList');if(!c)return;
+  var html='';data.forEach(function(p){html+=renderPatientCard(p,full)});
+  c.innerHTML=html||'<div class="empty"><div class="em-icon">🔍</div><div class="em-text">未找到患者</div></div>';
 }
 
 function renderFinance(content){
-  var income=MOCK.finance.filter(function(f){return f.type==='income'}).reduce(function(s,f){return s+f.amount},0);
-  var expense=MOCK.finance.filter(function(f){return f.type==='expense'}).reduce(function(s,f){return s+f.amount},0);
-  var html='';
-  html+='<div class="stats-grid">';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f8f0">💰</div><div><div class="sc-value">¥'+income+'</div><div class="sc-label">总收入</div></div></div>';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#fdeaea">💸</div><div><div class="sc-value">¥'+expense+'</div><div class="sc-label">总支出</div></div></div>';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f4fd">📈</div><div><div class="sc-value">¥'+(income-expense)+'</div><div class="sc-label">净利润</div></div></div>';
+  var inc=MOCK.finance.filter(function(f){return f.type==='income'}).reduce(function(s,f){return s+f.amount},0);
+  var exp=MOCK.finance.filter(function(f){return f.type==='expense'}).reduce(function(s,f){return s+f.amount},0);
+  var html='<div class="stats-grid">';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f8f0">💰</div><div><div class="sc-value">¥'+inc+'</div><div class="sc-label">总收入</div></div></div>';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#fdeaea">💸</div><div><div class="sc-value">¥'+exp+'</div><div class="sc-label">总支出</div></div></div>';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f4fd">📈</div><div><div class="sc-value">¥'+(inc-exp)+'</div><div class="sc-label">净利润</div></div></div>';
   html+='<div class="stat-card"><div class="sc-icon" style="background:#fef5e7">📊</div><div><div class="sc-value">'+MOCK.finance.length+'</div><div class="sc-label">交易笔数</div></div></div>';
-  html+='</div>';
-  html+='<div class="section"><div class="section-title">收支明细</div></div>';
-  html+='<div class="card-list">';
+  html+='</div><div class="section"><div class="section-title">收支明细</div></div><div class="card-list">';
   MOCK.finance.forEach(function(f){
-    html+='<div class="data-card">';
-    html+='<div class="dc-header"><div class="dc-title">'+f.category+'</div><span class="badge '+(f.type==='income'?'badge-success':'badge-danger')+'">'+(f.type==='income'?'收入':'支出')+'</span></div>';
-    html+='<div class="dc-body"><div class="dc-field">来源：<span>'+f.source+'</span></div><div class="dc-field">日期：<span>'+f.date+'</span></div></div>';
-    html+='<div class="dc-footer"><div class="dc-field">金额：<span>¥'+f.amount+'</span></div></div>';
-    html+='</div>';
+    html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+f.category+'</div><span class="badge '+(f.type==='income'?'badge-success':'badge-danger')+'">'+(f.type==='income'?'收入':'支出')+'</span></div><div class="dc-body"><div class="dc-field">来源：<span>'+f.source+'</span></div><div class="dc-field">日期：<span>'+f.date+'</span></div></div><div class="dc-footer"><div class="dc-field">金额：<span>¥'+f.amount+'</span></div></div></div>';
   });
   html+='</div>';
   content.innerHTML=html;
@@ -852,108 +900,106 @@ function renderFinance(content){
 
 function renderReports(content){
   var html='<div class="section"><div class="section-title">营收趋势</div></div>';
-  html+='<div class="chart" style="display:flex;align-items:flex-end;gap:6px;height:120px;padding:12px;background:#fff;border-radius:10px;margin:0 12px">';
+  html+='<div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding:12px;background:#fff;border-radius:10px;margin:0 12px">';
   var months=['1月','2月','3月','4月','5月','6月','7月','8月'];
   var values=[45,52,48,61,58,67,72,89];
   var max=Math.max.apply(null,values);
   months.forEach(function(m,i){
     var h=Math.round(values[i]/max*100);
-    html+='<div class="chart-bar" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">';
-    html+='<div style="width:100%;border-radius:4px 4px 0 0;min-height:4px;height:'+h+'px;background:#1abc9c"></div>';
-    html+='<div style="font-size:10px;color:#7f8c8d">'+m+'</div>';
-    html+='</div>';
+    html+='<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><div style="width:100%;border-radius:4px 4px 0 0;min-height:4px;height:'+h+'px;background:#1abc9c"></div><div style="font-size:10px;color:#7f8c8d">'+m+'</div></div>';
   });
-  html+='</div>';
-  html+='<div class="section" style="margin-top:12px"><div class="section-title">分类统计</div></div>';
-  html+='<div class="card-list">';
+  html+='</div><div class="section" style="margin-top:12px"><div class="section-title">收入明细</div></div><div class="card-list">';
   html+='<div class="data-card"><div class="dc-header"><div class="dc-title">种植卡收入</div></div><div class="dc-body"><div class="dc-field">金额：<span>¥58,600</span></div></div></div>';
   html+='<div class="data-card"><div class="dc-header"><div class="dc-title">佣金收入</div></div><div class="dc-body"><div class="dc-field">金额：<span>¥12,500</span></div></div></div>';
-  html+='<div class="data-card"><div class="dc-header"><div class="dc-title">采购支出</div></div><div class="dc-body"><div class="dc-field">金额：<span>¥15,600</span></div></div></div>';
   html+='</div>';
   content.innerHTML=html;
 }
 
-function renderReview(content){
-  var pending=MOCK.clinics.filter(function(c){return c.status==='pending'}).concat(MOCK.pharmacies.filter(function(p){return p.status==='pending'}));
-  var html='';
+function renderRegReview(content){
+  var pending=MOCK.registrations.filter(function(r){return r.status==='pending'});
+  var approved=MOCK.registrations.filter(function(r){return r.status==='approved'});
+  var rejected=MOCK.registrations.filter(function(r){return r.status==='rejected'});
+  var html='<div class="stats-grid">';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#fef5e7">⏳</div><div><div class="sc-value">'+pending.length+'</div><div class="sc-label">待审核</div></div></div>';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f8f0">✅</div><div><div class="sc-value">'+approved.length+'</div><div class="sc-label">已通过</div></div></div>';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#fdeaea">✗</div><div><div class="sc-value">'+rejected.length+'</div><div class="sc-label">已拒绝</div></div></div>';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f4fd">📋</div><div><div class="sc-value">'+MOCK.registrations.length+'</div><div class="sc-label">总申请</div></div></div>';
+  html+='</div>';
   if(pending.length===0){
-    html='<div class="empty"><div class="em-icon">✅</div><div class="em-text">暂无待审核申请</div></div>';
+    html+='<div class="empty"><div class="em-icon">✅</div><div class="em-text">暂无待审核申请</div></div>';
   }else{
-    html+='<div class="card-list">';
-    pending.forEach(function(item){
-      html+='<div class="data-card">';
-      html+='<div class="dc-header"><div class="dc-title">'+item.name+'</div>'+badge('pending')+'</div>';
-      html+='<div class="dc-body"><div class="dc-field">负责人：<span>'+item.manager+'</span></div><div class="dc-field">电话：<span>'+item.phone+'</span></div><div class="dc-field">地址：<span>'+item.address+'</span></div></div>';
-      html+='<div class="dc-footer"><button class="btn-primary" style="padding:6px 16px;border-radius:6px" onclick="approveItem('+item.id+',\''+item.name+'\')">通过</button><button class="btn-danger" style="padding:6px 16px;border-radius:6px" onclick="rejectItem('+item.id+',\''+item.name+'\')">拒绝</button></div>';
-      html+='</div>';
+    html+='<div class="section"><div class="section-title">待审核申请</div></div><div class="card-list">';
+    pending.forEach(function(r){
+      html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+r.name+'</div>'+badge('pending')+'</div>';
+      html+='<div class="dc-body"><div class="dc-field">类型：<span>'+(r.type==='clinic'?'诊所':'药店')+'</span></div><div class="dc-field">账号：<span>'+r.account+'</span></div><div class="dc-field">负责人：<span>'+r.manager+'</span></div><div class="dc-field">电话：<span>'+r.phone+'</span></div><div class="dc-field">地址：<span>'+r.address+'</span></div><div class="dc-field">日期：<span>'+r.date+'</span></div></div>';
+      html+='<div class="dc-footer"><div></div><div class="dc-actions"><button class="btn-primary" style="padding:6px 16px;border-radius:6px" onclick="approveReg('+r.id+')">通过</button><button class="btn-danger" style="padding:6px 16px;border-radius:6px" onclick="rejectReg('+r.id+')">拒绝</button></div></div></div>';
     });
     html+='</div>';
   }
   content.innerHTML=html;
 }
 
-function approveItem(id,name){
-  showConfirm('确认通过 '+name+' 的注册申请？',function(){
-    showToast('已通过审核');
-    renderReview(document.getElementById('contentArea'));
+function approveReg(id){
+  var r=MOCK.registrations.find(function(x){return x.id===id});
+  if(!r)return;
+  showConfirm('确认通过 '+r.name+' 的注册申请？',function(){
+    r.status='approved';
+    if(r.type==='clinic'){ACCOUNTS[r.account]={password:'123456',name:r.manager,avatar:r.manager.charAt(0),role:'clinic',ports:['clinic']}}
+    if(r.type==='pharmacy'){ACCOUNTS[r.account]={password:'123456',name:r.manager,avatar:r.manager.charAt(0),role:'pharmacy',ports:['pharmacy']}}
+    showToast('已通过审核，账号已创建');
+    renderRegReview(document.getElementById('contentArea'));
   });
 }
 
-function rejectItem(id,name){
-  showConfirm('确认拒绝 '+name+' 的注册申请？',function(){
+function rejectReg(id){
+  var r=MOCK.registrations.find(function(x){return x.id===id});
+  if(!r)return;
+  showConfirm('确认拒绝 '+r.name+' 的注册申请？',function(){
+    r.status='rejected';
     showToast('已拒绝申请');
-    renderReview(document.getElementById('contentArea'));
+    renderRegReview(document.getElementById('contentArea'));
   });
+}
+
+function renderTracking(content){
+  var html='<div class="stats-grid">';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#fef5e7">📦</div><div><div class="sc-value">2</div><div class="sc-label">待处理</div></div></div>';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f4fd">🚚</div><div><div class="sc-value">1</div><div class="sc-label">已发货</div></div></div>';
+  html+='</div><div class="section"><div class="section-title">订单状态</div></div><div class="card-list">';
+  MOCK.orders.forEach(function(o){
+    html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+o.id+'</div>'+badge(o.status)+'</div><div class="dc-body"><div class="dc-field">诊所：<span>'+o.clinic+'</span></div><div class="dc-field">产品：<span>'+o.items+'</span></div><div class="dc-field">金额：<span>¥'+o.amount+'</span></div></div>';
+    html+='<div class="timeline" style="padding:8px 0 0"><div class="timeline-item"><div class="timeline-dot '+(o.status==='completed'||o.status==='shipped'||o.status==='production'?'done':'pending')+'">1</div><div><div style="font-size:13px;font-weight:600">下单</div><div style="font-size:11px;color:var(--text-muted)">'+o.date+'</div></div></div>';
+    html+='<div class="timeline-item"><div class="timeline-dot '+(o.status==='completed'||o.status==='shipped'?'done':'pending')+'">2</div><div><div style="font-size:13px;font-weight:600">生产</div></div></div>';
+    html+='<div class="timeline-item"><div class="timeline-dot '+(o.status==='completed'||o.status==='shipped'?'done':'pending')+'">3</div><div><div style="font-size:13px;font-weight:600">发货</div></div></div>';
+    html+='<div class="timeline-item"><div class="timeline-dot '+(o.status==='completed'?'done':'pending')+'">4</div><div><div style="font-size:13px;font-weight:600">完成</div></div></div></div></div>';
+  });
+  html+='</div>';
+  content.innerHTML=html;
 }
 
 function renderProduction(content){
   var html='<div class="stats-grid">';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f8f0">⏳</div><div><div class="sc-value">78</div><div class="sc-label">生产中</div></div></div>';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#fef5e7">📦</div><div><div class="sc-value">23</div><div class="sc-label">待生产</div></div></div>';
+  html+='<div class="stat-card"><div class="sc-icon" style="background:#fef5e7">⏳</div><div><div class="sc-value">78</div><div class="sc-label">生产中</div></div></div>';
   html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f4fd">✅</div><div><div class="sc-value">345</div><div class="sc-label">已完成</div></div></div>';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#fdeaea">⚠️</div><div><div class="sc-value">5</div><div class="sc-label">异常</div></div></div>';
-  html+='</div>';
-  html+='<div class="section"><div class="section-title">生产排产</div></div>';
-  html+='<div class="card-list">';
+  html+='</div><div class="section"><div class="section-title">今日排产</div></div><div class="card-list">';
   MOCK.orders.forEach(function(o){
-    html+='<div class="data-card">';
-    html+='<div class="dc-header"><div class="dc-title">'+o.id+'</div>'+badge(o.status)+'</div>';
-    html+='<div class="dc-body"><div class="dc-field">诊所：<span>'+o.clinic+'</span></div><div class="dc-field">产品：<span>'+o.items+'</span></div><div class="dc-field">日期：<span>'+o.date+'</span></div></div>';
-    html+='</div>';
+    html+='<div class="data-card"><div class="dc-header"><div class="dc-title">'+o.id+'</div>'+badge(o.status)+'</div><div class="dc-body"><div class="dc-field">诊所：<span>'+o.clinic+'</span></div><div class="dc-field">产品：<span>'+o.items+'</span></div><div class="dc-field">日期：<span>'+o.date+'</span></div></div></div>';
   });
   html+='</div>';
   content.innerHTML=html;
 }
 
-function renderSales(content){
-  var html='<div class="stats-grid">';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#e8f8f0">📈</div><div><div class="sc-value">234万</div><div class="sc-label">总销售额</div></div></div>';
-  html+='<div class="stat-card"><div class="sc-icon" style="background:#fef5e7">💰</div><div><div class="sc-value">12.5万</div><div class="sc-label">佣金</div></div></div>';
-  html+='</div>';
-  html+='<div class="section"><div class="section-title">销售活动</div></div>';
-  html+='<div class="card-list">';
-  html+='<div class="data-card"><div class="dc-header"><div class="dc-title">夏季种植牙促销</div><span class="badge badge-success">进行中</span></div><div class="dc-body"><div class="dc-field">时间：<span>2026.07-2026.08</span></div><div class="dc-field">优惠：<span>种植体8折</span></div></div></div>';
-  html+='<div class="data-card"><div class="dc-header"><div class="dc-title">老客户推荐奖励</div><span class="badge badge-info">长期</span></div><div class="dc-body"><div class="dc-field">奖励：<span>推荐返现500元</span></div></div></div>';
-  html+='</div>';
+function renderFactoryDetail(content){
+  var f=MOCK.factories[0];
+  var html='<div class="section"><div class="section-title">工厂信息</div></div><div class="card-list"><div class="data-card"><div class="dc-header"><div class="dc-title">'+f.name+'</div></div><div class="dc-body"><div class="dc-field">负责人：<span>'+f.manager+'</span></div><div class="dc-field">电话：<span>'+f.phone+'</span></div><div class="dc-field">地址：<span>'+f.address+'</span></div><div class="dc-field">产品种类：<span>'+f.products+'</span></div><div class="dc-field">订单总数：<span>'+f.orders+'</span></div></div></div></div>';
+  html+='<div class="section"><div class="section-title">生产流程</div></div><div class="timeline"><div class="timeline-item"><div class="timeline-dot done">1</div><div><div style="font-weight:600">接收订单</div><div style="font-size:12px;color:var(--text-muted)">诊所下单</div></div></div><div class="timeline-item"><div class="timeline-dot done">2</div><div><div style="font-weight:600">生产排产</div><div style="font-size:12px;color:var(--text-muted)">安排生产计划</div></div></div><div class="timeline-item"><div class="timeline-dot pending">3</div><div><div style="font-weight:600">质检</div><div style="font-size:12px;color:var(--text-muted)">质量检测</div></div></div><div class="timeline-item"><div class="timeline-dot pending">4</div><div><div style="font-weight:600">发货</div><div style="font-size:12px;color:var(--text-muted)">发货至诊所</div></div></div></div>';
   content.innerHTML=html;
-}
-
-function renderService(content){
-  content.innerHTML='<div class="empty"><div class="em-icon">🎧</div><div class="em-text">客服中心 - 工作时间: 9:00-18:00</div><div style="margin-top:12px"><div class="dc-field">电话：<span>400-888-0000</span></div></div></div>';
 }
 
 function renderSettings(content){
   var pc=PORT_CONFIG[currentPort];
-  var html='<div class="settings-group">';
-  html+='<div class="settings-item"><span>账号</span><span>'+(userInfo?userInfo.account:'')+'</span></div>';
-  html+='<div class="settings-item"><span>姓名</span><span>'+(userInfo?userInfo.name:'')+'</span></div>';
-  html+='<div class="settings-item"><span>端口</span><span>'+pc.name+'</span></div>';
-  html+='<div class="settings-item" onclick="logout()"><span style="color:#e74c3c">退出登录</span><span>›</span></div>';
-  html+='</div>';
-  html+='<div class="settings-group">';
-  html+='<div class="settings-item"><span>关于系统</span><span>v2.0</span></div>';
-  html+='<div class="settings-item"><span>客服电话</span><span>400-888-0000</span></div>';
-  html+='</div>';
+  var html='<div class="settings-group"><div class="settings-item"><span>账号</span><span>'+(userInfo?userInfo.account:'')+'</span></div><div class="settings-item"><span>姓名</span><span>'+(userInfo?userInfo.name:'')+'</span></div><div class="settings-item"><span>角色</span><span>'+(userInfo?userInfo.role:'')+'</span></div><div class="settings-item"><span>当前端口</span><span>'+pc.name+'</span></div></div>';
+  html+='<div class="settings-group"><div class="settings-item" onclick="logout()"><span style="color:var(--danger)">退出登录</span><span>›</span></div><div class="settings-item"><span>关于系统</span><span>v2.0</span></div><div class="settings-item"><span>客服电话</span><span>400-888-0000</span></div></div>';
   content.innerHTML=html;
 }
 
@@ -962,13 +1008,12 @@ function init(){
   var btn=document.getElementById('loginBtn');
   btn.addEventListener('click',function(e){e.preventDefault();doLogin()});
   btn.addEventListener('touchend',function(e){e.preventDefault();doLogin()});
-  document.getElementById('loginPassword').addEventListener('keypress',function(e){
-    if(e.key==='Enter'){e.preventDefault();doLogin()}
-  });
-  
-  if(token&&userInfo&&currentPort){
+  document.getElementById('loginPassword').addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();doLogin()}});
+  document.getElementById('loginAccount').addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();doLogin()}});
+
+  if(token&&userInfo&&currentPort&&userInfo.ports&&userInfo.ports.indexOf(currentPort)>=0){
     showMain();
-  }else if(token&&userInfo){
+  }else if(token&&userInfo&&userInfo.ports&&userInfo.ports.length>1){
     showPortSelect();
   }else{
     showLogin();
