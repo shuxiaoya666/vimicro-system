@@ -364,6 +364,13 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
         loginPage.style.display='none';
       }
     }catch(e){}
+  }else if(savedToken&&savedUser&&!savedPort){
+    try{
+      var u2=JSON.parse(savedUser);
+      if(u2&&u2.ports){
+        showPortSelect(u2);
+      }
+    }catch(e2){}
   }
 })();
 </script>
@@ -1980,16 +1987,15 @@ function getPortSettings(){
 // ==================== Init ====================
 (function init(){
   if(token&&userInfo){
-    showPortSelect();
+    var savedPort=localStorage.getItem('adminPort');
+    if(savedPort){
+      currentPort=savedPort;
+      showMain();
+    }else{
+      showPortSelect();
+    }
   }else{
     showLogin();
-  }
-  var lp=document.getElementById('loginPassword');
-  if(lp)lp.addEventListener('keypress',function(e){if(e.key==='Enter')doLogin()});
-  var lb=document.getElementById('loginBtn');
-  if(lb){
-    lb.addEventListener('click',function(e){e.preventDefault();doLogin()});
-    lb.addEventListener('touchend',function(e){e.preventDefault();doLogin()});
   }
 })();
 </script>
