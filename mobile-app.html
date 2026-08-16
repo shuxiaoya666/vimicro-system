@@ -990,6 +990,16 @@ html, body {
       </div>
       <button class="login-btn" id="loginBtn" onclick="doLogin()">登 录</button>
       <div class="login-hint">测试账号：client / 123456</div>
+      <div style="text-align:center;margin-top:20px;">
+        <a href="javascript:void(0)" onclick="toggleApiSetting()" style="font-size:12px;color:var(--text-muted);text-decoration:none;">⚙ API地址设置</a>
+      </div>
+      <div id="apiSettingBox" style="display:none;margin-top:12px;">
+        <div class="form-group">
+          <label class="form-label">API 地址</label>
+          <input type="text" class="form-input" id="apiBaseInput" placeholder="https://xxx.loca.lt/api" style="font-size:12px;">
+        </div>
+        <button class="btn btn-outline btn-sm" style="width:100%;" onclick="saveApiBase()">保存地址</button>
+      </div>
     </div>
   </div>
 
@@ -1311,7 +1321,7 @@ html, body {
 
 <script>
 // ===== 配置 =====
-var API_BASE = 'https://xiaowei-backend.loca.lt/api';
+var API_BASE = localStorage.getItem('apiBase') || 'https://cowardly-bird-18.loca.lt/api';
 var token = localStorage.getItem('token');
 var userInfo = JSON.parse(localStorage.getItem('userInfo') || 'null');
 var cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -1339,6 +1349,31 @@ var mockOrders = [
 var allProducts = [];
 var currentMallFilter = 'all';
 var currentOrderFilter = 'all';
+
+// ===== API地址设置 =====
+function toggleApiSetting() {
+  var box = document.getElementById('apiSettingBox');
+  var input = document.getElementById('apiBaseInput');
+  if (box.style.display === 'none') {
+    input.value = API_BASE;
+    box.style.display = 'block';
+  } else {
+    box.style.display = 'none';
+  }
+}
+
+function saveApiBase() {
+  var val = document.getElementById('apiBaseInput').value.trim();
+  if (!val) { showToast('请输入API地址'); return; }
+  if (!val.endsWith('/api')) {
+    if (val.endsWith('/')) val = val + 'api';
+    else val = val + '/api';
+  }
+  localStorage.setItem('apiBase', val);
+  API_BASE = val;
+  showToast('API地址已保存');
+  document.getElementById('apiSettingBox').style.display = 'none';
+}
 
 // ===== 开场页上滑手势 =====
 var splashScreen = document.getElementById('splashScreen');
