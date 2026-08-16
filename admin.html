@@ -353,25 +353,6 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
   btn.addEventListener('click',function(e){e.preventDefault();handleLogin()});
   btn.addEventListener('touchend',function(e){e.preventDefault();handleLogin()});
   pwd.addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();handleLogin()}});
-
-  var savedToken=localStorage.getItem('adminToken');
-  var savedUser=localStorage.getItem('adminUserInfo');
-  var savedPort=localStorage.getItem('adminPort');
-  if(savedToken&&savedUser&&savedPort){
-    try{
-      var u=JSON.parse(savedUser);
-      if(u&&u.ports&&u.ports.indexOf(savedPort)>=0){
-        loginPage.style.display='none';
-      }
-    }catch(e){}
-  }else if(savedToken&&savedUser&&!savedPort){
-    try{
-      var u2=JSON.parse(savedUser);
-      if(u2&&u2.ports){
-        showPortSelect(u2);
-      }
-    }catch(e2){}
-  }
 })();
 </script>
     <div class="login-hint">测试账号: <b>admin</b> / <b>clinic</b> / <b>dealer</b> / <b>pharmacy</b> / <b>factory</b> 密码: <b>123456</b></div>
@@ -455,17 +436,19 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
 
 <script>
 // ==================== Config ====================
-var APP_VERSION='v20260816ad1';
+var APP_VERSION='v20260816ad2';
+if(localStorage.getItem('adminAppVersion')!==APP_VERSION){
+  localStorage.removeItem('adminToken');
+  localStorage.removeItem('adminUserInfo');
+  localStorage.removeItem('adminPort');
+  localStorage.removeItem('apiBase');
+  localStorage.setItem('adminAppVersion',APP_VERSION);
+}
 var API_BASE=localStorage.getItem('apiBase')||'https://xiaowei-backend.loca.lt/api';
 var token=localStorage.getItem('adminToken');
 var userInfo=JSON.parse(localStorage.getItem('adminUserInfo')||'null');
 var currentPort=localStorage.getItem('adminPort')||'platform';
 var currentPage='home';
-
-if(localStorage.getItem('adminAppVersion')!==APP_VERSION){
-  localStorage.removeItem('apiBase');
-  localStorage.setItem('adminAppVersion',APP_VERSION);
-}
 
 // ==================== Port Config ====================
 var PORT_CONFIG={
