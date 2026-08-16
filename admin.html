@@ -1986,16 +1986,20 @@ function getPortSettings(){
 
 // ==================== Init ====================
 (function init(){
-  if(token&&userInfo){
-    var savedPort=localStorage.getItem('adminPort');
-    if(savedPort){
-      currentPort=savedPort;
-      showMain();
+  try{
+    if(token&&userInfo){
+      var savedPort=localStorage.getItem('adminPort');
+      if(savedPort){
+        currentPort=savedPort;
+        showMain();
+      }else{
+        showPortSelect();
+      }
     }else{
-      showPortSelect();
+      showLogin();
     }
-  }else{
-    showLogin();
+  }catch(e){
+    document.body.innerHTML='<div style="padding:20px;font-size:14px"><h3>JS Error</h3><pre>'+e.message+'\n'+e.stack+'</pre><button onclick="localStorage.clear();location.reload()">Clear data & reload</button></div>';
   }
 })();
 </script>
