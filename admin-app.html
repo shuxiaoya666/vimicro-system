@@ -273,11 +273,13 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
   <div class="splash-logo">🦷</div>
   <div class="splash-title">小唯管理系统</div>
   <div class="splash-sub">口腔种植体产业链综合管理平台</div>
-  <div class="splash-enter" onclick="enterApp()">
-    <div style="font-size:28px;">👆</div>
-    <div style="font-size:13px;color:rgba(255,255,255,.8);font-weight:500;">点击进入</div>
-  </div>
 </div>
+<script>
+setTimeout(function(){
+  var s=document.getElementById('splash');
+  if(s){s.classList.add('up');setTimeout(function(){s.style.display='none';var t=localStorage.getItem('adminToken');var u=localStorage.getItem('adminUserInfo');if(t&&u){var ps=document.getElementById('portSelectPage');var la=document.getElementById('loginPage');if(ps&&la){ps.classList.remove('hidden');la.classList.add('hidden')}}else{var la=document.getElementById('loginPage');if(la)la.classList.remove('hidden')}},500)}
+},1200);
+</script>
 
 <!-- Login -->
 <div class="login hidden" id="loginPage">
@@ -807,21 +809,6 @@ function showConfirm(msg,cb){
   };
 }
 function closeConfirm(){document.getElementById('confirmBg').classList.remove('show')}
-
-// ==================== Splash ====================
-var splashEl=document.getElementById('splash');
-function enterApp(){
-  if(splashEl.classList.contains('up'))return;
-  splashEl.classList.add('up');
-  setTimeout(function(){
-    splashEl.style.display='none';
-    if(token&&userInfo){showPortSelect()}
-    else{showLogin()}
-  },500);
-}
-splashEl.addEventListener('click',function(){enterApp()});
-splashEl.addEventListener('touchend',function(){enterApp()},{passive:true});
-setTimeout(function(){if(!splashEl.classList.contains('up'))enterApp()},3000);
 
 // ==================== Captcha ====================
 function generateCaptcha(){
