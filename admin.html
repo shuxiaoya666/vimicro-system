@@ -175,7 +175,7 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
       <label>密码</label>
       <input type="password" id="loginPassword" value="123456">
     </div>
-    <button class="login-btn" id="loginBtn" type="button">登 录</button>
+    <button class="login-btn" id="loginBtn" type="button" onclick="doLogin()">登 录</button>
     <div class="login-hint">账号: admin/clinic/dealer/pharmacy/factory<br>密码: 123456</div>
   </div>
 </div>
@@ -249,7 +249,7 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
 </div>
 
 <script>
-var APP_VERSION='v20260816ad5';
+var APP_VERSION='v20260816ad6';
 if(localStorage.getItem('adminAppVersion')!==APP_VERSION){
   localStorage.removeItem('adminToken');
   localStorage.removeItem('adminUserInfo');
@@ -1006,10 +1006,14 @@ function renderSettings(content){
 // ==================== Init ====================
 function init(){
   var btn=document.getElementById('loginBtn');
-  btn.addEventListener('click',function(e){e.preventDefault();doLogin()});
-  btn.addEventListener('touchend',function(e){e.preventDefault();doLogin()});
-  document.getElementById('loginPassword').addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();doLogin()}});
-  document.getElementById('loginAccount').addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();doLogin()}});
+  if(btn){
+    btn.addEventListener('click',function(e){e.preventDefault();doLogin()});
+    btn.addEventListener('touchend',function(e){e.preventDefault();doLogin()});
+  }
+  var pw=document.getElementById('loginPassword');
+  if(pw){pw.addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();doLogin()}})}
+  var ac=document.getElementById('loginAccount');
+  if(ac){ac.addEventListener('keypress',function(e){if(e.key==='Enter'){e.preventDefault();doLogin()}})}
 
   if(token&&userInfo&&currentPort&&userInfo.ports&&userInfo.ports.indexOf(currentPort)>=0){
     showMain();
@@ -1020,7 +1024,11 @@ function init(){
   }
 }
 
-init();
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',init);
+}else{
+  init();
+}
 </script>
 </body>
 </html>
