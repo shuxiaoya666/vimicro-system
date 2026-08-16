@@ -284,13 +284,6 @@ input,select,textarea{font-family:inherit;font-size:14px;outline:none}
       <label>密码</label>
       <input type="password" id="loginPassword" placeholder="请输入密码" value="123456">
     </div>
-    <div class="login-field">
-      <label>验证码</label>
-      <div class="login-row">
-        <input type="text" id="loginCaptcha" placeholder="输入验证码" maxlength="4">
-        <div class="captcha-box" id="captchaBox" onclick="generateCaptcha()"></div>
-      </div>
-    </div>
     <button class="login-btn" id="loginBtn" onclick="doLogin()">登 录</button>
     <div class="login-hint">测试账号: <b>admin</b> / <b>clinic</b> / <b>dealer</b> / <b>pharmacy</b> / <b>factory</b> 密码: <b>123456</b></div>
     <div class="api-settings">
@@ -811,7 +804,6 @@ function showLogin(){
   document.getElementById('loginPage').classList.remove('hidden');
   document.getElementById('mainApp').classList.add('hidden');
   document.getElementById('portSelectPage').classList.add('hidden');
-  generateCaptcha();
 }
 
 function toggleApiConfig(){
@@ -830,10 +822,7 @@ function saveApiBase(){
 function doLogin(){
   var a=document.getElementById('loginAccount').value.trim();
   var p=document.getElementById('loginPassword').value.trim();
-  var c=document.getElementById('loginCaptcha').value.trim().toUpperCase();
-  var cap=document.getElementById('captchaBox').textContent;
   if(!a||!p){showToast('请输入账号和密码');return}
-  if(c!==cap){showToast('验证码错误');generateCaptcha();return}
   
   var btn=document.getElementById('loginBtn');
   btn.disabled=true;btn.textContent='登录中...';
@@ -857,7 +846,6 @@ function doLogin(){
     }else{
       btn.disabled=false;btn.textContent='登 录';
       showToast('账号或密码错误');
-      generateCaptcha();
     }
   });
 }
@@ -1909,16 +1897,12 @@ function getPortSettings(){
 
 // ==================== Init ====================
 (function init(){
-  generateCaptcha();
   if(token&&userInfo){
     showPortSelect();
   }else{
     showLogin();
   }
   document.getElementById('loginPassword').addEventListener('keypress',function(e){
-    if(e.key==='Enter')doLogin();
-  });
-  document.getElementById('loginCaptcha').addEventListener('keypress',function(e){
     if(e.key==='Enter')doLogin();
   });
 })();
