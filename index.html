@@ -3,14 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>小唯管理系统</title>
+<title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=18">
+<link rel="stylesheet" href="css/style.css?v=19">
 </head>
 <body>
 
+<!-- ========== 淘宝风格商城首页 ========== -->
+<div id="shopHome">
+  <!-- 顶部导航 -->
+  <header class="shop-header">
+    <div class="shop-topbar">
+      <div>欢迎来到小唯商城 · 口腔健康一站式平台</div>
+      <div class="shop-topbar-right">
+        <span onclick="openLoginModal()">请登录</span>
+        <span onclick="openLoginModal()">免费注册</span>
+        <span onclick="openLoginModal()">我的订单</span>
+        <span onclick="openLoginModal()">商家入驻</span>
+      </div>
+    </div>
+    <div class="shop-nav">
+      <div class="shop-logo" onclick="scrollToTop()">
+        <svg class="brand-logo-svg" viewBox="0 0 240 52" xmlns="http://www.w3.org/2000/svg" aria-label="VMicro 小唯">
+          <g font-family="Inter, sans-serif" font-weight="700" text-rendering="geometricPrecision">
+            <text x="0" y="42" font-size="40" fill="#008B8B">V</text>
+            <text x="33" y="42" font-size="40" fill="#008B8B">M</text>
+            <text x="69" y="42" font-size="53" fill="#008B8B">ı</text>
+            <text x="82" y="42" font-size="55" fill="#008B8B">c</text>
+            <text x="116" y="42" font-size="55" fill="#008B8B">r</text>
+            <text x="139" y="42" font-size="55" fill="#D2691E">o</text>
+            <text x="176" y="20" font-size="12" font-weight="400" fill="#008B8B">®</text>
+          </g>
+          <circle cx="76" cy="10" r="3" fill="none" stroke="#D2691E" stroke-width="1.8"/>
+          <text x="188" y="42" font-family="'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="25" font-weight="600" fill="#008B8B">小唯</text>
+        </svg>
+      </div>
+      <div class="shop-search">
+        <input type="text" id="shopSearchInput" placeholder="搜索口腔护理产品、种植牙服务..." onkeypress="if(event.key==='Enter')searchProducts()">
+        <button onclick="searchProducts()">🔍 搜索</button>
+      </div>
+      <div class="shop-nav-right">
+        <button class="shop-cart-btn" onclick="openLoginModal()">🛒 购物车</button>
+        <button class="shop-login-btn" onclick="openLoginModal()">登录 / 注册</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Banner轮播 -->
+  <section class="shop-banner">
+    <div class="banner-wrapper">
+      <div class="banner-slide on" data-idx="0">
+        <div class="banner-text">
+          <h2>小唯种植牙特惠季</h2>
+          <p>韩国进口种植体低至2980元起，一价全包更安心</p>
+          <div class="banner-btn" onclick="openLoginModal()">立即查看 →</div>
+        </div>
+        <div class="banner-img">🦷</div>
+      </div>
+      <div class="banner-slide" data-idx="1">
+        <div class="banner-text">
+          <h2>口腔护理套装</h2>
+          <p>全年12次洗牙+口腔检查，呵护您的口腔健康</p>
+          <div class="banner-btn" onclick="openLoginModal()">立即抢购 →</div>
+        </div>
+        <div class="banner-img">🪥</div>
+      </div>
+      <div class="banner-slide" data-idx="2">
+        <div class="banner-text">
+          <h2>新用户专享福利</h2>
+          <p>注册即送100积分，首单立减50元</p>
+          <div class="banner-btn" onclick="openLoginModal()">立即注册 →</div>
+        </div>
+        <div class="banner-img">🎁</div>
+      </div>
+      <div class="banner-dots">
+        <div class="banner-dot on" onclick="goBanner(0)"></div>
+        <div class="banner-dot" onclick="goBanner(1)"></div>
+        <div class="banner-dot" onclick="goBanner(2)"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 分类快捷入口 -->
+  <section class="shop-categories">
+    <div class="category-row">
+      <div class="category-item" onclick="filterByCategory('all')">
+        <div class="category-icon">🏠</div>
+        <div class="category-name">全部商品</div>
+      </div>
+      <div class="category-item" onclick="filterByCategory('口护用品')">
+        <div class="category-icon">🪥</div>
+        <div class="category-name">口护用品</div>
+      </div>
+      <div class="category-item" onclick="filterByCategory('种植体医疗服务')">
+        <div class="category-icon">🦷</div>
+        <div class="category-name">种植牙</div>
+      </div>
+      <div class="category-item" onclick="openLoginModal()">
+        <div class="category-icon">💧</div>
+        <div class="category-name">冲牙器</div>
+      </div>
+      <div class="category-item" onclick="openLoginModal()">
+        <div class="category-icon">🧴</div>
+        <div class="category-name">漱口水</div>
+      </div>
+      <div class="category-item" onclick="openLoginModal()">
+        <div class="category-icon">🧵</div>
+        <div class="category-name">牙线棒</div>
+      </div>
+      <div class="category-item" onclick="openLoginModal()">
+        <div class="category-icon">✨</div>
+        <div class="category-name">牙齿美白</div>
+      </div>
+      <div class="category-item" onclick="openLoginModal()">
+        <div class="category-icon">🧒</div>
+        <div class="category-name">儿童护齿</div>
+      </div>
+      <div class="category-item" onclick="openLoginModal()">
+        <div class="category-icon">🛡️</div>
+        <div class="category-name">质保服务</div>
+      </div>
+      <div class="category-item" onclick="openLoginModal()">
+        <div class="category-icon">📋</div>
+        <div class="category-name">术后复查</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 两个额外链接入口 -->
+  <section class="shop-entry-links">
+    <div class="entry-link-card" onclick="handleEntryClick('clinic')">
+      <div class="entry-link-icon orange">🏥</div>
+      <div class="entry-link-text">
+        <h3>诊所管理系统</h3>
+        <p>专为口腔诊所打造的一站式管理平台，患者管理、预约挂号、库存管理</p>
+      </div>
+      <div class="entry-link-arrow">›</div>
+    </div>
+    <div class="entry-link-card" onclick="handleEntryClick('dealer')">
+      <div class="entry-link-icon teal">🏭</div>
+      <div class="entry-link-text">
+        <h3>经销商订货平台</h3>
+        <p>经销商在线订货、订单跟踪、物流查询、销售数据分析</p>
+      </div>
+      <div class="entry-link-arrow">›</div>
+    </div>
+  </section>
+
+  <!-- 热门推荐商品 -->
+  <section class="shop-products">
+    <div class="shop-section-title">
+      <h2>热门推荐</h2>
+      <div class="shop-section-tabs" id="productTabs">
+        <span class="active" onclick="filterByCategory('all', this)">全部</span>
+        <span onclick="filterByCategory('口护用品', this)">口护用品</span>
+        <span onclick="filterByCategory('种植体医疗服务', this)">种植牙服务</span>
+      </div>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- 商品由JS动态渲染 -->
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer class="shop-footer">
+    <p>© 2026 小唯商城 VMicro · 口腔健康一站式平台</p>
+    <p style="margin-top:6px;">客服热线：400-888-8888 | 工作时间：9:00-21:00</p>
+  </footer>
+</div>
+
+<!-- ========== 登录弹窗 ========== -->
+<div id="loginModal" class="login-modal-mask" onclick="if(event.target===this)closeLoginModal()">
+  <div class="login-modal">
+    <div class="modal-header">
+      <h3>登录小唯</h3>
+      <button class="modal-close" onclick="closeLoginModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-form-group">
+        <label>账号</label>
+        <input type="text" id="modalAccount" placeholder="请输入账号">
+      </div>
+      <div class="modal-form-group">
+        <label>密码</label>
+        <input type="password" id="modalPassword" placeholder="请输入密码">
+      </div>
+      <div class="modal-form-group">
+        <label>验证码</label>
+        <div class="modal-captcha-row">
+          <input type="text" id="modalCaptcha" placeholder="请输入验证码">
+          <div class="modal-captcha-code" id="modalCaptchaCode" onclick="refreshModalCaptcha()">A3B7</div>
+        </div>
+      </div>
+      <div class="modal-error" id="modalError">账号或密码错误</div>
+      <button class="modal-login-btn" onclick="doModalLogin()">登 录</button>
+      <div class="modal-hint">
+        测试账号：admin / 123456（全部权限）<br>
+        还没有账号？<a onclick="switchToRegister()">立即注册</a>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ========== 登录页 ========== -->
-<div id="loginPage" class="login-page">
+<div id="loginPage" class="login-page" style="display:none;">
   <div class="login-left">
     <!-- [LOGO修改] SVG像素级精确控制，所有字母统一字号粗细一致，i用橘色空心圆圈 -->
     <div class="login-logo">
@@ -276,6 +472,244 @@
   </div>
 </div>
 
+<script>
+// ========== 商城首页数据和逻辑 ==========
+var shopProducts = [
+  {id:1,name:'软毛牙刷套装（德国进口软毛 温和不伤牙龈）',category:'口护用品',price:59,originalPrice:89,stock:50,sales:1280,icon:'🪥',tag:'热销'},
+  {id:2,name:'便携式冲牙器 清洁牙缝残留 三档调节',category:'口护用品',price:199,originalPrice:299,stock:30,sales:890,icon:'💧',tag:'新品'},
+  {id:3,name:'漱口水500ml×2瓶 杀菌清新口气',category:'口护用品',price:69,originalPrice:99,stock:100,sales:2340,icon:'🧴',tag:'特惠'},
+  {id:4,name:'超细牙线棒100支装 轻松清洁牙缝',category:'口护用品',price:29,originalPrice:45,stock:60,sales:1560,icon:'🧵',tag:''},
+  {id:5,name:'口腔护理全年套装 12次洗牙+检查',category:'口护用品',price:599,originalPrice:1280,stock:20,sales:456,icon:'🎁',tag:'超值'},
+  {id:6,name:'儿童护齿套装 含氟牙膏+软毛牙刷',category:'口护用品',price:79,originalPrice:119,stock:80,sales:956,icon:'🧒',tag:''},
+  {id:7,name:'XW-TI-4212种植体医疗服务 亲水表面',category:'种植体医疗服务',price:4980,originalPrice:6800,stock:15,sales:328,icon:'🦷',tag:'爆款'},
+  {id:8,name:'XW-TI-4200种植体医疗服务 高强度',category:'种植体医疗服务',price:4580,originalPrice:5980,stock:20,sales:286,icon:'🦷',tag:''},
+  {id:9,name:'XW-TI-3510种植体医疗服务 畅销款',category:'种植体医疗服务',price:3680,originalPrice:4980,stock:25,sales:562,icon:'🦷',tag:'推荐'},
+  {id:10,name:'种植术后复查套餐 3次复查+维护',category:'种植体医疗服务',price:299,originalPrice:499,stock:40,sales:689,icon:'📋',tag:''},
+  {id:11,name:'种植体终身质保服务 免费更换',category:'种植体医疗服务',price:1980,originalPrice:2980,stock:10,sales:189,icon:'🛡️',tag:'保障'},
+  {id:12,name:'冷光牙齿美白护理 一次见效',category:'种植体医疗服务',price:699,originalPrice:1280,stock:30,sales:423,icon:'✨',tag:'美白'}
+];
+
+var currentCategory = 'all';
+var currentSearch = '';
+var bannerIdx = 0;
+var bannerTimer = null;
+var pendingAction = null; // 登录后要执行的操作
+
+// 渲染商品
+function renderProducts() {
+  var grid = document.getElementById('productGrid');
+  if (!grid) return;
+  var list = shopProducts.filter(function(p) {
+    var matchCat = currentCategory === 'all' || p.category === currentCategory;
+    var matchSearch = !currentSearch || p.name.toLowerCase().indexOf(currentSearch.toLowerCase()) >= 0;
+    return matchCat && matchSearch;
+  });
+  if (list.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:#999;">暂无相关商品</div>';
+    return;
+  }
+  var h = '';
+  list.forEach(function(p) {
+    h += '<div class="product-card" onclick="handleProductClick(' + p.id + ')">';
+    h += '<div class="product-img">' + p.icon + '</div>';
+    h += '<div class="product-info">';
+    if (p.tag) h += '<span class="product-tag">' + p.tag + '</span>';
+    h += '<div class="product-name">' + p.name + '</div>';
+    h += '<div class="product-price"><span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span></div>';
+    h += '<div class="product-meta"><span>已售' + p.sales + '件</span><span>库存' + p.stock + '</span></div>';
+    h += '</div></div>';
+  });
+  grid.innerHTML = h;
+}
+
+// 按分类筛选
+function filterByCategory(cat, el) {
+  currentCategory = cat;
+  if (el) {
+    var tabs = document.querySelectorAll('#productTabs span');
+    tabs.forEach(function(t) { t.classList.remove('active'); });
+    el.classList.add('active');
+  }
+  renderProducts();
+  // 滚动到商品区域
+  document.getElementById('productGrid').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// 搜索商品
+function searchProducts() {
+  currentSearch = document.getElementById('shopSearchInput').value.trim();
+  renderProducts();
+  document.getElementById('productGrid').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// 点击商品
+function handleProductClick(id) {
+  pendingAction = { type: 'product', id: id };
+  openLoginModal();
+}
+
+// 点击入口链接
+function handleEntryClick(type) {
+  pendingAction = { type: 'entry', entry: type };
+  openLoginModal();
+}
+
+// Banner轮播
+function goBanner(idx) {
+  bannerIdx = idx;
+  var slides = document.querySelectorAll('.banner-slide');
+  var dots = document.querySelectorAll('.banner-dot');
+  slides.forEach(function(s, i) { s.classList.toggle('on', i === idx); });
+  dots.forEach(function(d, i) { d.classList.toggle('on', i === idx); });
+}
+function startBanner() {
+  if (bannerTimer) clearInterval(bannerTimer);
+  bannerTimer = setInterval(function() {
+    bannerIdx = (bannerIdx + 1) % 3;
+    goBanner(bannerIdx);
+  }, 3500);
+}
+
+// 登录弹窗
+function openLoginModal() {
+  document.getElementById('loginModal').classList.add('show');
+  document.getElementById('modalAccount').focus();
+  refreshModalCaptcha();
+}
+function closeLoginModal() {
+  document.getElementById('loginModal').classList.remove('show');
+  pendingAction = null;
+}
+function refreshModalCaptcha() {
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var code = '';
+  for (var i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('modalCaptchaCode').textContent = code;
+}
+
+// 弹窗登录
+function doModalLogin() {
+  var account = document.getElementById('modalAccount').value.trim().toLowerCase();
+  var password = document.getElementById('modalPassword').value;
+  var captcha = document.getElementById('modalCaptcha').value.trim().toUpperCase();
+  var errorEl = document.getElementById('modalError');
+  var realCode = document.getElementById('modalCaptchaCode').textContent;
+
+  if (!account || !password) {
+    errorEl.textContent = '请输入账号和密码';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if (captcha !== realCode) {
+    errorEl.textContent = '验证码错误';
+    errorEl.style.display = 'block';
+    refreshModalCaptcha();
+    return;
+  }
+
+  // 使用现有账号系统验证
+  var user = null;
+  if (typeof ACCOUNTS !== 'undefined' && ACCOUNTS[account]) {
+    if (ACCOUNTS[account].password === password) {
+      user = ACCOUNTS[account];
+    }
+  }
+  // 也支持客户端账号
+  if (!user) {
+    var clientAccounts = {
+      client: {password:'123456',name:'周小明',avatar:'周',role:'client',ports:['client']}
+    };
+    if (clientAccounts[account] && clientAccounts[account].password === password) {
+      user = clientAccounts[account];
+    }
+  }
+
+  if (!user) {
+    errorEl.textContent = '账号或密码错误';
+    errorEl.style.display = 'block';
+    refreshModalCaptcha();
+    return;
+  }
+
+  errorEl.style.display = 'none';
+
+  // 登录成功 - 保存登录状态并使用现有系统
+  if (typeof loginUser === 'function') {
+    // 保存到localStorage供后续使用
+    localStorage.setItem('xiaowei_account', account);
+
+    // 隐藏商城首页，显示管理系统
+    document.getElementById('shopHome').style.display = 'none';
+    closeLoginModal();
+
+    // 调用原有登录逻辑
+    document.getElementById('loginAccount').value = account;
+    document.getElementById('loginPassword').value = password;
+    if (typeof doLogin === 'function') {
+      doLogin();
+    }
+
+    // 如果有挂起的操作，执行
+    if (pendingAction) {
+      setTimeout(function() {
+        if (pendingAction.type === 'entry') {
+          // 切换到对应端口
+          if (typeof switchPort === 'function') {
+            switchPort(pendingAction.entry);
+          }
+        }
+        pendingAction = null;
+      }, 500);
+    }
+  } else {
+    // 降级：直接进入
+    closeLoginModal();
+    alert('登录成功！欢迎' + user.name);
+  }
+}
+
+// 回车登录
+document.addEventListener('keypress', function(e) {
+  if (e.key === 'Enter' && document.getElementById('loginModal').classList.contains('show')) {
+    doModalLogin();
+  }
+});
+
+// 切换到注册
+function switchToRegister() {
+  closeLoginModal();
+  document.getElementById('shopHome').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'none';
+  if (typeof showRegister === 'function') {
+    showRegister();
+  }
+}
+
+// 回到顶部
+function scrollToTop() {
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+// 初始化商城首页
+function initShopHome() {
+  renderProducts();
+  startBanner();
+  // 检查是否已登录
+  var savedAccount = localStorage.getItem('xiaowei_account');
+  if (savedAccount && typeof currentUser !== 'undefined' && currentUser) {
+    // 已登录，显示管理系统
+    document.getElementById('shopHome').style.display = 'none';
+  }
+}
+
+// DOM加载完成后初始化
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initShopHome);
+} else {
+  initShopHome();
+}
+</script>
+
 <script src="js/config.js?v=3"></script>
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
@@ -285,6 +719,43 @@
 <script>
   // 页面加载时初始化数据库
   DB.init();
+
+  // 覆盖 showLogin：显示商城首页而不是登录页
+  var _originalShowLogin = typeof showLogin === 'function' ? showLogin : null;
+  function showLogin() {
+    document.getElementById('shopHome').style.display = 'block';
+    document.getElementById('mainApp').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('registerPage').style.display = 'none';
+    window.scrollTo(0, 0);
+  }
+
+  // 覆盖 doLogout：退出后回到商城首页
+  var _originalDoLogout = typeof doLogout === 'function' ? doLogout : null;
+  function doLogout() {
+    if (_originalDoLogout) _originalDoLogout();
+    // 确保显示商城首页
+    document.getElementById('shopHome').style.display = 'block';
+    document.getElementById('loginPage').style.display = 'none';
+    // 清除保存的账号
+    localStorage.removeItem('xiaowei_account');
+  }
+
+  // 覆盖 showRegister：从商城首页跳转到注册页
+  var _originalShowRegister = typeof showRegister === 'function' ? showRegister : null;
+  function showRegister() {
+    document.getElementById('shopHome').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'none';
+    if (_originalShowRegister) _originalShowRegister();
+  }
+
+  // 添加返回商城首页的功能
+  function backToShopHome() {
+    document.getElementById('registerPage').style.display = 'none';
+    document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('shopHome').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
 </script>
 </body>
 </html>
