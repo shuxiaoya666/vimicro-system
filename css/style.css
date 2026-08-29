@@ -1899,6 +1899,223 @@ body {
   margin: 0 auto;
   padding: 16px;
 }
+
+/* ===== 知识页面样式 ===== */
+.knowledge-hero {
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  color: #fff;
+}
+.knowledge-hero.academy {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+.knowledge-hero.implant {
+  background: linear-gradient(135deg, #008B8B, #006d6d);
+}
+.knowledge-hero-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+}
+.knowledge-hero h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.knowledge-hero p {
+  font-size: 14px;
+  opacity: 0.9;
+}
+.knowledge-section {
+  margin-bottom: 24px;
+}
+.knowledge-section > h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-left: 12px;
+  border-left: 4px solid var(--primary);
+}
+.knowledge-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.knowledge-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.knowledge-card p {
+  color: #555;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+.knowledge-card ol,
+.knowledge-card ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+.knowledge-card li {
+  line-height: 1.8;
+  color: #555;
+  margin-bottom: 4px;
+}
+.knowledge-tip {
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #795548;
+  line-height: 1.6;
+}
+.knowledge-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 13px;
+}
+.knowledge-table th {
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+}
+.knowledge-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #eee;
+  color: #555;
+}
+.knowledge-table tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+/* 种植牙结构 */
+.implant-parts {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+  flex-wrap: wrap;
+}
+.implant-part {
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
+  background: #f0f9f8;
+  border-radius: 10px;
+  padding: 16px 12px;
+}
+.implant-part-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.implant-part h4 {
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: var(--primary-dark);
+}
+.implant-part p {
+  font-size: 12px;
+  color: #777;
+}
+
+/* 优势网格 */
+.implant-advantages {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+.advantage-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 14px;
+}
+.advantage-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+.advantage-item strong {
+  font-size: 14px;
+  color: var(--text);
+  display: block;
+  margin-bottom: 4px;
+}
+.advantage-item p {
+  font-size: 12px;
+  color: #888;
+  margin: 0;
+}
+
+/* 流程步骤 */
+.implant-steps {
+  position: relative;
+  padding-left: 8px;
+}
+.implant-step {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.implant-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 44px;
+  bottom: -20px;
+  width: 2px;
+  background: #e0e0e0;
+}
+.step-num {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  z-index: 1;
+}
+.step-content {
+  padding-top: 4px;
+}
+.step-content h4 {
+  font-size: 15px;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.step-content p {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .implant-advantages {
+    grid-template-columns: 1fr;
+  }
+  .implant-parts {
+    flex-direction: column;
+  }
+}
+
 .detail-img {
   width: 100%;
   height: 360px;
