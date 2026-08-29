@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=20">
+<link rel="stylesheet" href="css/style.css?v=21">
 </head>
 <body>
 
@@ -43,7 +43,7 @@
         <button onclick="searchProducts()">🔍 搜索</button>
       </div>
       <div class="shop-nav-right">
-        <button class="shop-cart-btn" onclick="openLoginModal()">🛒 购物车</button>
+        <button class="shop-cart-btn" onclick="openCart()">🛒 购物车<span id="cartBadge" class="cart-badge" style="display:none">0</span></button>
         <button class="shop-login-btn" onclick="openLoginModal()">登录 / 注册</button>
       </div>
     </div>
@@ -520,7 +520,7 @@ function renderProducts() {
   }
   var h = '';
   list.forEach(function(p) {
-    h += '<div class="product-card" onclick="handleProductClick(' + p.id + ')">';
+    h += '<div class="product-card" onclick="showProductDetail(' + p.id + ')">';
     h += '<div class="product-img">' + (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷') + '</div>';
     h += '<div class="product-info">';
     if (p.tag) h += '<span class="product-tag">' + p.tag + '</span>';
@@ -530,7 +530,9 @@ function renderProducts() {
     } else {
       h += '<div class="product-price"><span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span></div>';
     }
-    h += '<div class="product-meta"><span>已售' + p.sales + '件</span><span>库存' + p.stock + '</span></div>';
+    h += '<div class="product-actions">';
+    h += '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart(' + p.id + ')">🛒 加入购物车</button>';
+    h += '</div>';
     h += '</div></div>';
   });
   grid.innerHTML = h;
@@ -556,9 +558,181 @@ function searchProducts() {
   document.getElementById('productGrid').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
-// 点击商品
-function handleProductClick(id) {
-  pendingAction = { type: 'product', id: id };
+// 购物车数据
+var shopCart = [];
+var currentDetailId = null;
+
+// 点击商品 - 显示详情页
+function showProductDetail(id) {
+  var p = shopProducts.find(function(x) { return x.id === id; });
+  if (!p) return;
+  currentDetailId = id;
+  var detail = document.getElementById('productDetailPage');
+  var imgHtml = p.img ? '<img src="' + p.img + '" alt="' + p.name + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷';
+  var priceHtml = '';
+  if (p.originalPrice && p.originalPrice > p.price) {
+    priceHtml = '<span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span><span class="price-original">¥' + p.originalPrice + '</span>';
+  } else {
+    priceHtml = '<span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span>';
+  }
+  var desc = getProductDescription(p);
+  detail.innerHTML =
+    '<div class="detail-header">' +
+      '<button class="detail-back" onclick="closeProductDetail()">← 返回</button>' +
+      '<span>商品详情</span>' +
+    '</div>' +
+    '<div class="detail-body">' +
+      '<div class="detail-img">' + imgHtml + '</div>' +
+      '<div class="detail-info">' +
+        (p.tag ? '<span class="product-tag">' + p.tag + '</span>' : '') +
+        '<h1 class="detail-name">' + p.name + '</h1>' +
+        '<div class="detail-price">' + priceHtml + '</div>' +
+        '<div class="detail-meta"><span>分类：' + p.category + '</span></div>' +
+        '<div class="detail-desc">' + desc + '</div>' +
+      '</div>' +
+      '<div class="detail-features">' +
+        '<h3>产品特点</h3>' +
+        '<ul>' +
+          '<li>✅ 械字号认证，品质保证</li>' +
+          '<li>✅ 医疗器械级口腔护理产品</li>' +
+          '<li>✅ 小唯口腔品牌出品，安全可靠</li>' +
+          '<li>✅ 正品保证，假一赔十</li>' +
+        '</ul>' +
+      '</div>' +
+    '</div>' +
+    '<div class="detail-footer">' +
+      '<button class="detail-cart-btn" onclick="addToCart(' + p.id + ')">加入购物车</button>' +
+      '<button class="detail-buy-btn" onclick="addToCart(' + p.id + ');openCart();">立即购买</button>' +
+    '</div>';
+  detail.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProductDetail() {
+  document.getElementById('productDetailPage').classList.remove('show');
+  document.body.style.overflow = '';
+  currentDetailId = null;
+}
+
+// 生成商品描述
+function getProductDescription(p) {
+  var cat = p.category;
+  var name = p.name;
+  var desc = '<p>' + name + '，小唯口腔品牌旗下产品。</p>';
+  if (cat.indexOf('牙膏') > -1) {
+    desc += '<p>采用专业配方，含氟防蛀，有效清洁牙齿，清新口气。适合日常口腔护理使用。</p>';
+  } else if (cat.indexOf('牙刷') > -1) {
+    desc += '<p>采用优质刷毛，温柔清洁牙齿表面及牙缝，不伤牙龈。人体工学手柄设计，使用舒适。</p>';
+  } else if (cat.indexOf('漱口水') > -1) {
+    desc += '<p>温和无酒精配方，有效清洁口腔，清新口气，呵护牙龈健康。便携包装，随时随地使用。</p>';
+  } else if (cat.indexOf('口腔护理') > -1) {
+    desc += '<p>专业口腔护理产品，针对口腔问题提供温和有效的护理方案。械字号认证，安全可靠。</p>';
+  } else if (cat.indexOf('益生菌') > -1) {
+    desc += '<p>精选21种编码菌株和6大益生元，含免疫球蛋白，助力肠道健康与免疫力提升。</p>';
+  }
+  desc += '<p><strong>使用方法：</strong>请按照产品说明书使用，如有不适请停止使用并咨询医生。</p>';
+  desc += '<p><strong>注意事项：</strong>请置于儿童不易触及处，避免阳光直射。</p>';
+  return desc;
+}
+
+// 添加到购物车
+function addToCart(id) {
+  var p = shopProducts.find(function(x) { return x.id === id; });
+  if (!p) return;
+  var existing = shopCart.find(function(x) { return x.id === id; });
+  if (existing) {
+    existing.qty++;
+  } else {
+    shopCart.push({id: p.id, name: p.name, price: p.price, img: p.img, qty: 1});
+  }
+  updateCartBadge();
+  showCartToast('已加入购物车');
+}
+
+// 更新购物车标记
+function updateCartBadge() {
+  var total = shopCart.reduce(function(s, x) { return s + x.qty; }, 0);
+  var badge = document.getElementById('cartBadge');
+  if (total > 0) {
+    badge.textContent = total;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// 购物车提示
+function showCartToast(msg) {
+  var toast = document.getElementById('cartToast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 1500);
+}
+
+// 打开购物车
+function openCart() {
+  var cartPage = document.getElementById('cartPage');
+  var body = document.getElementById('cartBody');
+  if (shopCart.length === 0) {
+    body.innerHTML = '<div class="cart-empty">🛒<br>购物车是空的<br><button class="cart-continue" onclick="closeCart()">继续逛逛</button></div>';
+  } else {
+    var h = '';
+    var total = 0;
+    shopCart.forEach(function(item) {
+      total += item.price * item.qty;
+      var imgHtml = item.img ? '<img src="' + item.img + '" onerror="this.style.display=\'none\'">' : '🦷';
+      h += '<div class="cart-item">';
+      h += '<div class="cart-item-img">' + imgHtml + '</div>';
+      h += '<div class="cart-item-info">';
+      h += '<div class="cart-item-name">' + item.name + '</div>';
+      h += '<div class="cart-item-price">¥' + item.price + '</div>';
+      h += '<div class="cart-item-qty">';
+      h += '<button onclick="changeQty(' + item.id + ',-1)">-</button>';
+      h += '<span>' + item.qty + '</span>';
+      h += '<button onclick="changeQty(' + item.id + ',1)">+</button>';
+      h += '</div>';
+      h += '</div>';
+      h += '<div class="cart-item-del" onclick="removeFromCart(' + item.id + ')">✕</div>';
+      h += '</div>';
+    });
+    h += '<div class="cart-total">合计：<span class="cart-total-price">¥' + total.toFixed(2) + '</span></div>';
+    body.innerHTML = h;
+  }
+  cartPage.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCart() {
+  document.getElementById('cartPage').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function changeQty(id, delta) {
+  var item = shopCart.find(function(x) { return x.id === id; });
+  if (item) {
+    item.qty += delta;
+    if (item.qty <= 0) {
+      shopCart = shopCart.filter(function(x) { return x.id !== id; });
+    }
+    updateCartBadge();
+    openCart();
+  }
+}
+
+function removeFromCart(id) {
+  shopCart = shopCart.filter(function(x) { return x.id !== id; });
+  updateCartBadge();
+  openCart();
+}
+
+// 结算 - 此时才要求登录
+function checkoutCart() {
+  if (shopCart.length === 0) {
+    showCartToast('购物车是空的');
+    return;
+  }
+  pendingAction = { type: 'checkout' };
+  closeCart();
   openLoginModal();
 }
 
@@ -665,14 +839,21 @@ function doModalLogin() {
 
     // 如果有挂起的操作，执行
     if (pendingAction) {
+      var action = pendingAction;
+      pendingAction = null;
       setTimeout(function() {
-        if (pendingAction.type === 'entry') {
+        if (action.type === 'entry') {
           // 切换到对应端口
           if (typeof switchPort === 'function') {
-            switchPort(pendingAction.entry);
+            switchPort(action.entry);
           }
+        } else if (action.type === 'checkout') {
+          // 结算成功
+          var total = shopCart.reduce(function(s, x) { return s + x.price * x.qty; }, 0);
+          showCartToast('订单已提交！合计¥' + total.toFixed(2));
+          shopCart = [];
+          updateCartBadge();
         }
-        pendingAction = null;
       }, 500);
     }
   } else {
@@ -771,5 +952,23 @@ if (document.readyState === 'loading') {
     window.scrollTo(0, 0);
   }
 </script>
+<!-- 商品详情页 -->
+<div id="productDetailPage" class="detail-overlay"></div>
+
+<!-- 购物车页面 -->
+<div id="cartPage" class="cart-overlay">
+  <div class="cart-header">
+    <button class="cart-back" onclick="closeCart()">← 返回</button>
+    <span>购物车</span>
+  </div>
+  <div id="cartBody" class="cart-body"></div>
+  <div id="cartFooter" class="cart-footer">
+    <button class="checkout-btn" onclick="checkoutCart()">去结算</button>
+  </div>
+</div>
+
+<!-- 购物车提示 -->
+<div id="cartToast" class="cart-toast"></div>
+
 </body>
 </html>
