@@ -284,14 +284,18 @@ function doLogin() {
     return;
   }
 
-  // 尝试 API 登录
+  // 尝试 API 登录（3秒超时，超时后降级到本地验证）
   var _apiBase = (typeof API_CONFIG !== 'undefined') ? API_CONFIG.baseUrl.replace(/\/api$/, '') : 'http://localhost:3000';
+  var _controller = new AbortController();
+  var _timeout = setTimeout(function() { _controller.abort(); }, 3000);
   fetch(_apiBase + '/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ account: account, password: password })
+    body: JSON.stringify({ account: account, password: password }),
+    signal: _controller.signal
   })
   .then(function(res) {
+    clearTimeout(_timeout);
     if (!res.ok) throw new Error('API登录失败');
     return res.json();
   })
@@ -304,6 +308,7 @@ function doLogin() {
     loginUser(data.user, account);
   })
   .catch(function(err) {
+    clearTimeout(_timeout);
     // API 不可用，降级到本地账号验证
     console.warn('[Auth] API不可用，使用本地账号验证:', err.message);
     var user = ACCOUNTS[account];
