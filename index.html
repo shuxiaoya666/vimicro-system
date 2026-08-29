@@ -824,21 +824,13 @@ function doModalLogin() {
 
   errorEl.style.display = 'none';
 
-  // 登录成功 - 保存登录状态并使用现有系统
+  // 登录成功 - 直接调用loginUser，跳过API请求（已本地验证）
   if (typeof loginUser === 'function') {
-    // 保存到localStorage供后续使用
     localStorage.setItem('xiaowei_account', account);
-
-    // 隐藏商城首页，显示管理系统
     document.getElementById('shopHome').style.display = 'none';
     closeLoginModal();
-
-    // 调用原有登录逻辑
-    document.getElementById('loginAccount').value = account;
-    document.getElementById('loginPassword').value = password;
-    if (typeof doLogin === 'function') {
-      doLogin();
-    }
+    // 直接调用loginUser，不走doLogin的API流程，避免白屏等待
+    loginUser(user, account);
 
     // 如果有挂起的操作，执行
     if (pendingAction) {
