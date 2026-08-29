@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=21">
+<link rel="stylesheet" href="css/style.css?v=22">
 </head>
 <body>
 
@@ -575,7 +575,13 @@ function showProductDetail(id) {
   } else {
     priceHtml = '<span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span>';
   }
-  var desc = getProductDescription(p);
+  // 获取小程序真实详情内容
+  var realContent = '';
+  if (typeof productDetails !== 'undefined' && productDetails[id] && productDetails[id].content) {
+    realContent = productDetails[id].content;
+  } else {
+    realContent = getProductDescription(p);
+  }
   detail.innerHTML =
     '<div class="detail-header">' +
       '<button class="detail-back" onclick="closeProductDetail()">← 返回</button>' +
@@ -588,16 +594,10 @@ function showProductDetail(id) {
         '<h1 class="detail-name">' + p.name + '</h1>' +
         '<div class="detail-price">' + priceHtml + '</div>' +
         '<div class="detail-meta"><span>分类：' + p.category + '</span></div>' +
-        '<div class="detail-desc">' + desc + '</div>' +
       '</div>' +
-      '<div class="detail-features">' +
-        '<h3>产品特点</h3>' +
-        '<ul>' +
-          '<li>✅ 械字号认证，品质保证</li>' +
-          '<li>✅ 医疗器械级口腔护理产品</li>' +
-          '<li>✅ 小唯口腔品牌出品，安全可靠</li>' +
-          '<li>✅ 正品保证，假一赔十</li>' +
-        '</ul>' +
+      '<div class="detail-content">' +
+        '<h3>商品介绍</h3>' +
+        '<div class="detail-content-html">' + realContent + '</div>' +
       '</div>' +
     '</div>' +
     '<div class="detail-footer">' +
@@ -906,6 +906,7 @@ if (document.readyState === 'loading') {
 </script>
 
 <script src="js/config.js?v=3"></script>
+<script src="js/product-details.js?v=1"></script>
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>

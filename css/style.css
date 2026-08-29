@@ -1969,6 +1969,36 @@ body {
   font-size: 14px;
   color: #555;
 }
+
+/* ===== 商品详情内容（小程序图文） ===== */
+.detail-content {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 80px;
+}
+.detail-content h3 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+.detail-content-html {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #555;
+  word-break: break-all;
+}
+.detail-content-html img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 8px 0;
+  border-radius: 4px;
+}
+.detail-content-html p {
+  margin-bottom: 8px;
+}
 .detail-footer {
   position: fixed;
   bottom: 0; left: 0; right: 0;
