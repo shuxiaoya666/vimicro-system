@@ -1,0 +1,20 @@
+<view class="points-page">
+  <view class="points-banner">
+    <view class="points-label">我的积分</view>
+    <view class="points-value">{{totalPoints}}</view>
+    <view class="points-tip">消费可累计积分，积分可兑换商品</view>
+  </view>
+  <view class="section-title">积分明细</view>
+  <view class="card" wx:if="{{transactions.length > 0}}">
+    <view class="point-item" wx:for="{{transactions}}" wx:key="id">
+      <view class="point-left">
+        <view class="point-name">{{item.item}}</view>
+        <view class="point-date">{{item.date}}</view>
+      </view>
+      <view class="point-right {{item.points > 0 ? 'plus' : 'minus'}}">
+        {{item.points > 0 ? '+' : ''}}{{item.points}}
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:else>暂无积分记录</view>
+</view>

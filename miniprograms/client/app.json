@@ -1,0 +1,52 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/home/home",
+    "pages/plant/plant",
+    "pages/mall/mall",
+    "pages/product-detail/product-detail",
+    "pages/orders/orders",
+    "pages/points/points",
+    "pages/cards/cards",
+    "pages/reviews/reviews",
+    "pages/transactions/transactions",
+    "pages/progress/progress",
+    "pages/service/service",
+    "pages/faq/faq",
+    "pages/knowledge/knowledge",
+    "pages/profile/profile"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#1abc9c",
+    "navigationBarTitleText": "小唯",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f6fa"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#1abc9c",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/mall/mall",
+        "text": "商场"
+      },
+      {
+        "pagePath": "pages/points/points",
+        "text": "积分"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

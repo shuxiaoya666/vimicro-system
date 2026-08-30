@@ -1,0 +1,41 @@
+<view class="home-page">
+  <view class="home-header" style="background: linear-gradient(135deg, {{portColor}}, {{portColor}}dd);">
+    <view class="home-port-bar" bindtap="goPort">
+      <text class="home-port-icon">{{portIcon}}</text>
+      <text class="home-port-name">{{portName}}</text>
+      <text class="home-port-switch">切换 ›</text>
+    </view>
+    <view class="home-user">欢迎，{{userInfo.name || userInfo.account || '管理员'}}</view>
+  </view>
+
+  <view class="stat-grid">
+    <view class="stat-card" wx:for="{{stats}}" wx:key="label">
+      <view class="stat-icon">{{item.icon}}</view>
+      <view class="stat-value">{{item.value}}{{item.suffix || ''}}</view>
+      <view class="stat-label">{{item.label}}</view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">快捷功能</view>
+    <view class="quick-grid">
+      <view class="quick-item" wx:for="{{quickMenus}}" wx:key="key" data-key="{{item.key}}" data-entity="{{item.entity}}" data-special="{{item.special}}" bindtap="goMenu">
+        <view class="quick-icon" style="background: {{portColor}}22; color: {{portColor}};">{{item.icon}}</view>
+        <text class="quick-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-title">最新动态</view>
+    <view class="card">
+      <view class="recent-item" wx:for="{{recentList}}" wx:key="title">
+        <view class="recent-dot tag tag-{{item.status}}"></view>
+        <view class="recent-content">
+          <view class="recent-title">{{item.title}}</view>
+          <view class="recent-time">{{item.time}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

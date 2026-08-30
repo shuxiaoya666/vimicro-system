@@ -1,0 +1,15 @@
+<view class="profile-page">
+  <view class="profile-header">
+    <view class="profile-avatar">{{userInfo.avatar}}</view>
+    <view class="profile-name">{{userInfo.name}}</view>
+    <view class="profile-role">小唯尊享客户</view>
+  </view>
+  <view class="profile-menu">
+    <view class="menu-item" wx:for="{{menuList}}" wx:key="name" bindtap="goPage" data-page="{{item.page}}">
+      <text class="menu-icon">{{item.icon}}</text>
+      <text class="menu-name">{{item.name}}</text>
+      <text class="menu-arrow">→</text>
+    </view>
+  </view>
+  <button class="btn btn-outline logout-btn" bindtap="logout">退出登录</button>
+</view>

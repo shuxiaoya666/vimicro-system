@@ -1,0 +1,22 @@
+<view class="orders-page">
+  <scroll-view scroll-x class="filter-bar">
+    <view class="filter-item {{activeFilter === item.value ? 'active' : ''}}" wx:for="{{filters}}" wx:key="value" bindtap="selectFilter" data-value="{{item.value}}">
+      {{item.label}}
+    </view>
+  </scroll-view>
+  <view class="order-card" wx:for="{{filteredOrders}}" wx:key="id">
+    <view class="order-top">
+      <text class="order-no">{{item.no}}</text>
+      <text class="tag tag-{{item.status}}">{{item.status === 'active' ? '已完成' : '进行中'}}</text>
+    </view>
+    <view class="order-mid">
+      <text class="order-type">{{item.type}}</text>
+      <text class="order-item-name">{{item.item}}</text>
+    </view>
+    <view class="order-bottom">
+      <text class="order-amount">¥{{item.amount}}</text>
+      <text class="order-date">{{item.createdAt}}</text>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{filteredOrders.length === 0}}">暂无订单</view>
+</view>

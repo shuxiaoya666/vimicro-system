@@ -1,0 +1,14 @@
+.trans-page { padding: 24rpx; }
+.filter-bar { white-space: nowrap; margin-bottom: 24rpx; }
+.filter-item { display: inline-block; padding: 12rpx 32rpx; margin-right: 16rpx; background: #fff; border-radius: 32rpx; font-size: 26rpx; color: #666; }
+.filter-item.active { background: #1abc9c; color: #fff; }
+.trans-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 16rpx; }
+.trans-top { display: flex; justify-content: space-between; margin-bottom: 8rpx; }
+.trans-type { font-size: 24rpx; color: #1abc9c; }
+.trans-amount { font-size: 32rpx; font-weight: 600; color: #e74c3c; }
+.trans-item { font-size: 28rpx; color: #555; margin-bottom: 12rpx; }
+.trans-bottom { display: flex; justify-content: space-between; padding-top: 12rpx; border-top: 1rpx solid #f0f0f0; }
+.trans-date { font-size: 24rpx; color: #999; }
+.trans-points { font-size: 24rpx; font-weight: 500; }
+.trans-points.plus { color: #1abc9c; }
+.trans-points.minus { color: #e74c3c; }

@@ -1,0 +1,133 @@
+.plant-page { padding: 24rpx; }
+.steps-bar {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 120rpx;
+}
+.step-circle {
+  width: 56rpx; height: 56rpx;
+  border-radius: 50%;
+  background: #e0e0e0;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 700;
+}
+.step-item.active .step-circle {
+  background: #1abc9c;
+  color: #fff;
+}
+.step-name {
+  font-size: 20rpx;
+  margin-top: 8rpx;
+  color: #999;
+}
+.step-item.active .step-name { color: #1abc9c; }
+.step-line {
+  flex: 1;
+  height: 4rpx;
+  background: #e0e0e0;
+  margin: 0 8rpx;
+  margin-bottom: 36rpx;
+}
+.step-line.active { background: #1abc9c; }
+.form-item { margin-bottom: 24rpx; }
+.form-label {
+  display: block;
+  font-size: 28rpx;
+  margin-bottom: 12rpx;
+  font-weight: 500;
+}
+.step-tip {
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #999;
+  padding: 16rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+}
+.auth-info {
+  text-align: center;
+  padding: 48rpx 0;
+}
+.auth-icon {
+  font-size: 96rpx;
+  margin-bottom: 24rpx;
+}
+.auth-text { font-size: 32rpx; font-weight: 500; }
+.auth-desc { font-size: 24rpx; color: #999; margin-top: 8rpx; }
+.notice-list { padding: 16rpx 0; }
+.notice-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 12rpx 0;
+  font-size: 28rpx;
+  color: #555;
+}
+.notice-num {
+  flex-shrink: 0;
+  width: 40rpx; height: 40rpx;
+  border-radius: 50%;
+  background: #1abc9c;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22rpx;
+  margin-right: 16rpx;
+  margin-top: 4rpx;
+}
+.clinic-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  border: 2rpx solid #f0f0f0;
+  border-radius: 12rpx;
+  margin-bottom: 16rpx;
+}
+.clinic-item.selected {
+  border-color: #1abc9c;
+  background: #e8f8f5;
+}
+.clinic-name { font-size: 30rpx; font-weight: 500; }
+.clinic-meta { font-size: 24rpx; color: #999; margin-top: 4rpx; }
+.clinic-phone { font-size: 24rpx; color: #1abc9c; margin-top: 8rpx; }
+.clinic-check {
+  width: 48rpx; height: 48rpx;
+  border-radius: 50%;
+  border: 2rpx solid #1abc9c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1abc9c;
+  font-size: 32rpx;
+  font-weight: 700;
+}
+.confirm-info { padding: 16rpx 0; }
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.confirm-label { color: #999; }
+.step-actions {
+  display: flex;
+  gap: 24rpx;
+  margin-top: 32rpx;
+  padding: 0 24rpx;
+}
+.step-actions .btn { flex: 1; }

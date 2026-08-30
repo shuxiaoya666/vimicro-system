@@ -1,0 +1,18 @@
+<view class="knowledge-page">
+  <view class="know-banner">
+    <view class="know-title">小唯学院</view>
+    <view class="know-subtitle">学习种植知识，科学护齿</view>
+  </view>
+  <view class="article-list">
+    <view class="article-card" wx:for="{{articles}}" wx:key="id">
+      <view class="article-left">
+        <view class="article-icon" style="background: {{item.color}}1a;">{{item.icon}}</view>
+      </view>
+      <view class="article-right">
+        <view class="article-tag" style="color: {{item.color}};">{{item.tag}}</view>
+        <view class="article-title">{{item.title}}</view>
+        <view class="article-summary">{{item.summary}}</view>
+      </view>
+    </view>
+  </view>
+</view>

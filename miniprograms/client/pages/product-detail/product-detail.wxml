@@ -1,0 +1,38 @@
+<view class="product-page" wx:if="{{product}}">
+  <view class="product-hero">
+    <view class="hero-icon">{{product.icon || '📦'}}</view>
+    <view class="hero-category">{{product.category}}</view>
+  </view>
+  <view class="card">
+    <view class="p-name">{{product.name}}</view>
+    <view class="p-desc">{{product.desc}}</view>
+    <view class="p-price">¥{{product.price}}</view>
+    <view class="p-meta">
+      <text>库存: {{product.stock}}</text>
+      <text>销量: {{product.sales || 0}}</text>
+    </view>
+  </view>
+  <view class="card">
+    <view class="card-title">商品详情</view>
+    <view class="p-detail">
+      {{product.desc || '暂无详细描述'}}
+      该商品由小唯精密制造有限公司生产，经过严格质检，品质有保障。
+      如需了解更多信息，请联系客服。
+    </view>
+  </view>
+  <view class="card">
+    <view class="card-title">购买数量</view>
+    <view class="qty-control">
+      <view class="qty-btn" bindtap="decreaseQty">-</view>
+      <view class="qty-num">{{quantity}}</view>
+      <view class="qty-btn" bindtap="increaseQty">+</view>
+    </view>
+  </view>
+  <view class="bottom-bar">
+    <view class="total-price">
+      <text class="total-label">合计</text>
+      <text class="total-amount">¥{{product.price * quantity}}</text>
+    </view>
+    <button class="btn btn-primary buy-btn" bindtap="buyNow">立即购买</button>
+  </view>
+</view>

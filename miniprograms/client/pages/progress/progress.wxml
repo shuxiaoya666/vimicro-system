@@ -1,0 +1,20 @@
+<view class="progress-page">
+  <view class="prog-header">
+    <view class="prog-title">种植进度</view>
+    <view class="prog-stat">已完成 3/7 步骤</view>
+  </view>
+  <view class="timeline">
+    <view class="timeline-item {{item.done ? 'done' : ''}}" wx:for="{{steps}}" wx:key="num">
+      <view class="timeline-dot {{item.done ? 'done' : ''}}">{{item.done ? '✓' : item.num}}</view>
+      <view class="timeline-content" wx:if="{{index < steps.length}}">
+        <view class="timeline-name">{{item.name}}</view>
+        <view class="timeline-date">{{item.date}}</view>
+      </view>
+      <view class="timeline-line {{item.done ? 'done' : ''}}" wx:if="{{index < steps.length - 1}}"></view>
+    </view>
+  </view>
+  <view class="card">
+    <view class="card-title">温馨提示</view>
+    <view class="tip-text">种植体骨结合需要3-6个月，请耐心等待。如有任何问题，可随时联系客服。</view>
+  </view>
+</view>

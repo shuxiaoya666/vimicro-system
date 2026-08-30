@@ -1,0 +1,24 @@
+.points-page { padding-bottom: 32rpx; }
+.points-banner {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  padding: 64rpx 32rpx;
+  text-align: center;
+  color: #fff;
+}
+.points-label { font-size: 28rpx; opacity: 0.85; }
+.points-value { font-size: 96rpx; font-weight: 700; margin: 16rpx 0; }
+.points-tip { font-size: 24rpx; opacity: 0.85; }
+.section-title { margin: 32rpx 24rpx 16rpx; font-size: 32rpx; font-weight: 600; }
+.point-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #f0f0f0;
+}
+.point-item:last-child { border-bottom: none; }
+.point-name { font-size: 28rpx; }
+.point-date { font-size: 24rpx; color: #999; margin-top: 4rpx; }
+.point-right { font-size: 32rpx; font-weight: 600; }
+.point-right.plus { color: #1abc9c; }
+.point-right.minus { color: #e74c3c; }

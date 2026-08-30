@@ -1,0 +1,51 @@
+<view class="reg-page">
+  <view class="reg-tabs">
+    <view class="reg-tab {{activeTab === 'pending' ? 'active' : ''}}" data-tab="pending" bindtap="switchTab">
+      待审核 <text class="tab-count">{{pendingList.length}}</text>
+    </view>
+    <view class="reg-tab {{activeTab === 'approved' ? 'active' : ''}}" data-tab="approved" bindtap="switchTab">
+      已通过 <text class="tab-count">{{approvedList.length}}</text>
+    </view>
+    <view class="reg-tab {{activeTab === 'rejected' ? 'active' : ''}}" data-tab="rejected" bindtap="switchTab">
+      已驳回 <text class="tab-count">{{rejectedList.length}}</text>
+    </view>
+  </view>
+
+  <view class="reg-list">
+    <view class="reg-card" wx:for="{{currentList}}" wx:key="id">
+      <view class="reg-top">
+        <view class="reg-icon" style="background: {{item.type === 'clinic' ? '#3498db' : '#8e44ad'}}22;">
+          <text>{{item.type === 'clinic' ? '🏥' : '💊'}}</text>
+        </view>
+        <view class="reg-main">
+          <view class="reg-name">{{item.name}}</view>
+          <view class="reg-meta">{{item.type === 'clinic' ? '诊所' : '药店'}} · {{item.region}}</view>
+        </view>
+        <view class="tag tag-{{item.status}}">{{item.status === 'pending' ? '待审核' : item.status === 'approved' ? '已通过' : '已驳回'}}</view>
+      </view>
+      <view class="reg-detail">
+        <view class="reg-row" wx:if="{{item.owner || item.manager}}">
+          <text class="reg-label">负责人：</text>
+          <text>{{item.owner || item.manager}}</text>
+        </view>
+        <view class="reg-row">
+          <text class="reg-label">电话：</text>
+          <text>{{item.phone}}</text>
+        </view>
+        <view class="reg-row">
+          <text class="reg-label">申请日期：</text>
+          <text>{{item.submittedAt}}</text>
+        </view>
+        <view class="reg-row" wx:if="{{item.reason}}">
+          <text class="reg-label">驳回原因：</text>
+          <text class="text-danger">{{item.reason}}</text>
+        </view>
+      </view>
+      <view class="reg-actions" wx:if="{{item.status === 'pending'}}">
+        <button class="btn btn-outline btn-sm" data-id="{{item.id}}" bindtap="rejectReg">驳回</button>
+        <button class="btn btn-primary btn-sm" data-id="{{item.id}}" bindtap="approveReg">通过</button>
+      </view>
+    </view>
+    <view class="empty" wx:if="{{currentList.length === 0}}">暂无{{activeTab === 'pending' ? '待审核' : activeTab === 'approved' ? '已通过' : '已驳回'}}记录</view>
+  </view>
+</view>

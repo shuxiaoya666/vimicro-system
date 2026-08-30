@@ -1,0 +1,86 @@
+<view class="plant-page">
+  <view class="steps-bar">
+    <block wx:for="{{steps}}" wx:key="num">
+      <view class="step-item {{step >= item.num ? 'active' : ''}}">
+        <view class="step-circle">{{item.num}}</view>
+        <text class="step-name">{{item.name}}</text>
+      </view>
+      <view class="step-line {{step > item.num ? 'active' : ''}}" wx:if="{{index < steps.length - 1}}"></view>
+    </block>
+  </view>
+
+  <view class="step-content">
+    <block wx:if="{{step === 1}}">
+      <view class="card">
+        <view class="card-title">💳 绑定种植卡</view>
+        <view class="form-item">
+          <text class="form-label">卡号</text>
+          <input class="input" placeholder="请输入种植卡卡号" bindinput="onCardNoInput" value="{{cardNo}}" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">卡密</text>
+          <input class="input" password placeholder="请输入卡密" bindinput="onCardPasswordInput" value="{{cardPassword}}" />
+        </view>
+        <view class="step-tip">请在您的种植卡上找到卡号和卡密，输入后点击下一步</view>
+      </view>
+    </block>
+
+    <block wx:elif="{{step === 2}}">
+      <view class="card">
+        <view class="card-title">🔐 登录认证</view>
+        <view class="auth-info">
+          <view class="auth-icon">✅</view>
+          <view class="auth-text">已认证为 {{userInfo.name}}</view>
+          <view class="auth-desc">您的身份已通过系统认证，可以继续下一步操作</view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:elif="{{step === 3}}">
+      <view class="card">
+        <view class="card-title">📖 种植须知</view>
+        <view class="notice-list">
+          <view class="notice-item"><text class="notice-num">1</text> 种植手术前需进行完整口腔检查</view>
+          <view class="notice-item"><text class="notice-num">2</text> 术前需拍摄CBCT评估骨量</view>
+          <view class="notice-item"><text class="notice-num">3</text> 术后注意口腔卫生，定期复查</view>
+          <view class="notice-item"><text class="notice-num">4</text> 种植体寿命可达20年以上</view>
+          <view class="notice-item"><text class="notice-num">5</text> 术后3-6个月完成骨结合后安装牙冠</view>
+        </view>
+      </view>
+    </block>
+
+    <block wx:elif="{{step === 4}}">
+      <view class="card">
+        <view class="card-title">🏥 选择诊所</view>
+        <view class="clinic-list">
+          <view class="clinic-item {{selectedClinicId === item.id ? 'selected' : ''}}" wx:for="{{clinics}}" wx:key="id" bindtap="selectClinic" data-id="{{item.id}}">
+            <view class="clinic-info">
+              <view class="clinic-name">{{item.name}}</view>
+              <view class="clinic-meta">{{item.owner}} · {{item.region}}</view>
+              <view class="clinic-phone">📞 {{item.phone}}</view>
+            </view>
+            <view class="clinic-check">{{selectedClinicId === item.id ? '✓' : ''}}</view>
+          </view>
+        </view>
+        <view class="empty" wx:if="{{clinics.length === 0}}">暂无可选诊所</view>
+      </view>
+    </block>
+
+    <block wx:elif="{{step === 5}}">
+      <view class="card">
+        <view class="card-title">✅ 确认信息</view>
+        <view class="confirm-info">
+          <view class="confirm-row"><text class="confirm-label">患者姓名</text><text>{{userInfo.name}}</text></view>
+          <view class="confirm-row"><text class="confirm-label">种植卡号</text><text>{{cardNo}}</text></view>
+          <view class="confirm-row"><text class="confirm-label">选择诊所</text><text>{{clinics[selectedClinicId - 1] ? clinics[selectedClinicId - 1].name : ''}}</text></view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view class="step-actions">
+    <button class="btn btn-outline" wx:if="{{step > 1}}" bindtap="prevStep">上一步</button>
+    <button class="btn btn-primary" wx:if="{{step < 5}}" bindtap="nextStep">下一步</button>
+    <button class="btn btn-primary" wx:if="{{step === 5}}" bindtap="confirmPlant">确认提交</button>
+  </view>
+</view>

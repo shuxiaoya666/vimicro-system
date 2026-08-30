@@ -1,0 +1,1 @@
+{ "desc": "小唯管理端小程序", "rules": [{ "action": "allow", "page": "*" }] }

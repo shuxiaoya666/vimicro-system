@@ -1,0 +1,11 @@
+<view class="trans-page">
+  <scroll-view scroll-x class="filter-bar">
+    <view class="filter-item {{activeFilter === item.value ? 'active' : ''}}" wx:for="{{filters}}" wx:key="value" bindtap="selectFilter" data-value="{{item.value}}">{{item.label}}</view>
+  </scroll-view>
+  <view class="trans-card" wx:for="{{transactions}}" wx:key="id">
+    <view class="trans-top"><text class="trans-type">{{item.type}}</text><text class="trans-amount">¥{{item.amount}}</text></view>
+    <view class="trans-item">{{item.item}}</view>
+    <view class="trans-bottom"><text class="trans-date">{{item.date}}</text><text class="trans-points {{item.points > 0 ? 'plus' : 'minus'}}">{{item.points > 0 ? '+' : ''}}{{item.points}} 积分</text></view>
+  </view>
+  <view class="empty" wx:if="{{transactions.length === 0}}">暂无消费记录</view>
+</view>

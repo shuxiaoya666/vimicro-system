@@ -338,6 +338,8 @@ function loginUser(user, account) {
   currentPort = currentUser.ports[0]; // 默认进入第一个可用端口
   currentPage = 'home';
 
+  var shopHome = document.getElementById('shopHome');
+  if (shopHome) shopHome.style.display = 'none';
   document.getElementById('loginPage').style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
 
@@ -532,30 +534,9 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// ===== 自动登录检查 =====
-// 页面加载时检查 localStorage 中是否有 token，如果有则尝试自动登录
+// ===== 自动登录检查（已禁用） =====
+// 新流程使用 banner 登录 + enterSystem() 验证，不再使用 token 自动登录
+// 清除可能残留的旧 token，防止绕过登录
 document.addEventListener('DOMContentLoaded', function() {
-  var token = localStorage.getItem('xiaowei_token');
-  if (!token) return;
-
-  // 用 token 请求 /api/auth/me 验证是否仍然有效
-  var _apiBase = (typeof API_CONFIG !== 'undefined') ? API_CONFIG.baseUrl.replace(/\/api$/, '') : 'http://localhost:3000';
-  fetch(_apiBase + '/api/auth/me', {
-    headers: { 'Authorization': 'Bearer ' + token }
-  })
-  .then(function(res) {
-    if (!res.ok) throw new Error('token无效');
-    return res.json();
-  })
-  .then(function(data) {
-    // token 有效，自动登录
-    DB._token = token;
-    DB.enableApiMode(token);
-    loginUser(data.user, data.user.account || data.account || '');
-  })
-  .catch(function(err) {
-    // token 无效或 API 不可用，清除 token
-    console.warn('[Auth] 自动登录失败:', err.message);
-    localStorage.removeItem('xiaowei_token');
-  });
+  localStorage.removeItem('xiaowei_token');
 });

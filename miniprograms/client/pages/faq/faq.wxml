@@ -1,0 +1,9 @@
+<view class="faq-page">
+  <view class="faq-item" wx:for="{{faqs}}" wx:key="index" bindtap="toggle" data-index="{{index}}">
+    <view class="faq-q">
+      <text class="faq-q-icon">{{expandedIndex === index ? '−' : '+'}}</text>
+      <text class="faq-q-text">{{item.q}}</text>
+    </view>
+    <view class="faq-a" wx:if="{{expandedIndex === index}}">{{item.a}}</view>
+  </view>
+</view>

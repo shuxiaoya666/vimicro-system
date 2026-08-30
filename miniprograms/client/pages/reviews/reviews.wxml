@@ -1,0 +1,32 @@
+<view class="reviews-page">
+  <view class="review-card" wx:for="{{reviews}}" wx:key="id">
+    <view class="review-top">
+      <text class="review-type tag tag-active">{{item.type}}</text>
+      <view class="review-stars">{{'★★★★★'.substring(0, item.rating)}}</view>
+    </view>
+    <view class="review-target">{{item.target}}</view>
+    <view class="review-content">{{item.content}}</view>
+    <view class="review-date">{{item.date}}</view>
+  </view>
+  <view class="empty" wx:if="{{reviews.length === 0 && !showForm}}">暂无评价记录</view>
+  <view class="card" wx:if="{{showForm}}">
+    <view class="card-title">写评价</view>
+    <view class="form-item">
+      <text class="form-label">类型</text>
+      <radio-group bindchange="onTypeChange">
+        <label><radio value="诊所评价" /> 诊所评价</label>
+        <label><radio value="商品评价" /> 商品评价</label>
+      </radio-group>
+    </view>
+    <view class="form-item"><text class="form-label">评价对象</text><input class="input" placeholder="请输入评价对象" bindinput="onTargetInput" value="{{target}}" /></view>
+    <view class="form-item">
+      <text class="form-label">评分</text>
+      <radio-group bindchange="onRatingChange">
+        <label wx:for="{{[5,4,3,2,1]}}" wx:key="*this"><radio value="{{item}}" /> {{item}}星</label>
+      </radio-group>
+    </view>
+    <view class="form-item"><text class="form-label">评价内容</text><textarea class="textarea" placeholder="请输入评价内容" bindinput="onContentInput" value="{{content}}" /></view>
+    <button class="btn btn-primary" bindtap="submitReview">提交评价</button>
+  </view>
+  <view class="fab" bindtap="toggleForm" wx:if="{{!showForm}}">+</view>
+</view>

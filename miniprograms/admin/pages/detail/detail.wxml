@@ -1,0 +1,23 @@
+<view class="detail-page">
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <block wx:else>
+    <view class="detail-header card">
+      <view class="detail-title">{{detail.name || detail.cardNo || detail.orderNo || '详情'}}</view>
+      <view class="tag tag-{{detail.status || 'active'}}">{{detail.status || 'active'}}</view>
+    </view>
+
+    <view class="card">
+      <view class="card-title">基本信息</view>
+      <view class="info-row" wx:for="{{fields}}" wx:key="name">
+        <text class="info-label">{{item.label}}</text>
+        <text class="info-value" wx:if="{{!isEditing}}">{{detail[item.name] || '-'}}</text>
+        <input class="info-input" wx:if="{{isEditing}}" data-field="{{item.name}}" value="{{detail[item.name]}}" bindinput="onFieldInput" />
+      </view>
+    </view>
+
+    <view class="detail-actions">
+      <button class="btn btn-outline" bindtap="toggleEdit">{{isEditing ? '取消' : '编辑'}}</button>
+      <button class="btn btn-primary" wx:if="{{isEditing}}" bindtap="saveDetail">保存</button>
+    </view>
+  </block>
+</view>

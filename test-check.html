@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"></head><body>
+<h3>Admin Script Syntax Check</h3>
+<div id="result">Checking...</div>
+<script>
+// Load the main script via fetch and check syntax
+fetch('https://shuxiaoya666.github.io/vimicro-system/admin.html?v=9')
+  .then(r => r.text())
+  .then(html => {
+    var m = html.match(/<script>(\/\/ =+ Config[\s\S]*?)<\/script>\s*<\/body>/);
+    if(!m){document.getElementById('result').textContent='Could not extract main script';return}
+    var script = m[1];
+    try {
+      new Function(script);
+      document.getElementById('result').textContent = 'OK - no syntax errors (' + script.length + ' chars)';
+    } catch(e) {
+      document.getElementById('result').innerHTML = '<pre style="white-space:pre-wrap;word-break:break-all">ERROR: ' + e.message + '\n\nStack: ' + e.stack + '</pre>';
+    }
+  })
+  .catch(e => document.getElementById('result').textContent = 'Fetch error: ' + e.message);
+</script>
+</body></html>

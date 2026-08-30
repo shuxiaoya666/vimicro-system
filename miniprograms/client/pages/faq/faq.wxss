@@ -1,0 +1,6 @@
+.faq-page { padding: 24rpx; }
+.faq-item { background: #fff; border-radius: 16rpx; margin-bottom: 16rpx; overflow: hidden; }
+.faq-q { display: flex; align-items: center; padding: 24rpx; gap: 16rpx; }
+.faq-q-icon { font-size: 36rpx; color: #1abc9c; font-weight: 700; width: 48rpx; text-align: center; }
+.faq-q-text { flex: 1; font-size: 30rpx; font-weight: 500; }
+.faq-a { padding: 0 24rpx 24rpx 88rpx; font-size: 28rpx; color: #555; line-height: 1.8; }

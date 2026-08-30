@@ -1,0 +1,30 @@
+<view class="cards-page">
+  <view class="card-list">
+    <view class="my-card" wx:for="{{cards}}" wx:key="id">
+      <view class="card-top">
+        <text class="card-no">{{item.cardNo}}</text>
+        <text class="tag tag-{{item.status}}">{{item.status === 'active' ? '已激活' : '审核中'}}</text>
+      </view>
+      <view class="card-info">
+        <text>患者: {{item.patient}}</text>
+        <text>诊所: {{item.clinic}}</text>
+        <text wx:if="{{item.implantType}}">型号: {{item.implantType}}</text>
+        <text>绑定: {{item.bindDate}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:if="{{cards.length === 0 && !showForm}}">暂无绑定的实体卡</view>
+
+  <view class="form-section" wx:if="{{showForm}}">
+    <view class="card">
+      <view class="card-title">绑定新卡</view>
+      <view class="form-item"><text class="form-label">卡号 *</text><input class="input" placeholder="请输入卡号" bindinput="onCardNoInput" value="{{cardNo}}" /></view>
+      <view class="form-item"><text class="form-label">患者姓名 *</text><input class="input" placeholder="请输入患者姓名" bindinput="onPatientInput" value="{{patient}}" /></view>
+      <view class="form-item"><text class="form-label">诊所名称 *</text><input class="input" placeholder="请输入诊所名称" bindinput="onClinicInput" value="{{clinic}}" /></view>
+      <view class="form-item"><text class="form-label">种植体型号</text><input class="input" placeholder="请输入种植体型号" bindinput="onImplantTypeInput" value="{{implantType}}" /></view>
+      <button class="btn btn-primary" bindtap="submitCard">确认绑定</button>
+    </view>
+  </view>
+
+  <view class="fab" bindtap="toggleForm" wx:if="{{!showForm}}">+</view>
+</view>

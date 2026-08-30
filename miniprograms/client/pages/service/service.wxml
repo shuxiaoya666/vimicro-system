@@ -1,0 +1,16 @@
+<view class="service-page">
+  <view class="svc-card" wx:for="{{records}}" wx:key="id">
+    <view class="svc-top"><text class="svc-no">{{item.no}}</text><text class="tag tag-{{item.status}}">{{item.status === 'active' ? '已解决' : item.status === 'processing' ? '处理中' : '待处理'}}</text></view>
+    <view class="svc-type">{{item.type}}</view>
+    <view class="svc-content">{{item.content}}</view>
+    <view class="svc-date">{{item.date}}</view>
+  </view>
+  <view class="empty" wx:if="{{records.length === 0 && !showForm}}">暂无售后记录</view>
+  <view class="card" wx:if="{{showForm}}">
+    <view class="card-title">新增售后</view>
+    <view class="form-item"><text class="form-label">类型</text><radio-group bindchange="onTypeChange"><label><radio value="退款申请" /> 退款申请</label><label><radio value="质保维修" /> 质保维修</label></radio-group></view>
+    <view class="form-item"><text class="form-label">问题描述</text><textarea class="textarea" placeholder="请描述问题" bindinput="onContentInput" value="{{content}}" /></view>
+    <button class="btn btn-primary" bindtap="submitService">提交申请</button>
+  </view>
+  <view class="fab" bindtap="toggleForm" wx:if="{{!showForm}}">+</view>
+</view>

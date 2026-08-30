@@ -1,0 +1,19 @@
+.reg-page { min-height: 100vh; background: #f5f6fa; }
+.reg-tabs { display: flex; background: #fff; border-bottom: 1rpx solid #eee; }
+.reg-tab { flex: 1; text-align: center; padding: 24rpx 0; font-size: 26rpx; color: #999; position: relative; }
+.reg-tab.active { color: #1abc9c; font-weight: 600; }
+.reg-tab.active::after { content: ''; position: absolute; bottom: 0; left: 30%; right: 30%; height: 4rpx; background: #1abc9c; border-radius: 2rpx; }
+.tab-count { font-size: 22rpx; background: #e8f8f5; color: #1abc9c; padding: 2rpx 12rpx; border-radius: 16rpx; margin-left: 8rpx; }
+.reg-list { padding: 24rpx; }
+.reg-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 16rpx; box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06); }
+.reg-top { display: flex; align-items: center; margin-bottom: 16rpx; }
+.reg-icon { width: 64rpx; height: 64rpx; border-radius: 16rpx; display: flex; align-items: center; justify-content: center; font-size: 32rpx; margin-right: 16rpx; }
+.reg-main { flex: 1; }
+.reg-name { font-size: 30rpx; font-weight: 600; }
+.reg-meta { font-size: 22rpx; color: #999; margin-top: 4rpx; }
+.reg-detail { padding: 16rpx 0; border-top: 1rpx solid #f5f6fa; border-bottom: 1rpx solid #f5f6fa; margin-bottom: 16rpx; }
+.reg-row { font-size: 26rpx; color: #666; margin-bottom: 8rpx; }
+.reg-label { color: #999; }
+.reg-actions { display: flex; gap: 16rpx; }
+.btn-sm { height: 64rpx; font-size: 26rpx; border-radius: 32rpx; flex: 1; }
+.text-danger { color: #e74c3c; }

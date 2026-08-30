@@ -1,0 +1,23 @@
+<view class="login-page">
+  <view class="login-header">
+    <view class="logo">VMicro 小唯</view>
+    <view class="slogan">Oral health, trust in Vmicro / 小唯</view>
+    <view class="subtitle">客户端</view>
+  </view>
+  <view class="login-form">
+    <view class="form-item">
+      <text class="form-label">账号</text>
+      <input class="input" type="text" placeholder="请输入账号（如：client）" bindinput="onAccountChange" value="{{account}}" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">密码</text>
+      <input class="input" password placeholder="请输入密码（如：123456）" bindinput="onPasswordChange" value="{{password}}" />
+    </view>
+    <button class="btn btn-primary login-btn" bindtap="doLogin" loading="{{loading}}" disabled="{{loading}}">
+      登 录
+    </button>
+    <view class="login-hint">
+      <text>测试账号：client / 123456</text>
+    </view>
+  </view>
+</view>

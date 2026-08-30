@@ -1,0 +1,68 @@
+.product-page { padding-bottom: 120rpx; }
+.product-hero {
+  background: linear-gradient(135deg, #1abc9c, #16a085);
+  padding: 64rpx 32rpx;
+  text-align: center;
+}
+.hero-icon { font-size: 120rpx; }
+.hero-category {
+  display: inline-block;
+  margin-top: 16rpx;
+  padding: 8rpx 24rpx;
+  background: rgba(255,255,255,0.2);
+  border-radius: 20rpx;
+  color: #fff;
+  font-size: 24rpx;
+}
+.p-name { font-size: 36rpx; font-weight: 600; margin-bottom: 8rpx; }
+.p-desc { font-size: 26rpx; color: #999; margin-bottom: 16rpx; }
+.p-price { font-size: 48rpx; font-weight: 700; color: #e74c3c; }
+.p-meta {
+  display: flex;
+  gap: 32rpx;
+  margin-top: 16rpx;
+  font-size: 24rpx;
+  color: #999;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #f0f0f0;
+}
+.p-detail {
+  font-size: 28rpx;
+  color: #555;
+  line-height: 1.8;
+  padding: 8rpx 0;
+}
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 32rpx;
+  margin-top: 16rpx;
+}
+.qty-btn {
+  width: 64rpx; height: 64rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  color: #1abc9c;
+}
+.qty-num { font-size: 36rpx; font-weight: 600; min-width: 60rpx; text-align: center; }
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  padding: 16rpx 24rpx;
+  background: #fff;
+  box-shadow: 0 -2rpx 12rpx rgba(0,0,0,0.08);
+  z-index: 100;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+}
+.total-price { flex: 1; }
+.total-label { font-size: 24rpx; color: #999; display: block; }
+.total-amount { font-size: 40rpx; font-weight: 700; color: #e74c3c; }
+.buy-btn { width: 280rpx; }

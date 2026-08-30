@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=25">
+<link rel="stylesheet" href="css/style.css?v=37">
 </head>
 <body>
 
@@ -52,37 +52,72 @@
     </div>
   </header>
 
-  <!-- Banner轮播 -->
+  <!-- Banner轮播 + 登录面板 -->
   <section class="shop-banner">
     <div class="banner-wrapper">
-      <div class="banner-slide on" data-idx="0">
-        <div class="banner-text">
-          <h2>小唯种植牙特惠季</h2>
-          <p>韩国进口种植体低至2980元起，一价全包更安心</p>
-          <div class="banner-btn" onclick="openLoginModal()">立即查看 →</div>
+      <div class="banner-slides">
+        <div class="banner-slide on" data-idx="0">
+          <div class="banner-text">
+            <h2>小唯种植牙特惠季</h2>
+            <p>韩国进口种植体低至2980元起，一价全包更安心</p>
+            <div class="banner-btn" onclick="filterByCategory('all');scrollToProducts()">立即查看 →</div>
+          </div>
+          <div class="banner-img">🦷</div>
         </div>
-        <div class="banner-img">🦷</div>
-      </div>
-      <div class="banner-slide" data-idx="1">
-        <div class="banner-text">
-          <h2>口腔护理套装</h2>
-          <p>全年12次洗牙+口腔检查，呵护您的口腔健康</p>
-          <div class="banner-btn" onclick="openLoginModal()">立即抢购 →</div>
+        <div class="banner-slide" data-idx="1">
+          <div class="banner-text">
+            <h2>口腔护理套装</h2>
+            <p>全年12次洗牙+口腔检查，呵护您的口腔健康</p>
+            <div class="banner-btn" onclick="filterByCategory('口腔护理');scrollToProducts()">立即抢购 →</div>
+          </div>
+          <div class="banner-img">🪥</div>
         </div>
-        <div class="banner-img">🪥</div>
-      </div>
-      <div class="banner-slide" data-idx="2">
-        <div class="banner-text">
-          <h2>新用户专享福利</h2>
-          <p>注册即送100积分，首单立减50元</p>
-          <div class="banner-btn" onclick="openLoginModal()">立即注册 →</div>
+        <div class="banner-slide" data-idx="2">
+          <div class="banner-text">
+            <h2>新用户专享福利</h2>
+            <p>注册即送100积分，首单立减50元</p>
+            <div class="banner-btn" onclick="document.getElementById('bannerLoginAccount').focus()">立即注册 →</div>
+          </div>
+          <div class="banner-img">🎁</div>
         </div>
-        <div class="banner-img">🎁</div>
+        <div class="banner-dots">
+          <div class="banner-dot on" onclick="goBanner(0)"></div>
+          <div class="banner-dot" onclick="goBanner(1)"></div>
+          <div class="banner-dot" onclick="goBanner(2)"></div>
+        </div>
       </div>
-      <div class="banner-dots">
-        <div class="banner-dot on" onclick="goBanner(0)"></div>
-        <div class="banner-dot" onclick="goBanner(1)"></div>
-        <div class="banner-dot" onclick="goBanner(2)"></div>
+      <!-- 右侧固定登录面板 -->
+      <div class="banner-login-panel" id="bannerLoginPanel">
+        <div class="banner-login-form" id="bannerLoginForm">
+          <h3>登录小唯</h3>
+          <div class="banner-login-group">
+            <input type="text" id="bannerLoginAccount" placeholder="请输入账号">
+          </div>
+          <div class="banner-login-group">
+            <input type="password" id="bannerLoginPassword" placeholder="请输入密码">
+          </div>
+          <div class="banner-login-group">
+            <div class="banner-login-captcha">
+              <input type="text" id="bannerLoginCaptcha" placeholder="验证码" onkeypress="if(event.key==='Enter')doBannerLogin()">
+              <div class="banner-captcha-code" id="bannerCaptchaCode" onclick="refreshBannerCaptcha()">A3B7</div>
+            </div>
+          </div>
+          <div class="banner-login-error" id="bannerLoginError"></div>
+          <button class="banner-login-btn" onclick="doBannerLogin()">登 录</button>
+          <div class="banner-login-hint">
+            测试：admin / 123456<br>
+            <a onclick="switchToRegister()">没有账号？立即注册</a>
+          </div>
+        </div>
+        <!-- 已登录状态 -->
+        <div class="banner-user-panel" id="bannerUserPanel" style="display:none;">
+          <div class="banner-user-avatar" id="bannerUserAvatar">A</div>
+          <div class="banner-user-name" id="bannerUserName">用户名</div>
+          <div class="banner-user-actions">
+            <button onclick="enterSystem()">进入系统</button>
+            <button onclick="doLogout()">退出</button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -508,6 +543,117 @@ var bannerIdx = 0;
 var bannerTimer = null;
 var pendingAction = null; // 登录后要执行的操作
 
+// Banner登录面板
+function refreshBannerCaptcha() {
+  var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  var code = '';
+  for (var i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  var el = document.getElementById('bannerCaptchaCode');
+  if (el) el.textContent = code;
+}
+
+function doBannerLogin() {
+  var account = document.getElementById('bannerLoginAccount').value.trim().toLowerCase();
+  var password = document.getElementById('bannerLoginPassword').value;
+  var captcha = document.getElementById('bannerLoginCaptcha').value.trim().toUpperCase();
+  var errorEl = document.getElementById('bannerLoginError');
+  var realCode = document.getElementById('bannerCaptchaCode').textContent;
+
+  if (!account || !password) {
+    errorEl.textContent = '请输入账号和密码';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if (captcha !== realCode) {
+    errorEl.textContent = '验证码错误';
+    errorEl.style.display = 'block';
+    refreshBannerCaptcha();
+    return;
+  }
+
+  var user = null;
+  if (typeof ACCOUNTS !== 'undefined' && ACCOUNTS[account]) {
+    if (ACCOUNTS[account].password === password) {
+      user = ACCOUNTS[account];
+    }
+  }
+  if (!user) {
+    var clientAccounts = {
+      client: {password:'123456',name:'周小明',avatar:'周',role:'client',ports:['client']}
+    };
+    if (clientAccounts[account] && clientAccounts[account].password === password) {
+      user = clientAccounts[account];
+    }
+  }
+
+  if (!user) {
+    errorEl.textContent = '账号或密码错误';
+    errorEl.style.display = 'block';
+    refreshBannerCaptcha();
+    return;
+  }
+
+  errorEl.style.display = 'none';
+  localStorage.setItem('xiaowei_account', account);
+  localStorage.setItem('xiaowei_password', password);
+  if (typeof currentUser !== 'undefined') {
+    currentUser = user;
+  }
+
+  // 切换到已登录面板
+  document.getElementById('bannerLoginForm').style.display = 'none';
+  document.getElementById('bannerUserPanel').style.display = 'flex';
+  document.getElementById('bannerUserAvatar').textContent = user.avatar || user.name.charAt(0);
+  document.getElementById('bannerUserName').textContent = user.name;
+
+  // 更新顶部用户信息
+  var userMenu = document.getElementById('userMenu');
+  if (userMenu) {
+    userMenu.style.display = 'inline-flex';
+    var avatarEl = userMenu.querySelector('.user-avatar');
+    if (avatarEl) avatarEl.textContent = user.avatar || user.name.charAt(0);
+    var nameEl = userMenu.querySelector('.user-name');
+    if (nameEl) nameEl.textContent = user.name;
+  }
+  var loginBtn = document.querySelector('.shop-login-btn');
+  if (loginBtn) loginBtn.style.display = 'none';
+
+  // 如果是结算操作，打开购物车
+  if (pendingAction && pendingAction.type === 'checkout') {
+    pendingAction = null;
+    setTimeout(function() { openCart(); }, 300);
+    showCartToast('登录成功，请点击结算');
+    return;
+  }
+
+  showCartToast('登录成功！欢迎' + user.name);
+}
+
+function enterSystem() {
+  var savedAccount = localStorage.getItem('xiaowei_account');
+  var savedPassword = localStorage.getItem('xiaowei_password');
+  if (savedAccount && typeof ACCOUNTS !== 'undefined' && ACCOUNTS[savedAccount]) {
+    var user = ACCOUNTS[savedAccount];
+    if (user.password !== savedPassword) {
+      showCartToast('登录已过期，请重新登录');
+      doLogout();
+      return;
+    }
+    document.getElementById('shopHome').style.display = 'none';
+    if (typeof loginUser === 'function') {
+      loginUser(user, savedAccount);
+    }
+  } else {
+    showCartToast('请先登录');
+    openLoginModal();
+  }
+}
+
+function scrollToProducts() {
+  var grid = document.getElementById('productGrid');
+  if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // 渲染商品
 function renderProducts() {
   var grid = document.getElementById('productGrid');
@@ -590,7 +736,7 @@ function showProductDetail(id) {
       '<button class="detail-back" onclick="closeProductDetail()">← 返回</button>' +
       '<span>商品详情</span>' +
     '</div>' +
-    '<div class="detail-body">' +
+    '<div class="detail-body detail-body-with-toc">' +
       '<div class="detail-img">' + imgHtml + '</div>' +
       '<div class="detail-info">' +
         (p.tag ? '<span class="product-tag">' + p.tag + '</span>' : '') +
@@ -624,101 +770,161 @@ function showKnowledgePage(type) {
 
   if (type === 'academy') {
     html = ''
-      + '<div class="detail-header">'
-      +   '<button class="detail-back" onclick="closeKnowledgePage()">← 返回</button>'
-      +   '<span>🎓 小唯学院知识</span>'
-      + '</div>'
-      + '<div class="detail-body">'
-      +   '<div class="knowledge-hero academy">'
-      +     '<div class="knowledge-hero-icon">🎓</div>'
-      +     '<h2>小唯学院 · 口腔知识库</h2>'
-      +     '<p>专业口腔护理知识，让您拥有健康笑容</p>'
+      + '<div class="academy-layout">'
+      +   '<div class="detail-header">'
+      +     '<button class="detail-back" onclick="closeKnowledgePage()">← 返回</button>'
+      +     '<span>🎓 小唯学院知识</span>'
       +   '</div>'
-
-      +   '<div class="knowledge-section">'
-      +     '<h3>🪥 正确的刷牙方法</h3>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>巴氏刷牙法（Bass Method）</h4>'
-      +       '<p>巴氏刷牙法是目前国际公认最有效的刷牙方法，步骤如下：</p>'
-      +       '<ol>'
-      +         '<li><strong>牙刷角度：</strong>将牙刷与牙长轴呈45度角，刷毛指向牙龈方向。</li>'
-      +         '<li><strong>水平颤动：</strong>轻轻施加力量，使刷毛进入龈沟，做短距离水平颤动（约2-3mm），每次颤动10次左右。</li>'
-      +         '<li><strong>拂刷牙面：</strong>颤动后顺势将刷毛从牙龈向牙冠方向拂刷。</li>'
-      +         '<li><strong>分区刷牙：</strong>按顺序刷牙，每次覆盖2-3颗牙，确保每颗牙的唇颊侧和舌腭侧都刷到。</li>'
-      +         '<li><strong>刷牙时间：</strong>每次刷牙至少2分钟，每天早晚各一次。</li>'
-      +       '</ol>'
-      +       '<div class="knowledge-tip">💡 <strong>小贴士：</strong>建议使用软毛牙刷，每3个月更换一次。刷毛外翻或磨损时应提前更换。</div>'
+      +   '<button class="toc-fab" onclick="toggleAcademyToc()" id="academyTocFab">📋</button>'
+      +   '<div class="academy-body">'
+      +     '<div class="knowledge-toc-sidebar" id="academyTocSidebar">'
+      +       '<div class="toc-header">'
+      +         '<span class="toc-title">📋 目录（共38篇）</span>'
+      +         '<button class="toc-toggle" onclick="toggleAcademyToc()">☰</button>'
+      +       '</div>'
+      +       '<div class="toc-content" id="academyTocContent">'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">🪥 刷牙与口腔清洁</div>'
+      +           '<a href="#academy-art-1" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-1\');return false">省去这个步骤，护牙竟然事半功倍？！</a>'
+      +           '<a href="#academy-art-2" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-2\');return false">奇怪！竟然还有人不会刷牙？</a>'
+      +           '<a href="#academy-art-3" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-3\');return false">使用牙线是个好习惯！</a>'
+      +           '<a href="#academy-art-4" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-4\');return false">漱口比刷牙更重要？</a>'
+      +           '<a href="#academy-art-5" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-5\');return false">为什么不能用牙签剔牙？</a>'
+      +           '<a href="#academy-art-6" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-6\');return false">为什么不能用牙签剔牙？</a>'
+      +           '<a href="#academy-art-7" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-7\');return false">答应我，下次牙膏一定要这样选</a>'
+      +         '</div>'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">🦷 龋病预防与治疗</div>'
+      +           '<a href="#academy-art-8" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-8\');return false">全面护牙之防龋篇</a>'
+      +           '<a href="#academy-art-9" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-9\');return false">全面护牙之防龋篇（二）</a>'
+      +           '<a href="#academy-art-10" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-10\');return false">全面护牙之防龋篇（三）</a>'
+      +           '<a href="#academy-art-11" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-11\');return false">龋病，你了解多少？</a>'
+      +           '<a href="#academy-art-12" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-12\');return false">虫子吃掉了牙齿？</a>'
+      +           '<a href="#academy-art-13" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-13\');return false">儿童龋病的分类</a>'
+      +           '<a href="#academy-art-14" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-14\');return false">饮茶防龋？快来解锁防龋妙招</a>'
+      +           '<a href="#academy-art-15" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-15\');return false">牙齿涂氟和窝沟封闭的区别是什么</a>'
+      +         '</div>'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">🦷 牙周健康与牙龈护理</div>'
+      +           '<a href="#academy-art-16" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-16\');return false">刷牙流血？你的牙龈正在发出求救信号！</a>'
+      +           '<a href="#academy-art-17" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-17\');return false">有关牙菌斑和牙石这对CP的秘密</a>'
+      +           '<a href="#academy-art-18" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-18\');return false">牙菌斑和牙石是怎么形成的？</a>'
+      +           '<a href="#academy-art-19" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-19\');return false">牙疼可以吃消炎吗？</a>'
+      +         '</div>'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">❄️ 牙齿敏感</div>'
+      +           '<a href="#academy-art-20" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-20\');return false">360全面呵护，远离牙敏感</a>'
+      +           '<a href="#academy-art-21" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-21\');return false">冷热酸甜，大快朵颐！</a>'
+      +           '<a href="#academy-art-22" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-22\');return false">冷热酸甜？牙齿敏感那些事儿</a>'
+      +           '<a href="#academy-art-23" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-23\');return false">冷热酸甜？牙齿敏感那些事儿</a>'
+      +         '</div>'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">✨ 牙齿美白</div>'
+      +           '<a href="#academy-art-24" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-24\');return false">想拥有一口大白牙吗？不做牙贴面也能白！——拒绝偏方，科学美牙全攻略</a>'
+      +           '<a href="#academy-art-25" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-25\');return false">牙齿美白全攻略</a>'
+      +           '<a href="#academy-art-26" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-26\');return false">女神节特辑：你值得这世间所有的美好</a>'
+      +         '</div>'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">👨‍👩‍👧‍👦 特殊人群口腔护理</div>'
+      +           '<a href="#academy-art-27" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-27\');return false">有关儿童护牙Q&amp;amp;amp;A</a>'
+      +           '<a href="#academy-art-28" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-28\');return false">有关老年口腔健康</a>'
+      +           '<a href="#academy-art-29" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-29\');return false">有关老年口腔健康</a>'
+      +           '<a href="#academy-art-30" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-30\');return false">老掉牙是必然规律？</a>'
+      +         '</div>'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">👅 口腔黏膜与口气</div>'
+      +           '<a href="#academy-art-31" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-31\');return false">溃疡反反复复？别再走弯路</a>'
+      +           '<a href="#academy-art-32" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-32\');return false">社交有味，自己却闻不到？——扒一扒尴尬的来源</a>'
+      +           '<a href="#academy-art-33" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-33\');return false">神奇的金津玉液？</a>'
+      +         '</div>'
+      +         '<div class="toc-section">'
+      +           '<div class="toc-section-title">📊 口腔健康标准与节日护牙</div>'
+      +           '<a href="#academy-art-34" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-34\');return false">320世界口腔健康日——健康口腔，身心健康</a>'
+      +           '<a href="#academy-art-35" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-35\');return false">春节如何呵护牙齿健康？</a>'
+      +           '<a href="#academy-art-36" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-36\');return false">迎接新年，从齿开始</a>'
+      +           '<a href="#academy-art-37" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-37\');return false">五一特辑：劳动节，致敬我们的口腔</a>'
+      +           '<a href="#academy-art-38" class="toc-link" onclick="scrollToAcademyArticle(\'academy-art-38\');return false">健康口腔，粽享美味</a>'
+      +         '</div>'
+      +       '</div>'
+      +     '</div>'
+      +     '<div class="academy-content" id="academyContent">'
+      +       '<div class="knowledge-hero academy">'
+      +         '<div class="knowledge-hero-icon">🎓</div>'
+      +         '<h2>小唯学院 · 口腔知识库</h2>'
+      +         '<p>内容来源于“小唯医学工程”微信公众号小课堂 · 共38篇</p>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>🪥 刷牙与口腔清洁</h3>'
+      +       '<div class="knowledge-card" id="academy-art-1"><h4>📖 省去这个步骤，护牙竟然事半功倍？！</h4><p>每天至少刷2次牙、每次刷牙至少2分钟，推荐使用含氟牙膏，配合牙线口腔更健康。</p><p>这几点关于健康刷牙的建议，相信唯粉们听得耳朵都要长茧子了。</p><p>但是最近，小编看了几篇有意思的科普文献，推荐「刷牙后，不立即漱口」来提高刷牙的效率和防龋效果。</p><p>应该有不少群众的反映是：刷牙后不漱口多难受！？做不到……但这确实是有依据的科学建议。</p><p><strong>刷牙后，不立即漱口</strong></p><p>含氟牙膏可以提高牙齿的防龋力，这是口腔医学界认证的共识。因为氟化物产生的氟离子可以和牙釉质共同作用，降低其脱矿和促进釉质再矿化，从而达到防龋的作用。</p><p>而刷牙后不立即漱口为的就是减少氟化物的稀释，延长氟化物在牙齿表面停留的时间。</p><p>类似氟化物对牙齿的防龋应用如口服氟片、儿童涂氟，医生要求半小时内不漱口，也是因为停留时间越长，渗透到牙釉质内的效果越好。</p><p><strong>刷牙后，多久漱口合适？</strong></p><p>那好学的你肯定会问：到底刷牙多久后漱口比较好呢？</p><p>先吐出泡沫，接着等2～3分钟左右，其间可以洗洗脸或做些其他事，之后再用清水轻轻漱口即可。</p><p>如果你有足够好的护牙习惯和意识，可以尝试刷牙后不立即漱口；如果你还未养成爱护口腔的好习惯，那就别管漱口不漱口的了，咱先好好刷牙！</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-2"><h4>📖 奇怪！竟然还有人不会刷牙？</h4><p>点击蓝字 关注我们</p><p>人人都知道刷牙，刷牙是保持口腔卫生的重要手段，但如果刷牙不当，会造成牙齿的疾病。多长时间刷一次牙？刷牙的好处有哪些？如何正确选购牙刷？今天一次讲清楚，还不赶紧来“白嫖”～Q1</p><p>吃饭对于每个人来说是每天必须做的事情，刷牙也一样。相信经历过牙痛、牙敏感、补牙的同学们都认识口腔护理的重要性。通过正确的刷牙，可有效自我控制牙菌斑，是预防龋齿最有效的方法，还能预防其他牙病的发生，是最简便易行且最省钱的口腔保健措施。</p><p>养成每天刷牙的良好习惯，掌握正确刷牙的方法，可以清除牙齿表面的细菌及软垢。细菌无法产酸腐蚀牙齿，就可以达到预防龋齿的目的。坚持刷牙还可以减少牙石的产生，对牙周健康有帮助。另外，刷牙时刷毛对牙龈组织的按摩作用，可以增进牙龈的血液循环，保持牙龈健康，减少牙周病的发生。</p><p>所以，刷牙的意义很大，不能偷懒，要养成每日刷牙的习惯。</p><p>多长时间刷一次牙？</p><p>敲重点！首先每天必须刷牙，做到早晚刷牙。最好是进食后20分钟，如果没有条件，可以漱口。其中晚上的刷牙更重要！白天我们的口腔经常活动，能够刺激分泌唾液。唾液中含有一些能杀灭细菌的成分，在一定程度上能起到清洁口腔的作用。</p><p>而晚上，人处于睡眠状态，唾液分泌少，口腔自洁作用差，细菌更容易繁殖。为什么早晨起床后会感到嘴里黏糊甚至有味道，就是因为白天的食物残留在牙表面和牙缝中，到了晚上在细菌的作用下发酵产酸。</p><p>虽然每天早晚也刷牙了，为什么有的人牙齿还是存在牙垢呢？刷牙的时间不够长，刷牙的任务也就没有彻底完成。刷牙要保质保量，至少认真刷牙3分钟，这样才能有效地把牙菌斑清除掉。如果患有炎症，刷牙的时间还可以延长一些。</p><p>如何选择正确的牙刷？</p><ul><li>刷头小。刷头过大，无法清理牙齿死角及口腔深部（美国牙科协会建议，刷头长约2.54～3.18厘米。宽约0.79～0.95厘米为合适）。</li><li>刷毛硬度为中度或软毛。刷毛过硬容易造成牙龈损伤。</li><li>刷柄易把握。刷柄应有足够的硬度，还要符合人体工程学特点，不易滑脱。</li><li>儿童牙刷选购时要注意刷毛是否经过磨毛处理。</li></ul><p>每三个月至少更换一次牙刷。以下几种情况也需要更换：①牙刷根部颜色变深；②刷毛磨损变形；③感冒之后，避免二次感染。</p><p>有临床试验结果证实电动牙刷优于手动牙刷，比手动牙刷在去除牙菌斑和减轻牙龈炎方面更有效。鼓励大家适当选择电动牙刷以提高刷牙效率哦～</p><p>刷毛应与牙齿、牙龈成45度角，以画小圆圈的方式活动。</p><p>同样呈45度角斜放，上排牙齿向下，下排牙齿向上提拉轻刷。</p><p>将牙刷倾斜，与咬合面垂直，前后短距离颤动轻刷。</p><p>将牙刷竖起来，利用牙刷前端的刷毛沿牙缝上下以小圆弧刷动。每次刷两到三颗牙，反复旋转、按摩8～10次，可多角度地对牙齿和牙龈进行全面清洁。</p><p>由内向外轻轻去除食物残渣及细菌，让口气保持清新。一些人，只刷外面，不刷里面，实际上牙齿里外都要刷到。</p><p>好了，说了那么多，大家有没有学到呢？小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-3"><h4>📖 使用牙线是个好习惯！</h4><p>使用牙线是个好习惯！</p><p>牙间隙很容易滞留食物残渣、牙菌斑及软垢，单靠刷牙难以彻底清洁牙齿。大多数人会习惯地使用牙签来清理塞在牙缝里的食物，快停下，实际上这是不对的。牙签对清理牙齿是有害的。</p><p>首先，一些牙签的质量不过关。不少餐厅为节省成本，通常用比较劣质的牙签。没有足够的硬度韧性，不光滑有毛刺。      其次，牙签使用不当会导致牙周病。一部分人无塞牙现象而惯性乱剔牙，使用不当会损伤牙龈增大牙间隙，导致牙龈萎缩形成牙周病。☆</p><p>研究表明使用牙线可更好地清洁牙间隙，能有效清除牙菌斑，而且不伤牙龈，安全可靠。将牙线放于两牙之间轻轻加压，牙线越过两牙接触点将塞在牙里的食物挤出，这样一来，就不会伤害牙龈。</p><p>涂蜡牙线易滑进牙缝；含矫味剂（薄荷、水果味）牙线使用口感更好；含氟牙线能预防龋齿。</p><p>不同线身形状的牙线</p><p>扁平牙线提高清洁能力；弹性牙线柔软不伤牙；圆形牙线比较细。</p><p>操作简单，携带方便，一次性卫生。末端还可以替代牙签使用。</p><p>①建议刷牙前使用。使用牙线会松开牙间隙，后通过刷牙，有助于更好去除牙菌斑。</p><p>②养成每天使用的习惯。每天至少使用一次，尤其是晚上进食后。万事开头难，尽量随身携带，养成使用习惯。</p><p>不管是牙线还是牙线棒，只要方法得当，都是可以有效清除牙菌斑和牙垢的。配合正确地刷牙、漱口水的使用，清洁牙齿双管齐下。       原来牙线才是护牙神器，赶紧用起来~参考资料：《口腔预防医学（第3版）》/《自我口腔保健方法-牙线》</p><p>微信号｜Vmicro-xiaowei</p><p>口腔护理  信赖小唯</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-4"><h4>📖 漱口比刷牙更重要？</h4><p>自我口腔保健方法中第一个方法不是刷牙，而是漱口。这也是我们所忽视的习惯。</p><p>通过漱口可清除食物残渣和部分松动的软垢，以及口腔内容易借助含漱力量而被清除的污物和异味。如果口腔内有感染，可以使用含一定药物的漱口剂含漱，帮助减少口腔内致病微生物或抑制细菌的繁殖生长，起到一定的辅助治疗作用。</p><p>PS：漱口不能替代刷牙对菌斑的机械清除作用，只能作为刷牙之外的日常口腔护理辅助手段。漱口液的种类和作用</p><ul><li>防龋作用。对于龋高危人群效果明显。含氟漱口液，如0.05%-0.2%氟化钠含漱液，每天或每周使用一次具有明确的防龋效果。</li><li>抑菌作用。含有某些药物如精油、三氯生、茶多酚、西吡氯铵等的漱口液具有抑制牙菌斑、减轻牙龈炎的作用。PS：0.12%-0.2%氯己定为广谱抗菌剂，能有效防止牙菌斑形成，对治疗牙龈炎效果较好。但长期使用可使牙齿及粘膜着色。</li><li>止痛作用。含0.5%普鲁卡因的漱口液对于口腔溃疡等引发的疼痛有止痛作用。</li><li>美白作用。含过氧化氢、六偏磷酸钠、焦磷酸盐的漱口液有美白的作用。</li></ul><p>使用漱口液的注意事项？</p><ul><li>漱口时间。通常为饭后漱口，可清除食物碎屑，清新口气，每次含漱5-10ml（约2-4口即可）。口腔粘膜溃疡，或牙周洁治及手术前后，用药物漱口液含漱1分钟，每次连续含漱2口即可，每小时含漱1-2次。</li><li>每次用量。漱口的效果与漱口液用量、含漱力量、鼓漱的次数有关。应根据各人口腔大小使用适量漱口液，通常含漱一次用量为5-10ml。</li><li>注意问题。药物漱口液不能用做长期漱口，一般用于龈炎洁治后，牙周手术及其他口腔手术后。PS：口腔疾患痊愈后，应停止使用，以免引起口腔内正常菌群失调和产生抗药性。</li></ul><p>好了，说了那么多，大家有没有学到呢?小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做~参考资料：</p><p>《口腔预防医学（第3版）》/“十二五”规划教程供口腔医学类专业用</p><p>《口腔预防医学（第6版）》/“十二五”普通高等教育本科国家级规划教材</p><p>文案：阿金    编辑：小刘</p><p>微信号｜Vmicro-xiaowei</p><p>口腔护理 信赖小唯</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-5"><h4>📖 为什么不能用牙签剔牙？</h4><p>食物突然跑进牙缝里，你怎么做？拿根牙签剔剔？Nooooo！胡乱地用牙签清理是不对的。首先，部分牙签的质量不过关。不少餐厅为节省成本，通常用比较劣质的牙签。它没有足够的硬度韧性，不光滑而且有毛刺。其次，牙签使用不当会导致牙周病。一部分人无塞牙现象而惯性地乱剔牙，会损伤牙龈且增大牙间隙，导致牙龈萎缩形成牙周病。</p><p>把牙齿想象成为一个立方体，共有六个面。光靠刷牙，只能清洁到3个面！牙缝难以清理干净，长期放任不管你的牙齿就会——牙线才是真爱</p><p>牙线在国外十分普遍，但在国内却知之者甚少。全世界仅有不到1/5的人能定期使用牙线清洁牙齿，中国人大多倾向于使用牙签。</p><p>使用牙线可更好地清洁牙间隙，能有效清除牙菌斑，而且不伤牙龈，安全可靠。配合牙刷使用，可减少30%龋坏概率。将牙线放于两牙之间轻轻加压，缓缓地拉动。牙齿两侧及牙缝，都是平时刷牙刷不到的地方，使用牙线对刷牙是一个补充。</p><ul><li>建议刷牙前使用使用牙线会松开牙间隙，后通过刷牙，有助于更好地去除牙菌斑。</li><li>养成使用习惯每天至少使用一次，尤其是晚上进食后。万事开头难，尽量随身携带，养成每天使用的好习惯。</li></ul><p>不管是牙线还是牙线棒，只要方法得当，都是可以有效清除牙菌斑和牙垢的。配合正确的刷牙、漱口水的使用，清洁牙齿双管齐下。小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-6"><h4>📖 为什么不能用牙签剔牙？</h4><p>各位友友们，大家新年好呀！</p><p>“每逢佳节胖三斤”，想必在座的吃货们最恨美食吃到一半时，食物突然跑进牙缝里。拿根牙签剔剔？No no，胡乱地用牙签清理是不对滴。</p><p>首先，一些牙签的质量不过关。不少餐厅为节省成本，通常用比较劣质的牙签。没有足够的硬度韧性，不光滑而且有毛刺。其次，牙签使用不当会导致牙周病。一部分人无塞牙现象而惯性地乱剔牙，会损伤牙龈增大牙间隙，导致牙龈萎缩形成牙周病。</p><p>牙线在国外十分普遍，但在国内却知之者甚少。全世界仅有不到1/5的人能定期使用牙线清洁牙齿，中国人大多倾向于使用牙签。</p><p>使用牙线可更好地清洁牙间隙，能有效清除牙菌斑，而且不伤牙龈，安全可靠。配合牙刷使用，可减少30%龋坏概率。将牙线放于两牙之间轻轻加压，缓缓地拉动。牙齿两侧及牙缝，都是平时刷牙刷不到的地方，使用牙线对刷牙是一个补充。</p><p>使用牙线会松开牙间隙，后通过刷牙，有助于更好地去除牙菌斑。</p><p>每天至少使用一次，尤其是晚上进食后。万事开头难，尽量随身携带，养成每天使用的好习惯。</p><p>不管是牙线还是牙线棒，只要方法得当，都是可以有效清除牙菌斑和牙垢的。配合正确的刷牙、漱口水的使用，清洁牙齿双管齐下。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-7"><h4>📖 答应我，下次牙膏一定要这样选</h4><p>你的家里是不是屯了各种牙膏？面对眼花缭乱的产品，该如何选择适合自己的？牙膏选对，刷牙效果才能事半功倍。</p><p>牙膏的基本成分和作用</p><p>牙膏的主要作用是清洁牙齿，主要成分包括摩擦剂、洁净剂、润湿剂、胶粘剂、防腐剂、芳香剂和水。</p><p>①摩擦剂 含量最多。摩擦作用，磨光使牙面光洁达到清洁的功效。常见的有碳酸钙、二氧化硅等。</p><p>②洁净剂 表面活性剂。发泡作用，利于去除食物残屑。常见的有十二醇硫酸钠、月桂酰肌氨酸钠等。</p><p>③保湿剂 保持牙膏的湿润性，防止空气中脱水而变干。常见的有甘油、山梨醇、丙二醇等。</p><p>④胶粘剂 防止膏体固液分离分层，保持均质性。常见的有羧甲基纤维素钠。</p><p>⑤芳香剂 改善口感和味道，有助于提高刷牙兴趣尤其是儿童。</p><p>⑥防腐剂 防止膏体变质，增加牙膏稳定性。常见的有乙醇、对羟基苯甲酸酯类等。</p><p>普通牙膏VS功能牙膏</p><p>除了普通牙膏，功效牙膏似乎更受欢迎。除了清洁作用，它们的针对性更强：防龋、抗敏感、美白等。</p><p>①含氟牙膏 氟化物能够预防龋齿（蛀牙），推荐使用含氟牙膏。常用的成分有氟化钠、单氟磷酸钠和氟化亚等。Tips：成人含氟牙膏的氟含量在0.05%~0.15%之间，儿童含氟牙膏的氟含量在0.05%~0.11%之间。</p><p>②抗敏感牙膏 缓解牙本质敏感（冷热酸甜刺激）。通过封闭牙本质小管，阻隔外界刺激减轻敏感症状。主要成分为硝酸钾、氯化锶等。</p><p>③美白牙膏 通过增加摩擦剂，利用物理摩擦去除牙表面着色，针对外源性黄牙（因日常饮食带来的颜色：如茶渍、烟渍、咖啡渍等引起的黄牙）。常用的成分有六偏磷酸钠、碳酸钙、硅化合物（硅石、水合硅石、二氧化硅）或羟磷灰石等。</p><p>①不要共用 很多口腔疾病会交叉传染，每个人根据各自不同的口腔状况，选用不同的牙膏。</p><p>②选中等规格 打开使用时间越久，与牙刷接触频率越高，接触细菌机会大大增加。此外，与空气接触会使膏体变硬。中等规格有更好的新鲜口感。</p><p>③经常更换品牌 长期使用同一种，病菌会产生抗药性。经常更换，有利于牙齿健康。</p><p>④不盲目追求性价比 牙膏成分和正确的刷牙方法比价格更重要。适合的才是最好的。</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>🦷 龋病预防与治疗</h3>'
+      +       '<div class="knowledge-card" id="academy-art-8"><h4>📖 全面护牙之防龋篇</h4><p>本期开始，是有关四大口腔疾病全面防护系列篇。C位留给首列的龋病，一起来学习吧。</p><p>龋齿，也就是我们常说的蛀牙、虫牙。由于细菌感染，在多种因素作用下，导致牙齿发生慢性、进行性破坏，并最终形成牙洞的一种口腔常见病。十人九龋，儿童是高发人群。但儿童龋齿发展的速度要远快于成人，儿童龋坏属于急性龋，成人龋坏属于慢性龋。小贴士：牙齿有黑线并且去不掉的话，很有可能是龋齿。</p><p>龋病的发生主要是四个因素：细菌、食物、宿主、时间（同时存在，共同作用）。</p><ul><li>细菌</li></ul><p>主要因素，是先决条件。口腔内天然菌群的种类和数量繁多复杂，主要致龋菌是变形链球菌、乳酸杆菌。它们能产生多种有机酸，黏附在牙齿表面，导致牙菌斑形成。</p><ul><li>食物</li></ul><p>除细菌外重要的因素。主要是碳水化合物类食物。它们极易黏附于牙面不易清洁，使牙脱矿发生龋病。进餐次数多，且在两餐之间进食含糖食品，发生龋的危险性越大。</p><ul><li>宿主</li></ul><p>通俗易懂的说法就是我们的日常生活习惯以及自身的身体状况。平时不注重口腔的清洁，多吃甜食等都会促使龋齿的形成。</p><ul><li>时间</li></ul><p>也就是说龋齿不是一天形成的，它是一个慢性、进行性的过程。</p><p>我们知道细菌是龋病的罪魁祸首，而牙菌斑就是繁殖细菌的“母体”。</p><p>牙菌斑是存在于牙面或牙周袋中的一个细菌生态环境，细菌在其中生长、发育、繁殖和衰亡，并在其中进行着复杂的物质代谢活动。在条件适合时，细菌的代谢产物可造成牙齿或牙周组织的破坏。菌斑的形成很复杂，首先口腔唾液中的蛋白质靠静电相互作用选择性地沉积在牙面上，然后各种细菌等微生物很快附着上去，开始进行一系列物质代谢活动。菌斑按其部位可分为龈上和龈下菌斑。位于牙颈缘的菌斑与牙周病发生的关系最为密切。</p><p>什么样的牙齿易患龋齿呢？我们下期见～</p><p>点赞留言 抽3位唯粉 送新品净界系列牙刷！</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-9"><h4>📖 全面护牙之防龋篇（二）</h4><p>上周我们了解了龋病的四大因素，那什么样的牙齿易患龋齿？</p><p>龋病的发病不分种族、地区、年龄、性别，无论乳牙或恒牙，萌出后不久即可发生龋齿。每个人有28—32颗牙齿，但是它们发生龋齿的机会是不一样的。</p><p>龋齿发病最活跃的年龄阶段是11-19岁，此期发病率最高；成年时期的发病比较稳定；老年时期发病率又有所升高。</p><p>牙齿的咬合面窝沟最易患龋，其次是邻面和牙颈部。乳磨牙和恒磨牙患龋齿的机会最多，其次是前磨牙。因为这些牙齿的沟窝较多，更容易贮存食物的残渣和细菌。</p><p>牙齿排列不整齐、拥挤、重叠，容易产生不易清洁的间隙，有利于龋病的发生。因为这些地方容易积存食物和细菌，也就容易产生龋齿。</p><p>儿童和青少年易患龋病？</p><p>为什么儿童和青少年是最为常见的发生龋齿人群？①儿童和部分青少年都还存在乳牙。乳牙同恒牙相比钙化程度较差，表面不如恒牙坚硬，对细菌腐蚀的抵抗能力也差。②儿童喜欢吃甜食。甜食供细菌利用的碳水化合物就多，加上儿童不易养成定期定时刷牙的习惯，如果清洁口腔的工作不及时或不正确，食物的残渣更容易留在口腔里，特别是黏在牙面和塞在牙缝里，这就为细菌产酸，破坏牙齿提供了条件。龋病这么可怕，那它到底该怎么预防呢？小唯成立最重要的目的就是给大家普及口腔保健的知识���希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-10"><h4>📖 全面护牙之防龋篇（三）</h4><p>龋病这么可怕，但它是可以预防的。龋病的预防措施和方法，无外乎三大点：控制菌斑，糖代用品，增强牙的抗龋能力。Q1</p><ul><li>机械方法。简易的自我保健方法，用牙刷、牙线等清除口腔内牙菌斑。长期坚持良好的口腔卫生习惯是控制菌斑的有效方法。</li><li>生物学方法</li></ul><p>（1）抗菌剂。抑制致龋菌，但长期使用存在耐药性及毒副作用。</p><p>（2）抗附着剂。阻止细菌对牙面附着，使已附着的菌斑解脱。</p><ul><li>化学方法。氯己定，为广谱杀菌剂，有抑菌作用，对变形链球菌、放线菌作用显著。最简便的方法是使用氯己定含漱液。</li><li>免疫方法。各种防龋疫苗，特异体抗体直接作用于口腔内的致龋菌，较安全。</li></ul><p>蔗糖的致龋性最强。而山梨醇、甘露醇、木糖醇等糖代用品不易被菌斑中产酸菌利用，但只能起到限制蔗糖食用的辅助作用。</p><p>增强牙的抗龋能力？</p><ul><li>使用含氟口腔产品。使用含氟牙膏是有效、方便地预防龋齿的方法之一。小贴士：饮茶可以防龋哦。茶叶含氟较高，且粗老茶叶的含氟量要高于茶芽和嫩叶。</li><li>涂氟。就是在牙齿表面形成一层保护性的薄膜，增加牙齿对龋坏的抵抗力，同时氟离子可以和钙离子结合形成氟化钙更耐龋坏腐蚀。涂氟有利于牙齿的健康，还能起到加固牙齿的作用。小贴士：儿童建议在两岁半到六岁之间，一般建议涂氟一年两次。</li></ul><p>关于龋病我们一起学习了三期，相信大家应该认识了龋病，知道如何去“对付”它了吧？</p><p>养成良好的口腔卫生习惯是预防口腔疾病最简便可行的方法。儿童龋齿的预防在于家长的督促，要培养他们养成每天刷牙的好习惯。小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～参考资料：</p><p>丁香医生官方出品-健康百科-涂氟</p><p>李月.吕俊峰.口腔预防医学第3版/龋病的预防措施和方法</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-11"><h4>📖 龋病，你了解多少？</h4><p>张嘴看一看，你的牙齿是否存在黑线？如果有且刷不掉，极大可能就是龋齿。当然，还有小小的可能是色素沉着。</p><p>龋齿，也就是我们常说的蛀牙、虫牙。由于细菌感染，在多种因素作用下，导致牙齿发生慢性、进行性破坏，并最终形成牙洞的一种口腔常见病。”十人九龋“儿童是高发人群。</p><p>龋病的发生（同时存在，共同作用），主要是四因素：细菌、食物、宿主、时间。</p><p>主要因素，是先决条件。口腔内天然菌群的种类和数量繁多复杂，主要致龋菌是变形链球菌、乳酸杆菌。它们能产生多种有机酸，黏附在牙齿表面，导致牙菌斑形成。牙菌斑和食物中的糖、淀粉发生化学作用，能产生腐蚀牙齿的酸性物质，从而使牙釉质脱矿形成蛀斑。PS控制牙菌斑是重要环节。</p><p>包括牙、唾液、机体的全身状况以及我们的生活行为习惯。1.牙釉质本身有一定抗龋力，但如果发育不全抗酸能力差，容易患龋；另牙齿间存在不易清洁区，也易患龋。2.唾液有物理清洁、抗菌等作用，如果减少或不能维持pH值，则易患龋。3.人的全身状况与龋的发病有一定关系。4.生活习惯及饮食结构存在诸多因素：不良口腔卫生导致牙菌斑增多，就会发生龋齿；饮食中含糖过多或吸烟，会促使龋的发生。</p><p>除细菌外最重要的因素。主要是碳水化合物类食物。它们极易黏附于牙面不易清洁，使牙脱矿发生龋病。进餐次数多，且在两餐之间进食含糖食品，发生龋的危险性越大。</p><p>致龋是一个慢性、进行性的过程。致龋时间包括：牙萌出后；食物滞留于牙面上的时间；牙菌斑在牙面滞留的时间；唾液环境低于临界PH所持续的时间。这些因素持续时间越长，龋病发生危险性越大。</p><p>机械清除，用牙刷、牙膏、牙线等用品，清除口腔内牙菌斑。使用含有抑菌剂的漱口水，保持良好的口腔卫生。</p><p>窝沟封闭，增强牙的抗龋能力</p><p>牙萌出后4年之内，龋齿尚未发生的时候是窝沟封闭的最佳时机。氟可以提高牙齿的抗龋能力，推荐使用含氟牙膏及漱口水。可以多食用含氟量高的食物。</p><p>少吃甜食和饮用碳酸类饮料。建议多食用含纤维性的食物。推荐使用代糖，如山梨醇、木糖醇等，它们不易被菌斑中的产酸菌利用。</p><p>养成良好的口腔卫生习惯</p><p>首先，我们要做的是认真刷牙。每天用含氟牙膏刷牙3次，同时保证刷牙质量。进食后要漱口刷牙，做到每天早晚用牙线清洁牙缝。</p><p>关于龋病及如何预防，你学会了吗？</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-12"><h4>📖 虫子吃掉了牙齿？</h4><p>在你小时候，大人一定说过这样的话：少吃糖，小心虫子把你的牙齿吃掉。</p><p>就像老婆饼里没有老婆一样，牙疼是因为牙齿发炎，出现感染。感染浅的话是牙髓炎，深入根尖的就是根尖炎。</p><p>导致牙疼的“虫子”实际上是细菌，它就是我们熟悉的牙菌斑（细菌团块）。</p><p>牙菌斑是存在于牙面或牙周袋中的一个细菌生态环境，细菌在其中生长、发育、繁殖和衰亡，并在其中进行着复杂的物质代谢活动。在条件适合时，细菌的代谢产物可造成牙齿或牙周组织的破坏。一旦时机成熟，便形成龋齿或牙周病。</p><p>牙疼的分类有哪些？</p><p>（1）牙外伤。包括牙齿折断、脱位，明显的锐利的疼痛；</p><p>（2）牙神经发炎。难以忍受，甚至需止痛药；</p><p>（3）蛀牙、慢性牙髓炎。疼痛可以忍受，不加以治疗会加重；</p><p>（4）位置不正的阻生智齿。导致周围牙龈肿痛；</p><p>（1）靠近牙齿的组织器官。多见于颌面部组织病变；</p><p>（2）神经性疼痛。偏头痛、舌咽神经痛；</p><p>（3）全身性疾病。糖尿病、神经官能症等。</p><ul><li>合理使用止痛药。适量布洛芬等常见的止痛药；</li><li>合理使用抗生素。如头孢菌素、奥硝唑等，尤其是牙周炎导致的疼痛</li><li>含冰水的措施。如牙神经发炎，但并非所有人适用。</li></ul><p>如果以上措施都不能缓解牙痛，或者牙痛进一步加剧，需及时前往医院就诊查明原因并对症下药。另外，偷偷告诉你：牙菌斑都害怕刷牙。每天至少要刷牙两次，才能有效防止龋齿。如果刷牙敷衍了事，那我们口腔内的细菌就会像杂草一样春风吹又生。尾</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～参考资料：</p><p>吴效民.口腔常见疾病296个怎么办/什么是牙菌斑和牙石？它们是怎么形成的？</p><p>郝泽良 郝帅.一口好牙把口腔医生带回家/牙疼吃消炎药行不行？怎么治疗？</p><p>丁香医生健康百科/口腔科/牙痛</p><p>文案：阿金  编辑：小刘</p><p>微信号｜Vmicro-xiaowei</p><p>口腔问题  信赖小唯</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-13"><h4>📖 儿童龋病的分类</h4><p>儿童是龋病的高发人群。龋病发展快，自觉症状不如恒牙明显，常被家长忽略，往往发展成牙髓病或根尖周病才去就诊。</p><p>其实让娃娃张嘴，就能知道是否患有龋病。最简易的方法就是看牙齿是否有黑线、黑点。</p><p>与恒牙相比，乳牙龋病大致可以分为浅龋、中龋、深龋。特殊类型有喂养龋，也就是我们平常所说的奶瓶龋，另一种是猛性龋。</p><p>①发病早，患龋率高。7、8岁时达到高峰。</p><p>②多发，范围广。乳牙同时患龋，也常见同一个牙齿的多个牙面同时患龋。</p><p>③自觉症状不明显。自觉症状不如恒牙明显，常被家长忽视，往往已发展成牙髓病或根尖周病才就诊。</p><p>①组织结构特点。乳牙的釉质、牙本质薄，钙化程度低，抗酸力弱，易发生龋坏。</p><p>②饮食特点。儿童饮食多为流食或半流食等软性食物，含糖量高，粘性强，易发酵产酸。</p><p>③口腔自洁和清洁作用差。儿童不能很好地刷牙，家长往往也不够重视，使食物残渣、软垢容易滞留在牙面上成为致龋因素；且儿童的睡眠时间长，口腔处于静止状态时间也长，唾液分泌减少，自洁作用差，有利于细菌的繁殖，增加患龋机会。</p><p>①药物治疗。适用于龋损面广泛、表浅的龋坏或剥脱状的环状龋。常用治疗药物有2%氟化钠溶液，75%氟化钠甘油糊剂等。平常所说的再矿化法就是药物治疗。配制不同比例的钙、磷和氟化物的矿化液，通过含漱或置于牙面一定时间，使早期釉质龋或牙本质龋再矿化。</p><p>②修复治疗。去除龋坏组织，用牙科材料充填窝沟，恢复牙冠形态和功能的方法。</p><p>什么是年轻恒牙龋病</p><p>随着恒牙的逐渐萌出，患龋率开始升高。俗称六龄齿的第一恒磨牙萌出较早，常被家长误认为乳磨牙，不予重视而延迟治疗。</p><p>年轻恒牙窝沟深、钙化程度低、酸耐性差易患龋。第一恒磨牙常因为釉板结构的存在，致龋细菌可直接在牙体内部形成龋洞，而牙齿表面完好无损，叫作隐匿性龋。</p><p>儿童龋齿的预防在于家长的督促。培养他们每天刷牙的好习惯；少吃甜食，吃过后及时漱口刷牙，尤其是睡前；建议定期口腔检查（至少半年一次）。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-14"><h4>📖 饮茶防龋？快来解锁防龋妙招</h4><p>氟化物能够预防龋病已经是老生常谈了。氟是人体必需的14种微量元素之一，机体的骨骼代谢离不开适量的氟。</p><p>氟的防龋机制是什么？</p><p>抑制致龋菌代谢生长</p><p>氟离子可以改变细胞内环境抑制一些生长代谢酸的活性；可以抑制多糖等物质的合成来影响细菌的代谢生长和繁殖；能抑制致龋链球菌的作用，阻碍细菌在牙面上的黏附作用。</p><p>减少牙菌斑内酸的形成</p><p>氟化物是有效的抗酸剂，直接抑制酸的形成。</p><p>氟化物增强了釉质的抗酸性能。</p><p>氟离子对脱矿的初期龋损起到再矿化作用，通过促进早期龋损愈合，达到预防的目的。</p><p>人体氟的主要来源是饮水。在美国，有1.7亿人生活的公共饮水中加了氟。饮水氟化是一种迄今世界上最有效、最经济、最易行的公共卫生措施。但需注意的是将饮用水的氟浓度调整到最适宜的水氟浓度，以达到防止龋病的发生，又不引起氟牙症的效果。</p><p>如鱼类、茶叶等天然含氟量较高，也是获得氟化物的途径。</p><p>我国自古以来就有饮茶和以茶水漱口防龋的做法。茶叶之所以有益于牙齿，除了茶水能清洁口腔软垢和茶多酚可灭口腔细菌，更重要的是，茶中含氟较高，而氟离子具有防龋作用。</p><p>PS：粗老茶叶的含氟量高于茶芽和嫩叶。</p><p>专家明确提出，“使用含氟牙膏是安全的、有效的、经济的预防龋齿的方法”。</p><p>PS：3-6岁的儿童，每次牙膏用量约为“豌豆”大小，对于6岁以上的儿童和成人，每次用量约1g。</p><p>关于氟化物防龋的妙招大家有没有get呢？</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-15"><h4>📖 牙齿涂氟和窝沟封闭的区别是什么</h4><p>之前和大家分享过龋病的一些预防措施和方法，无外乎三大点：控制菌斑，糖代用品，增强牙的抗龋能力。</p><p>其中，牙齿涂氟和窝沟封闭在提供有效、高质量的龋病预防措施中起到了很重要的作用。</p><p><strong>什么是窝沟封闭</strong></p><p>又称点隙裂沟封闭，是指不去除牙体组织，在颌面、颊面或舌面的点隙裂沟涂布一层粘接性树脂，保护釉质不受细菌及代谢产物侵蚀。如同给牙齿穿上了一层保护衣，达到预防龋病发生的一种有效防龋方法。</p><p>当牙面的窝沟被封闭之后，原来存在于窝沟中的细菌的营养来源被断绝，这一方面起到了预防龋病发生的作用，另一方面窝沟封闭也能阻止已存在早期龋损的发展，因此可以在早期龋损尚未成洞之前达到治疗的目的。</p><p><strong>窝沟封闭的最佳时间</strong></p><p><strong>牙萌出后达到𬌗平面即适宜做窝沟封闭，一般是萌出后4年之内。最佳时间段有三个：乳磨牙在3-4岁，第一恒磨牙在6-7岁，第二恒磨牙在11-13岁为最适宜封闭的年龄。封闭的最佳时间是牙齿完全萌出，龋齿尚未发生的时候。</strong></p><p><strong>什么是牙齿涂氟</strong></p><p>氟化物能够预防龋齿，已经是老生常谈了。氟可以促进牙釉质再矿化，起到预防龋齿、延缓龋损进展的作用。在牙齿上涂氟，有利于牙齿的健康，还能起到加固牙齿的作用。涂氟就是在牙齿表面形成一层保护性的薄膜，增加牙齿对龋坏的抵抗力，同时氟离子可以和钙离子结合形成氟化钙更耐龋坏腐蚀。</p><p><strong>一岁可以牙齿涂氟吗？</strong></p><p><strong>一般建议在两岁半到六岁之间。一般儿童在两岁半左右乳牙萌出完全，六岁左右还是换牙，这个过程可以利用氟化物防龋。一般建议涂氟一年两次，涂氟前不要吃东西，涂氟半小时后不要漱口及吃东西。</strong></p><p><strong>涂氟和窝沟封闭安全吗？</strong></p><p><strong>牙齿涂氟在国外已经广泛采用了四十多年，是一种比较安全有效地防治龋齿的方式。</strong></p><p>窝沟封闭是目前儿童预防龋齿较为有效的方法，通常采用的是无毒高分子树脂材料，对身体完全无害，即使从牙齿窝沟上脱落，吃进肚子里，也可排出，不会对身体造成任何危害。窝沟封闭的过程不会让孩子感觉有疼痛感，封闭后孩子一般也不会有不适感觉，不会导致牙齿咬合上有异物感。</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>🦷 牙周健康与牙龈护理</h3>'
+      +       '<div class="knowledge-card" id="academy-art-16"><h4>📖 刷牙流血？你的牙龈正在发出求救信号！</h4><p>牙龈肿痛出血，口臭，甚至溃烂、牙齿松动掉落……如果出现这些现象，你很有可能有牙周病。</p><p>牙周病是和龋病并列为严重影响我们口腔健康的主要疾病。也就是平时常听到的牙龈炎、牙周炎，常见于老年群体。</p><p>它是发生在牙龈等组织的炎症，是由多种微生物引起的一种感染性疾病。牙龈炎和牙周炎二者的区别就在于牙槽骨是否被吸收。</p><p>口腔卫生不良是导致各种口腔疾病发生的先决条件。</p><ul><li>口腔卫生 口腔卫生差，则会产生牙菌斑（不能被水去除，也是引起各种口腔疾病的最主要原因），导致牙结石堆积。如果长期口腔情况不良，就会引起牙周炎。</li><li>吸烟 吸烟是牙周病的高危因素之一。有研究数据，当你的吸烟史小于10年，患牙周病的概率是不吸烟者的1.3倍；当你的吸烟史为16～20年，患牙周病的概率是不吸烟者的8倍！</li><li>营养 口腔卫生状况良好的情况下，为什么也会患牙周病？因为营养状况也是重要的因素之一。营养缺乏会造成牙周组织功能降低，尤其是蛋白质和维生素。</li><li>全身疾病 口腔健康影响全身健康。研究表明，糖尿病患者容易患牙周病。</li></ul><p>根据牙周病的自然发展史，可以把预防分为发生前、已发生、晚期阶段处理三个阶段。</p><ul><li>牙周病发生前</li></ul><p>初级预防。做好日常的口腔清洁并保持良好口腔卫生：进食后及时刷牙，每日保证两次；推荐使用含氟牙膏；进食后漱口、使用牙线等都是最简易且最有效的预防方法。</p><ul><li>已发生牙周病</li></ul><p>二级预防。减轻已发生的牙周病的严重程度，控制其发展：及时去除牙结石，采取适当治疗。</p><ul><li>晚期阶段处理</li></ul><p>三级预防。牙周病发展到严重和晚期阶段的治疗措施：修复缺失牙；治疗相关全身性疾病，如糖尿病。</p><p>希望你到80岁时仍能有20颗以上有咀嚼功能的健康牙齿。</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-17"><h4>📖 有关牙菌斑和牙石这对CP的秘密</h4><p>相信大家都洗过牙，就算没有也听过很多。牙石首先是一种钙化物，并不是牙齿表面因喝咖啡、喝茶等引起的着色。这里给大家纠正一个误区，想要牙白就得避免牙齿的着色，比如少喝咖啡、茶、碳酸饮料或少抽烟等。</p><p>它多存在于牙缝，尤其是牙齿的内层，像一层壳。牙石是由唾液或龈沟液中的钙盐逐渐沉积而成的，靠刷牙并不能去除。</p><p>所以为什么大家都去牙科诊所或医院由专业口腔人员进行处理。</p><p>那牙石和牙菌斑又是什么关系呢？</p><p>牙菌斑是引起各种口腔疾病的罪魁祸首，它的形成很复杂，首先口腔唾液中的蛋白质选择性地沉积在牙齿表面，然后各种细菌微生物附着上去，进行一系列物质代谢活动。</p><p>牙菌斑分龈上和龈下菌斑，位于牙颈部边缘的菌斑是导致口腔疾病最重要的原因。所以为什么推荐大家勤刷牙，尤其是牙齿与牙龈连结的地方。</p><p>刷牙是控制牙菌斑和预防口腔疾病最简单且最省钱的口腔保健措施。所以刷牙的意义非常大，希望看这篇推文的你，不要偷懒一定要好好刷牙。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-18"><h4>📖 牙菌斑和牙石是怎么形成的？</h4><p>我们都知道牙菌斑是引起各种口腔疾病的罪魁祸首，那它到底是怎么形成的呢？</p><p>牙菌斑是存在于牙面或牙周袋中的一个细菌生态环境，细菌在其中生长、发育、繁殖和衰亡，并在其中进行着复杂的物质代谢活动。在条件适合时，细菌��代谢产物可造成牙齿或牙周组织的破坏。</p><p>菌斑的形成很复杂，首先口腔唾液中的蛋白质靠静电相互作用选择性地沉积在牙面上，然后各种细菌等微生物很快附着上去，开始进行一系列物质代谢活动。菌斑按其部位可分为龈上和龈下菌斑。位于牙颈缘的菌斑与牙周病发生的关系最为密切。</p><p>牙石是一种沉积于牙面或修复体表面的钙化或正在钙化的牙菌斑及白垢，简单来说就是钙化后的牙菌斑。它是由唾液或龈沟液中的钙盐逐渐沉积而成的，靠刷牙不能去除。</p><p>牙菌斑和牙石是一对CP，牙菌斑矿化形成牙石，表面粗糙的牙石又为牙菌斑继续积聚提供良好部位，牙石能加快牙菌斑的致病作用主要是由于它表面常可形成未钙化的牙菌斑，可刺激牙龈造成炎症，加之牙石本身坚硬粗糙，对牙龈有机械刺激作用。</p><p>牙石的多孔结构也是其造成吸附大量细菌的原因。所以牙石是牙龈出血、牙周袋加深、牙槽骨吸收、牙周病发展的一个重要因素。牙石形成的速度因人而异，受唾液量、唾液成分、饮食和口腔卫生习惯的影响。</p><p>小贴士：定期进行口腔检查，建议半年洗牙一次。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-19"><h4>📖 牙疼可以吃消炎吗？</h4><p>“牙疼不是病，痛起来真要命！”相信大家经历过牙痛，吃消炎药可不可以缓解牙疼？到底行不行？</p><p>吃消炎药一般是没用的。牙疼是因为牙齿发炎，出现感染。细菌突破牙本质，进入牙髓，牙髓受细菌的侵蚀出现感染。感染浅的话是牙髓炎，深入根尖的就是根尖炎。能治疗牙髓受感染的患牙，只有根管治疗。</p><p>为什么吃消炎药对缓解牙疼没用呢？首先急性牙髓炎的原因是牙髓腔像高压锅受压的状态，任何物质进不去也出不来。只有钻开牙髓才可以瞬间止痛。那些吃消炎药可以缓解牙疼的情况是已经出现了根尖的脓肿，抗生素可以辅助控制已经感染了的根管。但是急性炎症消退之后，根管内的感染是始终存在的。为什么牙疼过去以后，还会反复发作？就是因为感染作为病灶长期潜伏在口腔里，当我们的身体抵抗力降低的情况时就会发作。只有根管治疗可以根除内部感染，并且杜绝以后再感染的治疗方法。</p><p>如果硬扛不去看牙，牙齿最后就会被蛀空。所以我们要尽早把细菌遏制在龋齿的阶段，不要到出现了牙疼（意味细菌已经感染牙髓）才追悔莫及。</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>❄️ 牙齿敏感</h3>'
+      +       '<div class="knowledge-card" id="academy-art-20"><h4>📖 360全面呵护，远离牙敏感</h4><p>冷热酸甜，牙齿敏感刺痛……不能大快朵颐，真的太难受了！</p><p><strong>什么是牙齿敏感？</strong></p><p>牙齿敏感就是我们俗称的“倒牙”，也叫牙本质过敏。牙本质是构成牙齿的主体，它由许多牙本质小管组成，小管内有神经末梢的突起。当牙本质暴露的时候，就会有冷、热、酸、甜的感觉。</p><p><strong>牙齿敏感原因？</strong></p><ul><li>机械磨损及牙颈部结构</li></ul><p>最主要的原因。牙刷毛质、牙膏颗粒的粗细、刷牙方式都与之相关。尤其是错误的刷牙方式，横向刷牙、暴力刷牙。加之牙颈部本就是牙齿的薄弱部位，长此以往会导致磨损。</p><ul><li>酸性物质腐蚀</li></ul><p>常食用酸性食物。唾液可以分泌酸性的分泌物，多见于胃炎患者、常反酸者。</p><ul><li>应力疲劳</li></ul><p>每一次的咀嚼都会对牙颈部产生力的作用，长此以往会出现应力疲劳，加剧牙本质的暴露。</p><p><strong>如何预防改善？</strong></p><ul><li>改正错误刷牙习惯。避免使用拉锯式的横刷法，选择颗粒合适的牙膏及牙刷，并配合正确的刷牙方式。</li><li>减少食用酸性食物。保持良好的饮食习惯，并避免单侧咀嚼，预防单侧牙颈部的用力。</li><li>使用含氟牙膏或脱敏糊剂。针对已经出现的症状，防患于未然。</li><li>定期口腔检查。至少一年一次，以便及时发现问题，及时处理。</li></ul></div>'
+      +       '<div class="knowledge-card" id="academy-art-21"><h4>📖 冷热酸甜，大快朵颐！</h4><p>您是否在享受美食时牙齿敏感刺痛？冷热酸甜，无法尽情享受。</p><p>俗称的“倒牙”就是牙齿敏感，也称牙本质过敏。前期已经科普过牙本质是构成牙齿的主体，它由许多牙本质小管组成，小管内有神经末梢的突起。当牙本质暴露的时候，就会引起冷、热、酸、甜的感觉。</p><p>当我们刷牙、咬硬物的时候，就会有异常酸、痛的感觉（常见于老年人），不过这种feel（感觉）马上就会消失。</p><p>导致牙本质暴露的原因？</p><p>错误的刷牙方式（横向、暴力刷牙）引起的牙楔状缺损，食用酸性食物引起的牙酸蚀，神经衰弱、妊娠期等，都会引起牙本质暴露出现牙齿敏感不适。</p><ul><li>避免使用拉锯式的横刷法。选择颗粒合适的牙膏和适合的牙刷，并配合正确的刷牙方式。</li><li>减少食用酸性食物。保持良好的饮食习惯，并避免单侧咀嚼，预防单侧牙颈部的用力。</li><li>使用含氟牙膏或脱敏糊剂。针对已经出现的症状，防患于未然。</li></ul><p>小唯脱敏糊剂：双效成分氯化锶和硝酸钾。氯化锶中的锶离子可以堵塞暴露的牙小管，硝酸钾中的钾离子可以阻断痛感来缓解牙敏感症状。封闭+止痛+修护，从源头缓解牙齿敏感。而且还含氟，可以作为日常坚持使用～</p><p>（点击图片查看详细内容）</p><ul><li>定期口腔检查。至少一年一次，以便及时发现问题，及时处理。</li></ul><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-22"><h4>📖 冷热酸甜？牙齿敏感那些事儿</h4><p>年关将至，吃货们又可以享受各种美食啦。但是冷热酸甜，牙齿敏感刺痛。想要大快朵颐，一定要有一口健康的牙齿。</p><p>牙齿敏感就是我们俗称的“倒牙”，也叫牙本质过敏。前期已经科普过牙本质是构成牙齿的主体，它由许多牙本质小管组成，小管内有神经末梢的突起。当牙本质暴露的时候，就会引起冷、热、酸、甜的感觉。</p><p>①机械磨损及牙颈部结构</p><p>最主要的原因。牙刷毛质、牙膏颗粒的粗细、刷牙方式都与之相关。尤其是错误的刷牙方式，横向刷牙、暴力刷牙。加之牙颈部本就是牙齿的薄弱部位，长此以往会导致磨损。</p><p>常食用酸性食物。唾液可以分泌酸性的分泌物，多见于胃炎患者、常反酸者。</p><p>每一次的咀嚼都会对牙颈部产生力的作用，长此以往会出现应力疲劳，加剧牙本质的暴露。</p><p>避免使用拉锯式的横刷法，选择颗粒合适的牙膏和适合的牙刷，并配合正确的刷牙方式。</p><p>保持良好的饮食习惯，并避免单侧咀嚼，预防单侧牙颈部的用力。</p><p>使用含氟牙膏或脱敏糊剂</p><p>针对已经出现的症状，防患于未然。</p><p>至少一年一次，以便及时发现问题，及时处理。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-23"><h4>📖 冷热酸甜？牙齿敏感那些事儿</h4><p>年关将至，吃货们又可以享受各种美食啦。但是冷热酸甜，牙齿敏感刺痛。想要大快朵颐，一定要有一口健康的牙齿。</p><p>牙齿敏感就是我们俗称的“倒牙”，也叫牙本质过敏。前期已经科普过牙本质是构成牙齿的主体，它由许多牙本质小管组成，小管内有神经末梢的突起。当牙本质暴露的时候，就会引起冷、热、酸、甜的感觉。</p><p>①机械磨损及牙颈部结构</p><p>最主要的原因。牙刷毛质、牙膏颗粒的粗细、刷牙方式都与之相关。尤其是错误的刷牙方式，横向刷牙、暴力刷牙。加之牙颈部本就是牙齿的薄弱部位，长此以往会导致磨损。</p><p>常食用酸性食物。唾液可以分泌酸性的分泌物，多见于胃炎患者、常反酸者。</p><p>每一次的咀嚼都会对牙颈部产生力的作用，长此以往会出现应力疲劳，加剧牙本质的暴露。</p><p>避免使用拉锯式的横刷法，选择颗粒合适的牙膏和适合的牙刷，并配合正确的刷牙方式。</p><p>保持良好的饮食习惯，并避免单侧咀嚼，预防单侧牙颈部的用力。</p><p>使用含氟牙膏或脱敏糊剂</p><p>针对已经出现的症状，防患于未然。</p><p>至少一年一次，以便及时发现问题，及时处理。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>✨ 牙齿美白</h3>'
+      +       '<div class="knowledge-card" id="academy-art-24"><h4>📖 想拥有一口大白牙吗？不做牙贴面也能白！——拒绝偏方，科学美牙全攻略</h4><p>“一白遮三丑”。美白，是各个年龄段人群尤其是女性孜孜以求的目标。这里的白不仅指肤白，【牙白更能提升社交自信】。</p><p><strong>太长不看/核心提炼</strong></p><ul><li>牙黄分表面（外源性着色）及本质（内源性着色）区别。</li><li>外源性牙黄指后天性因饮食习惯、不良口腔卫生引起的牙齿表面着色；内源性牙黄指先天性因药物饮水、遗传因素及年龄增长引起的牙齿内部着色。</li><li>真正有效的美白方法只有两大类：化学美白（主要成分为过氧化物，通过化学反应达到牙齿美白）、物理美白（主要成分为碳酸钙、合硅石等，通过物理摩擦达到牙齿美白）。</li><li>化学美白分两大类：诊室美白（浓度高，需要专业机构专业人士操作）、家庭美白（浓度低，安全有效且自己就能操作）。</li><li>牙齿美白不是永久的，无论哪种方法都需要坚持使用且定期维护。</li></ul><p><strong>为什么牙黄？</strong></p><p>事物都有表面和本质的区别。牙黄也分表面（外源性着色）及本质（内源性着色）区别。</p><ul><li>外源性着色（后天性外部附着）</li><li>1 饮食习惯。吸烟，饮用茶、咖啡等有色饮料或进食深色食物；</li><li>2 口腔卫生。口腔卫生不佳，牙菌斑、牙结石堆积，清洁不到位。</li><li>内源性着色（先天性牙齿内部）</li><li>1 药物饮水。儿时服用四环素类药物或长期饮用高氟含量用水（四环素牙、氟斑牙）；</li><li>2 遗传因素。牙釉质、牙本质发育不全，牙齿偏黄；</li><li>3 增龄性老化。年龄增长牙齿自然老化，逐渐暗淡发黄。</li></ul><p><strong>三种真正有效的美白方法|对症下药</strong></p><ul><li>冷光美白</li></ul><p>诊室美白，过氧化物为美白核心成分。需前往口腔机构或医院由专业人士操作。</p><p>极易造成牙敏感。氧化物浓度高一般在30%左右，严重患者需吃止痛药缓解；</p><p>容易造成假白。不自然“马桶白”；</p><p>舒适感不佳。一次一般在30～40分钟左右，且全程需佩戴扩口器；</p><p>周期偏长。一般一个疗程需重复做2～3次；</p><p>费用偏高。一般在1000-3000元左右。</p><p>适合人群：牙齿健康，需实现牙齿快速美白且钱包鼓囊。</p><ul><li>家庭美白</li></ul><p>和冷光美白采用相同的化学原理。氧化物浓度更低，能自己操作。</p><p>不易造成牙敏感。氟化物浓度低一般在3%左右，对牙齿刺激更小；</p><p>便携操作。在家就能自己操作，且佩戴过程中不影响生活；</p><p>舒适感佳。配合定制美学牙套（保持器）佩戴使用，无异物感；</p><p>周期适合。一般佩戴3～7天后有显著牙色提升；</p><p>性价比高。一疗程30～42天，平均每天折下来费用一杯奶茶钱。</p><p>①低浓度（3%）家庭美白安全吗？</p><p>安全。不超过3%的过氧化氢浓度被临床证明是安全的，且广泛应用于牙齿美白剂中。</p><p>②低浓度（3%）家庭美白有效果吗？</p><p>有效。实验证实每天使用一次坚持三周，色阶平均数可以提升2～5个均值的显著效果！</p><p>③使用过程中出现牙敏感是正常现象？</p><p>是正常现象。家庭美白发生牙齿敏感的概率为37%～90%，但不会引起牙髓坏死。是否坚持使用依主体牙齿情况而定。</p><p>④如何缓解牙敏感现象？</p><p>使用脱敏牙膏缓解。硝酸钾成分可以封闭牙本质小管，达到缓解的效果。可以在使用美白剂前用含硝酸钾成分的脱敏膏刷牙；也可以在使用美白剂后涂敷适量含硝酸钾成分的脱敏膏在敏感的牙齿上。</p><p>⑤哪些人群不适合化学美白？</p><ul><li>日常护理</li></ul><p>也就是美白牙膏。含有摩擦剂及核心成分（碳酸钙、合硅石、氢氧化铝）。通过物理摩擦去除外源色素。美白牙膏更适合用于牙齿化学美白后的效果维护。</p><p>购买链接：#小程序://小唯口腔/商品详情/J46ZWBKdwn8oMwD</p><p><strong>偏方不靠谱</strong></p><ul><li>小苏打、柠檬刷牙×</li></ul><ul><li>双氧水×</li></ul><p>浓度不够且伤害牙龈</p><ul><li>吃营养补充剂×</li></ul><p>牙釉质无神经和血管组织，补充任何营养补充剂都无法改变牙齿颜色</p><ul><li>网红美牙仪×</li></ul><p>部分“三无”产品且使用不当会灼伤牙龈</p><p><strong>牙齿美白维护</strong></p><ul><li>良好饮食习惯。避免牙齿着色，对易染色的食物应拒绝或限量；</li><li>良好口腔卫生。进食后及时进行口腔清洁，至少每年一次洗牙；</li><li>保持适合频率。定期化学美白，加物理美白（平时使用美白牙膏）。</li></ul><p>不论哪种方法，想要牙齿美白都需要坚持。希望你找到适合自己的美白方法，祝你笑口常开。</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-25"><h4>📖 牙齿美白全攻略</h4><p>敢大笑嘛？一口美牙会让你闪闪发光。可现实是，大多数人都有这样的困扰：牙齿不够白，明明每天刷牙，为什么牙齿又黑又黄？</p><p>小贴士：健康的牙齿颜色是偏向于半透明、些许黄色的乳白色~</p><p>牙齿发育过程中引起的整体着色，一般由药物和水质造成。儿童在发育阶段，服用四环素类药物，易患四环素牙。水中的氟含量过高（分布于我国西北、华北等地区，特别是山区），长此以往则会导致氟斑牙。这些色素在牙齿的深层，只有通过微创手术及特殊美白技术来改善（牙冠修复、瓷贴面等）。</p><p>后天日常饮食习惯引起的牙齿表面着色，如吸烟，饮用茶、咖啡等有色饮料。这些色素容易附着在牙齿表面，日积月累就会形成烟渍、茶渍、咖啡渍。口腔卫生不良也会导致牙菌斑堆积，使牙齿发黄。一般可以通过使用美白牙膏来改善。</p><p>衰老是不可避免的。牙齿也会随着年龄增长自然老化，逐渐暗淡发黄。</p><p>①良好的饮食习惯。对这些易染色的食物应拒绝或限量。小贴士：用吸管饮用有色饮料，可以减少牙齿接触色源的机会~②良好的口腔卫生习惯。进食后及时进行口腔清洁，如果没有刷牙条件也可用漱口水替代。③使用美白牙膏。美白牙膏就像磨砂膏，含有特定的摩擦剂和成分（碳酸钙、合硅石、过氧化氢等），原理是依靠研磨抛光去除牙齿表面的污垢。小贴士：美白牙膏可以帮助恢复牙齿原本的色泽，但美白效果有限~④专业美白方法。也就是牙齿漂白，通过含有过氧化物（过氧化氢、过氧化脲）的活性成分，在牙齿表面发生氧化还原反应，分解色素因子从而达到美白的效果。主要有两种：诊室美白和家庭美白。</p><p>诊室美白：需前往专业口腔机构操作。氧化物浓度高 一般在30%左右，易造成牙齿敏感且费用较高周期长，但能达到即刻的美白效果。</p><p>家庭美白：在家就能简单操作，配合专业个性化私人定制牙套，将美白啫喱挤入后每天佩戴数小时，持续2～3周能达到美白效果。适合牙敏感的人群。</p><p>不论哪种方法，想要保持牙齿美白都是要坚持的哦。祝大家牙齿亮白，笑口常开。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-26"><h4>📖 女神节特辑：你值得这世间所有的美好</h4><p>【口腔健康信赖小唯】</p><p>Health of Oral, Trust the Vmicro /小唯</p><p>三月的风温柔，三月的花渐开</p><p>在这个专属于女人的节日里</p><p>祝所有女神们节日快乐～</p><p>妊娠期如何预防牙病？</p><p>怀孕作为一名女性人生中最重要的时刻之一，如果没有在孕前就处理好口腔里的各种问题，准妈妈们可能在怀孕的时候就遭受牙疼、牙龈肿痛等口腔疾病。</p><ul><li>建立口腔卫生习惯。摒弃孕期不能刷牙的错误观念，增强口腔保健意识。</li><li>定期口腔健康检查。每隔3个月检查一次，自觉有口腔疾病应及时处理。妊娠期4—6个月是治疗口腔疾病的适宜时期。</li><li>良好生活习惯，注意饮食。慎用药物，如四环素影响胎儿的牙齿矿化、变色，形成四环素牙。多吃豆制品、新鲜蔬菜等，摄取足够蛋白质和必要的微量元素，利于胎儿的骨骼和牙齿的形成和钙化。</li></ul><p>Health of Oral</p><p>Trust the Vmicro /小唯</p><p>拥有一口灿烂大白牙的微笑是每个人梦寐以求的，尤其是女性。想拥有一口亮白的牙齿，其实并不难。</p><p>牙齿美白的本质就是避免牙釉质的着色。</p><ul><li>养成良好的饮食习惯。对这些易染色的食物应拒绝或限量</li></ul><p>Tips：用吸管饮用有色饮料，可以减少牙齿接触色源的机会～</p><ul><li>养成良好的口腔卫生习惯。进食后及时进行口腔清洁。</li></ul><p>Tips：嚼口香糖能对口腔起到清洁作用，但前提是无糖口香糖哦～</p><ul><li>使用美白牙膏。美白牙膏就像磨砂膏，含有特定的摩擦剂和成分（碳酸钙、合硅石、过氧化氢等），原理是依靠研磨抛光去除牙齿表面的污垢。</li></ul><p>Tips：美白牙膏可以帮助恢复牙齿原本的色泽，避免进一步发黄。但不能改变牙齿固有的颜色。不能做到使用一次就有立竿见影的效果，需要坚持使用～</p><p>Health of Oral</p><p>Trust the Vmicro /小唯</p><p>含天然碳酸钙、二氧化硅两种摩擦剂和高分散白色素（可以增白）</p><p>Health of Oral</p><p>Trust the Vmicro /小唯</p><p>小唯牙齿美白护理啫喱</p><p>3%过氧化氢，温和不刺激，安全有效</p><p>配合定制美学牙套，贴合美观防溢更安心</p><p>三疗程巩固，焕白暗沉黄牙，惊喜绽放</p><p>新品来袭，即将上市，敬请期待！</p><p>Health of Oral</p><p>Trust the Vmicro /小唯</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p><p>微信号｜Vmicro-xiaowei</p><p>口腔健康   信赖小唯</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>👨‍👩‍👧‍👦 特殊人群口腔护理</h3>'
+      +       '<div class="knowledge-card" id="academy-art-27"><h4>📖 有关儿童护牙Q&amp;A</h4><p>3-12周岁是口腔疾病的高发期，需特别重视儿童的龋病预防。培养他们每天刷牙的好习惯，建立口腔健康观念，明白保护牙齿的重要性。</p><p>为什么要用含氟牙膏？</p><p>用含氟牙膏刷牙可使患龋率降低24%</p><p>发现氟化物能够防龋，是20世纪口腔预防医学对人类最大的贡献之一。中华口腔医学会等多方面专家明确提出“使用含氟牙膏是安全的、有效的、经济的预防龋齿的方法”。</p><p>儿童也要使用含氟牙膏？</p><p>只要儿童的吞咽机制健全，就可以使用含氟牙膏。应在家长的指导下使用，黄豆粒大小的牙膏用量即可。</p><p>儿童刷牙时经常会吞食部分牙膏，吃了会中毒吗？</p><p>每千克体重每天的氟摄入量超过5mg才是可能中毒剂量。国家标准含氟浓度为：成人0.05%-0.15%，儿童0.05%-0.11%。</p><p>一起来做个小算术吧：</p><p>一个20kg左右的6岁儿童，一天内吞咽2-2.8g牙膏仍为适宜氟摄入量，吞咽200g左右（约为两支）才有可能出现氟中毒；一个65kg的成人，正常使用牙膏量每次约1g，一口气吞下4-5支牙膏可能达到中毒量。</p><p>好了，说了那么多，大家有没有学到呢?小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做~</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-28"><h4>📖 有关老年口腔健康</h4><p>《第四次全国口腔健康流行病学调查报告》的数据显示，我国牙周病患病率高，成人各年龄组（35～44岁、55～64岁和65～74岁）的牙周健康率均不足10％，55－64岁年龄组牙周健康率仅为5.0％。5岁儿童乳牙龋患率为70.9％，12岁儿童恒牙龋患率为34.5％，儿童青少年的口腔健康状况也不容乐观。</p><p>老年牙病与全身健康</p><p>慢性牙病和不良的口腔卫生常引起全身疾病。牙病引起的口腔颌面部感染、细菌性心内膜炎、视网膜脉络膜炎、长期低热、关节炎和肾脏疾病等口腔感染时有发生；同时，老年人咀嚼功能的减退和丧失，消化功能的障碍，会因营养的不良和因口腔湿润不良而引起窒息。应重视口腔疾病与全身健康的关系。</p><p>老年牙病很多，重点是龋病、牙周病和牙齿缺失。老年人平均存留牙数为20.97颗，有牙齿缺失的为86.1%。</p><p>老年人口腔健康的标准</p><p>世界卫生组织推荐的65岁以上老年人的口腔健康标准包括：</p><ul><li>牙缺失在10个以内</li><li>牙患龋和充填在12个以内</li><li>功能牙有20个</li><li>患者的主观感受。</li></ul><p>老年口腔保健应该注意什么？</p><p>摒弃不讲究口腔卫生的旧观念与习惯，消除“人老应该掉牙”的想法。选择合乎口腔卫生要求的保健牙刷，使用含氟牙膏，每天早晚及进食后刷牙。纠正不良卫生习惯，戒除烟酒嗜好等。保护好基牙，有口腔问题及时治疗。</p><p>安排合理膳食，保持良好饮食习惯。食物软硬适中，以温热为宜，细嚼慢咽。</p><p>有条件的老人最好3个月口腔检查一次，至少一年一次，以便及时发现问题，及时处理。</p><p>牙齿松动、缺失是常有的现象。通过专业人员帮助洁治治疗，及时修复缺失牙。注意义齿的清洁。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-29"><h4>📖 有关老年口腔健康</h4><p>《第四次全国口腔健康流行病学调查报告》的数据显示，我国牙周病患病率高，成人各年龄组（35～44岁、55～64岁和65～74岁）的牙周健康率均不足10％，55－64岁年龄组牙周健康率仅为5.0％。5岁儿童乳牙龋患率为70.9％，12岁儿童恒牙龋患率为34.5％，儿童青少年的口腔健康状况也不容乐观。</p><p>老年牙病与全身健康</p><p>慢性牙病和不良的口腔卫生常引起全身疾病。牙病引起的口腔颌面部感染、细菌性心内膜炎、视网膜脉络膜炎、长期低热、关节炎和肾脏疾病等口腔感染时有发生；同时，老年人咀嚼功能的减退和丧失，消化功能的障碍，会因营养的不良和因口腔湿润不良而引起窒息。应重视口腔疾病与全身健康的关系。</p><p>老年牙病很多，重点是龋病、牙周病和牙齿缺失。老年人平均存留牙数为20.97颗，有牙齿缺失的为86.1%。</p><p>老年人口腔健康的标准</p><p>世界卫生组织推荐的65岁以上老年人的口腔健康标准包括：</p><ul><li>牙缺失在10个以内</li><li>牙患龋和充填在12个以内</li><li>功能牙有20个</li><li>患者的主观感受。</li></ul><p>老年口腔保健应该注意什么？</p><p>摒弃不讲究口腔卫生的旧观念与习惯，消除“人老应该掉牙”的想法。选择合乎口腔卫生要求的保健牙刷，使用含氟牙膏，每天早晚及进食后刷牙。纠正不良卫生习惯，戒除烟酒嗜好等。保护好基牙，有口腔问题及时治疗。</p><p>安排合理膳食，保持良好饮食习惯。食物软硬适中，以温热为宜，细嚼慢咽。</p><p>有条件的老人最好3个月口腔检查一次，至少一年一次，以便及时发现问题，及时处理。</p><p>牙齿松动、缺失是常有的现象。通过专业人员帮助洁治治疗，及时修复缺失牙。注意义齿的清洁。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-30"><h4>📖 老掉牙是必然规律？</h4><p>有句俗话叫“老掉牙”，用来形容人的年纪大了牙齿会脱落。</p><p>老掉牙是必然的吗？事实并非如此，这是一种误解。老年人掉牙，主要是由牙周病导致的。ps:97%的成年人存在不同程度的口腔问题，65-74岁老年人的牙周健康率仅为9.3%（第四次全国口腔健康流行病学调查）</p><p>由多种微生物引起的感染性疾病。通俗来说就是发生在牙龈等组织的炎症，包括牙龈炎和牙周炎。牙龈肿痛出血、口臭，甚至溃烂、牙齿松动，最后掉落。ps：牙龈炎和牙周炎二者的区别就在于牙槽骨是否被吸收</p><p>口腔卫生不良，导致细菌病变，引起口腔疾病。</p><p>牙菌斑是牙周病的主要致病因素。细菌复合体，牙菌斑是口腔内不能被水去除的细菌性斑块，由多种细菌组成的生物膜。</p><p>牙结石是钙化后的牙菌斑。</p><p>手术：龈上洁治术、超声波洁治术。</p><p>药物：甲硝唑、四环素、多西环素等。</p><p>保持口腔卫生。每天保质保量地刷牙，进食后使用牙线，使用含氯己定的含漱液。</p><p>在疾病发生前进行预防是最积极有效的措施。增强口腔保健意识，建立良好的口腔卫生习惯，防患于未然。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>👅 口腔黏膜与口气</h3>'
+      +       '<div class="knowledge-card" id="academy-art-31"><h4>📖 溃疡反反复复？别再走弯路</h4><p>相信你肯定有过口腔溃疡的情况。明显的疼痛灼伤刺激感，让人备受折磨。</p><p>口腔黏膜疾病，指发生在口腔黏膜和口腔软组织的多种感染和非感染性疾病。分为两大类：一类是原发于口腔黏膜的疾病。常见于溃疡，有复发性、自愈性特点；另一类是全身性疾病在口腔的表征，主要表现为口腔黏膜损害。常见的有口腔炎、白斑、舌炎等。</p><p><strong>频发原因</strong></p><ul><li>饮食刺激与黏膜损伤</li></ul><p>主要原因。偏好烧烤、火锅等重口味食物，辛辣成分直接刺激口腔黏膜造成破损。</p><ul><li>营养缺乏免疫力下降</li></ul><p>维生素B族、C及锌是维持口腔粘膜完整性和修复能力的关键营养元素，缺乏则会导致口腔粘膜脆弱。</p><ul><li>微生物感染</li></ul><p>睡眠不足、疲劳会导致免疫力下降，病原微生物（如白念珠菌、单纯疱疹病毒）乘虚而入，引发感染性溃疡。</p><ul><li>内分泌紊乱</li></ul><p>睡眠质量影响免疫修复功能，情绪压力影响神经功能。压力激素会延长溃疡愈合时间。</p><p><strong>防治结合</strong></p><ul><li>清淡饮食</li></ul><p>以温凉的软/流食为主，避免过硬、辛辣刺激的食物。</p><ul><li>规律作息</li></ul><p>避免熬夜、劳累。注意合理安排作息时间，保证充足的睡眠，养成良好的作息和生活习惯。</p><ul><li>舒缓情绪</li></ul><p>保持良好的心理状态，避免过大的精神压力。</p><ul><li>口腔卫生</li></ul><p>不要因溃疡的疼痛而忽略日常的口腔卫生护理。进食后及时漱口达到创面清洁防护。</p><ul><li>用药治疗</li></ul><p>局部溃疡可以使用修复液达到物理隔绝形成保护性屏障；也可以选择抗炎、镇痛、促进愈合的药物治疗，如黄连、西瓜霜。</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-32"><h4>📖 社交有味，自己却闻不到？——扒一扒尴尬的来源</h4><p>一张嘴就有，想瞒都瞒不住。如果“社死”有排名，口臭绝对名列前三。</p><p><strong>太长不看/核心提炼</strong></p><ul><li>口臭分生理性口臭（容易消除，保持口腔卫生就可以做到）和病理性口臭（因疾病尤其是呼吸道类所导致的，不容易消除）</li><li>病理性口臭也分口源性口臭（口腔卫生不良导致的，致龋菌堆积在代谢过程中产生的异味）和非口源性口臭（呼吸道、血液携带来源产生的异味，包括食用大蒜、洋葱等刺激性食物后引起的）</li><li>口源性口臭可以通过保持口腔卫生清除异味（勤刷牙、勤漱口、配合牙线及舌苔刷使用）</li><li>非口源性口臭需要查导致口臭的病因并及时医治处理。</li></ul><p><strong>口臭的原因及分类</strong></p><ul><li>生理性口臭</li></ul><p>一般在睡眠后晨起易出现异味，但经口腔清洁后可很快消除。</p><ul><li>病理性口臭</li></ul><p>因疾病、病理状态或口腔内组织异常所导致的。</p><ul><li>1 口源性口臭</li></ul><p>绝大多数人（占比80%～90%）的口臭都来源于口腔本身，主要由厌氧菌引起。口腔卫生不良是最常见的原因（吸烟者、大量堆积牙结石）。由于口腔卫生不良的环境导致致龋菌堆积，在代谢过程中会产生臭味。特别是坏死性龈炎，更有一种强烈的如同臭皮蛋一样的腐败味。</p><ul><li>2非口源性口臭</li></ul><p>因呼吸道来源、血液携带来源的口臭及某些特殊食物引起的口臭等。</p><p>（1）呼吸道来源：如由支气管炎、肺炎、鼻阻塞等引起。</p><p>（2）血液携带来源：胃肠消化不良（较严重的胃病）引起的酸臭味、糖尿病酮症酸中毒引起的丙酮味（带有甜香），以及鼻炎、扁桃体炎化脓产生的臭味等。</p><p>（3）特殊食物引起：食用大蒜、洋葱等辛辣刺激的调味料后引起的口臭。</p><p><strong>口臭的防治|对症下药</strong></p><ul><li>口源性口臭。做好清洁，保持口腔卫生。进食后和晚上睡前要漱口刷牙；平时配合牙线辅助口腔清洁；清洁舌苔可有效减少口臭；定期洁牙和口腔检查。</li><li>非口源性口臭。查全身因素导致的口臭病因，检查是否患有胃肠道、呼吸道疾病等并及时医治处理。</li></ul><p>来，大声跟我念：保持口腔卫生，自信不尴尬~</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-33"><h4>📖 神奇的金津玉液？</h4><p>每个人身上都有一种奇妙的液体，说出来你可能不屑。垂涎三尺、馋涎欲滴，都是它在“作怪”。</p><p><strong>唾液的由来</strong></p><p>俗称的口水就是唾液，是由三大唾液腺分泌的。其中腮腺是最大的，分泌清淡的浆液；颌下腺分泌浆液性为主；舌下腺分泌粘液性为主。</p><p>一个健康成人每天可以分泌1.5升左右的唾液（惊呆了，大多数人可能还喝不够等量的水）！唾液大部分由水组成，约占98%。除了水之外，还含有多种有机、无机物质，比如葡萄糖、氨基酸、淀粉酶等。</p><p><strong>唾液的作用</strong></p><ul><li>消化和利于吞咽</li></ul><p>唾液中含有的淀粉酶有助于食物的消化。其中含有的大量水分和粘蛋白，具有润滑和软化��物的作用。食物在口腔中咀嚼时，唾液与食物搅拌成湿润的团块便于吞咽。</p><ul><li>机械性清洗</li></ul><p>可以将存留于口腔内、牙表面的食物残渣、细菌等冲洗掉，起到临时漱口的作用。</p><ul><li>抗菌作用</li></ul><p>免疫球蛋白等抗菌物质，具有抑制细菌生长和阻止细菌附着的作用，因此可以减少龋病的发生。</p><ul><li>中和酸的作用</li></ul><p>唾液中的碳酸盐等其他物质具有中和牙菌斑中酸的作用。通过中和，菌斑内酸变成水和其他对牙齿无害的物质。当你的唾液中和酸的能力下降，牙釉质会被腐蚀脱矿，这也是龋病发生的开始。</p><p>唾液量减少不仅会影响口腔的正常生理功能，还会造成口腔粘膜和牙齿的病变。所以嘛，不要随意吐口水。这么厉害的东西，应该存起来用！</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<h3>📊 口腔健康标准与节日护牙</h3>'
+      +       '<div class="knowledge-card" id="academy-art-34"><h4>📖 320世界口腔健康日——健康口腔，身心健康</h4><p>今天不只是3月的第20天，也是世界口腔健康日。</p><p>口腔问题在2023年健康困扰中排名第七。国民的口腔健康已经成为了不可忽视的问题，97%的成年人存在不同程度的口腔问题，老年人的牙周健康率仅为9.3%。</p><p>数据来源：丁香医生</p><p>牙疼、牙敏感、牙龈出血……唯粉们是不是中招了？让我们对照一下WHO（世界卫生组织）制定的五大牙齿健康标准：牙齿清洁、无龋洞、无痛感、牙龈颜色正常、无出血现象。凡是有一条不符合，就说明牙齿不够健康哦。要知道，我国达到牙齿健康标准的人口不足1%。</p><p>口腔疾病的罪魁祸首</p><ul><li>牙菌斑</li></ul><p>口腔内不能被水去除的细菌性斑块，由多种细菌组成的生物膜（细菌复合体）就是牙菌斑。它是引起各种口腔疾病的最主要原因。</p><ul><li>牙结石</li></ul><p>我们平时去口腔诊所、医院洗牙，洗的就是牙结石。它是黏附在牙齿的牙菌斑及软垢（沉积形成的钙化物），是钙化的牙菌斑。</p><p>口腔卫生不良，导致细菌病变，就会引起各种口腔问题。所以我们要保持口腔卫生，控制菌斑，才能预防口腔问题。</p><ul><li>用含氟牙膏刷牙，进食后漱口、使用牙线等机械方法是去除牙菌斑、保持口腔卫生最简易的保健方法。</li><li>少吃甜食和饮用碳酸类饮料。建议多食用含纤维性的食物。推荐使用代糖，如山梨醇、木糖醇等，它们不易被菌斑中的产酸菌利用。</li></ul><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-35"><h4>📖 春节如何呵护牙齿健康？</h4><p>“每逢佳节胖三斤”，在你大快朵颐的时候，牙齿又忙又累。春节期间如何在一饱口福之时，呵护好我们的牙齿健康呢？</p><p>饭后如果做不到及时刷牙，通过漱口可清除食物残渣和部分松动的软垢，以及口腔内容易借助含漱力量而被清除的污物和异味。建议每天早晚用牙线清洁牙缝，保持良好的口腔卫生，以减少口腔疾病的发生。小贴士：漱口不能替代刷牙对菌斑的机械清除作用，只能作为刷牙之外的日常口腔护理辅助手段。</p><p>少吃碳水化合物类食物。它们极易黏附于牙面不易清洁，使牙脱矿发生龋病；少吃甜食和饮用碳酸类饮料。建议多食用含纤维性的食物。推荐使用代糖，如山梨醇、木糖醇等，它们不易被菌斑中的产酸菌利用；少吃过烫和重口味的食物，避免引起口腔溃疡；减少牙齿的应力疲劳，如不咬坚硬的食物。每一次的咀嚼都会对牙颈部产生力的作用，长期以往会出现应力疲劳，加剧楔状缺损的产生。</p><p>在节前最好进行一次口腔检查，除了做好日常的口腔护理，定期进行洗牙，保护牙齿健康。</p><p>养成良好的口腔习惯，才能”吃嘛嘛香”。祝大家新年快乐，过一个祥和的新年！</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-36"><h4>📖 迎接新年，从齿开始</h4><p>二零二四年转瞬即逝，在辞旧迎新的时刻，你或许在计划着学习、旅游、工作等其他新年愿望。但有一项，我们最容易忽视，那就是——口腔健康计划。</p><p>口腔健康不仅是每天刷牙这么简单，它远比我们想象的复杂，也关乎着我们的健康状态和生活质量。小唯制定的这一份《口腔健康计划》，大家一定要收藏转发。</p><p>不同人群——口腔问题自查</p><p>作为口腔最高发疾病之一，蛀牙几乎是每个人都要面临的痛苦。没有口腔护理意识，进食后不进行口腔清洁。时间长了，就会形成牙菌斑。久而久之牙釉质会被破坏，形成脆弱的小蛀斑，从而形成龋齿。小贴士：对青少年来说，养成良好的口腔卫生习惯是至关重要的。</p><p>儿童也是龋病的高发人群。发病早，患龋率高，7、8岁时达到高峰。儿童龋齿的预防在于家长的督促。培养他们每天刷牙的好习惯；少吃甜食，吃过后及时漱口刷牙，尤其是睡前。</p><p>老年人掉牙，主要是由牙周病导致的。它是由多种微生物引起的感染性疾病。通俗来说就是发生在牙龈等组织的炎症，包括牙龈炎和牙周炎。牙龈肿痛出血、口臭，甚至溃烂、牙齿松动，最后掉落。小贴士：牙龈炎和牙周炎二者的区别就在于牙槽骨是否被吸收。</p><p>拥有一口灿烂大白牙的微笑是每个人梦寐以求的，尤其是女性。想拥有一口亮白的牙齿，其实并不难。最简单省钱的方法就是使用美白牙膏加上刷牙。美白牙膏可以帮助恢复牙齿原本的色泽，避免进一步发黄。但不能改变牙齿固有的颜色。不能做到使用一次就有立竿见影的效果，需要坚持使用。</p><p>日常口腔保健——养成习惯</p><p>饭后如果做不到及时刷牙，通过漱口可清除食物残渣和部分松动的软垢，以及口腔内容易借助含漱力量而被清除的污物和异味。建议每天早晚用牙线清洁牙缝，保持良好的口腔卫生，以减少口腔疾病的发生。小贴士：漱口不能替代刷牙对菌斑的机械清除作用，只能作为刷牙之外的日常口腔护理辅助手段。</p><p>每逢节日，当然少不了美食，但要少吃碳水化合物类食物。它们极易黏附于牙面不易清洁，使牙脱矿发生龋病；少吃甜食和饮用碳酸类饮料。建议多食用含纤维性的食物。推荐使用代糖，如山梨醇、木糖醇等，它们不易被菌斑中的产酸菌利用；少吃过烫和重口味的食物，避免引起口腔溃疡；减少牙齿的应力疲劳，如不咬坚硬的食物。每一次的咀嚼都会对牙颈部产生力的作用，长此以往会出现应力疲劳，加剧楔状缺损的产生。</p><p>平时除了做好日常的口腔护理，还需要定期进行洗牙，保护牙齿健康。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-37"><h4>📖 五一特辑：劳动节，致敬我们的口腔</h4><p>五一小长假来啦～小唯在此致敬劳动者们！与此同时，也不要忘了感谢守护我们健康的口腔哦。Vmicro</p><p>作为口腔最高发疾病之一，蛀牙几乎是每个人都要面临的痛苦。没有口腔护理意识，进食后不进行口腔清洁。时间长了，就会形成牙菌斑。久而久之牙釉质会被破坏，形成脆弱的小蛀斑，从而形成龋齿。小贴士：对青少年来说，养成良好的口腔卫生习惯是至关重要的。儿童也是龋病的高发人群。发病早，患龋率高，7、8岁时达到高峰。儿童龋齿的预防在于家长的督促。培养他们每天刷牙的好习惯；少吃甜食，吃过后及时漱口刷牙，尤其是睡前。老年人掉牙，主要是由牙周病导致的。它是由多种微生物引起的感染性疾病。通俗来说就是发生在牙龈等组织的炎症，包括牙龈炎和牙周炎。牙龈肿痛出血、口臭，甚至溃烂、牙齿松动，最后掉落。小贴士：牙龈炎和牙周炎二者的区别就在于牙槽骨是否被吸收。拥有一口灿烂大白牙的微笑是每个人梦寐以求的，尤其是女性。想拥有一口亮白的牙齿，其实并不难。最简单省钱的方法就是使用美白牙膏加上刷牙。美白牙膏可以帮助恢复牙齿原本的色泽，避免进一步发黄。但不能改变牙齿固有的颜色。不能做到使用一次就有立竿见影的效果，需要坚持使用。Vmicro</p><p>饭后如果做不到及时刷牙，通过漱口可清除食物残渣和部分松动的软垢，以及口腔内容易借助含漱力量而被清除的污物和异味。建议每天早晚用牙线清洁牙缝，保持良好的口腔卫生，以减少口腔疾病的发生。小贴士：漱口不能替代刷牙对菌斑的机械清除作用，只能作为刷牙之外的日常口腔护理辅助手段。</p><p>每逢节日，当然少不了美食，但要少吃碳水化合物类食物。它们极易黏附于牙面不易清洁，使牙脱矿发生龋病；少吃甜食和饮用碳酸类饮料。建议多食用含纤维性的食物。推荐使用代糖，如山梨醇、木糖醇等，它们不易被菌斑中的产酸菌利用；少吃过烫和重口味的食物，避免引起口腔溃疡；减少牙齿的应力疲劳，如不咬坚硬的食物。每一次的咀嚼都会对牙颈部产生力的作用，长此以往会出现应力疲劳，加剧楔状缺损的产生。</p><p>平时除了做好日常的口腔护理，还需要定期进行洗牙，保护牙齿健康。</p><p>小唯成立最重要的目的就是给大家普及口腔保健的知识，希望友友们能认识到保护口腔的重要性，能坚持去做～参考资料：</p><p>李月.吕俊峰.口腔预防医学第3版/牙周病的预防</p><p>李月.吕俊峰.口腔预防医学第3版/自我口腔保健方法</p><p>李月.吕俊峰.口腔预防医学第3版/特定人群的口腔保健</p><p>吴效民.口腔常见疾病296个怎么办/什么样的牙齿易患龋齿</p></div>'
+      +       '<div class="knowledge-card" id="academy-art-38"><h4>📖 健康口腔，粽享美味</h4><p>端午到，粽飘香。小唯祝愿各位端午安康！</p><p>蛋黄肉馅、板栗鲜肉馅、豆沙馅……爱吃粽子的小伙伴简直要幸福地起飞了。粽子虽然好吃，但尤其是存在口腔问题的朋友们，可不要贪嘴哦。</p><p>儿童是龋病的高发人群。粽子是高碳高糖食物，极易黏附于牙面不易清洁，特别是塞在牙缝里。这就为细菌产酸，使得牙脱矿发生龋病。儿童应适量食用，家长要督促他们食用后务必漱口刷牙。</p><p>牙缺失、戴义齿的中老年人</p><p>牙齿缺失多见于中老年人，极易发生掉牙的情况。粽子的黏性会使假牙脱落（脑补下此画面）。另外，牙齿不健全、咀嚼功能减退，会影响食物的消化。</p><p>美牙后最好不要吃。甜粽子中含有豆沙等有色食物，而且很容易黏在牙面，会影响美白效果。</p><p>如果没有刷牙条件，可以通过漱口借助含漱力量清除食物残渣和异味。Tips：漱口不能替代刷牙对菌斑的机械清除作用，只能作为刷牙之外的日常口腔护理辅助手段。</p><p>建议每天使用一次牙线，能更好地清洁牙间隙，有效清除牙菌斑。</p><p>除了做好日常的口腔护理，还应定期进行口腔健康检查，至少一年一次。以便及时发现口腔问题，及时处理。</p></div>'
+      +       '</div>'
+      +       '<div class="knowledge-section">'
+      +       '<div class="knowledge-card" style="text-align:center;">'
+      +       '<p style="color:#888;font-size:13px;">以上内容来源于“小唯医学工程”微信公众号小课堂文章</p>'
+      +       '<p style="color:#888;font-size:13px;">关注微信公众号获取更多口腔健康知识</p>'
+      +       '<p style="color:#1abc9c;font-size:14px;margin-top:8px;">口腔护理 信赖小唯</p>'
+      +       '</div>'
+      +       '</div>'
+      +       '</div>';
       +     '</div>'
       +   '</div>'
-
-      +   '<div class="knowledge-section">'
-      +     '<h3>🦷 常见口腔问题与预防</h3>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>龋齿（蛀牙）</h4>'
-      +       '<p>龋齿是由细菌分解食物中的糖分产生酸，腐蚀牙齿硬组织所引起的疾病。</p>'
-      +       '<p><strong>预防措施：</strong></p>'
-      +       '<ul>'
-      +         '<li>坚持每天刷牙两次，使用含氟牙膏</li>'
-      +         '<li>减少高糖食物和碳酸饮料的摄入</li>'
-      +         '<li>使用牙线清洁牙缝中的食物残渣</li>'
-      +         '<li>定期进行口腔检查（每半年一次）</li>'
-      +         '<li>窝沟封闭可有效预防儿童恒磨牙龋齿</li>'
-      +       '</ul>'
-      +     '</div>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>牙周病</h4>'
-      +       '<p>牙周病是牙龈和牙周组织的慢性炎症，早期表现为牙龈出血，晚期可导致牙齿松动脱落。</p>'
-      +       '<p><strong>预防措施：</strong></p>'
-      +       '<ul>'
-      +         '<li>保持良好的口腔卫生习惯</li>'
-      +         '<li>定期洗牙（每年1-2次），清除牙结石</li>'
-      +         '<li>戒烟限酒，减少牙周刺激因素</li>'
-      +         '<li>出现牙龈出血、口臭等症状及时就医</li>'
-      +       '</ul>'
-      +     '</div>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>牙齿敏感</h4>'
-      +       '<p>牙齿敏感是指在遇到冷、热、酸、甜等刺激时出现短暂酸痛感，多因牙釉质磨损或牙龈退缩导致。</p>'
-      +       '<p><strong>预防措施：</strong></p>'
-      +       '<ul>'
-      +         '<li>使用抗敏感牙膏</li>'
-      +         '<li>避免过度用力刷牙</li>'
-      +         '<li>减少酸性食物摄入</li>'
-      +         '<li>夜磨牙患者应佩戴咬合垫</li>'
-      +       '</ul>'
-      +     '</div>'
-      +   '</div>'
-
-      +   '<div class="knowledge-section">'
-      +     '<h3>🧒 儿童口腔护理</h3>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>各年龄段护理重点</h4>'
-      +       '<table class="knowledge-table">'
-      +         '<tr><th>年龄段</th><th>护理重点</th></tr>'
-      +         '<tr><td>0-1岁</td><td>用纱布或硅胶指套清洁口腔，避免含奶瓶入睡</td></tr>'
-      +         '<tr><td>1-3岁</td><td>开始使用儿童牙刷，家长协助刷牙，使用米粒大小含氟牙膏</td></tr>'
-      +         '<tr><td>3-6岁</td><td>培养自主刷牙习惯，家长监督，使用豌豆大小含氟牙膏</td></tr>'
-      +         '<tr><td>6岁以上</td><td>独立刷牙，学习使用牙线，定期口腔检查和窝沟封闭</td></tr>'
-      +       '</table>'
-      +     '</div>'
-      +   '</div>'
-
-      +   '<div class="knowledge-section">'
-      +     '<h3>❓ 常见问题解答</h3>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>Q：洗牙会损伤牙齿吗？</h4>'
-      +       '<p>正规的洗牙操作不会损伤牙齿。洗牙是通过超声波振动清除牙结石和菌斑，对牙釉质没有损害。洗牙后可能出现短暂敏感，属正常现象。</p>'
-      +     '</div>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>Q：牙线和冲牙器哪个更好？</h4>'
-      +       '<p>牙线能清洁牙缝中的菌斑，是日常护理的必备工具。冲牙器（水牙线）适合佩戴牙套、牙桥的人群，可作为辅助工具使用，但不能替代牙线。</p>'
-      +     '</div>'
-      +     '<div class="knowledge-card">'
-      +       '<h4>Q：漱口水可以替代刷牙吗？</h4>'
-      +       '<p>漱口水不能替代刷牙。刷牙通过机械摩擦清除菌斑，是口腔清洁的核心。漱口水可作为辅助手段，帮助减少细菌和清新口气。</p>'
-      +     '</div>'
-      +   '</div>'
-
       + '</div>';
   } else if (type === 'implant') {
     html = ''
@@ -735,7 +941,7 @@ function showKnowledgePage(type) {
 
       +   '<div class="knowledge-section">'
       +     '<h3>📋 什么是种植牙？</h3>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-43">'
       +       '<p>种植牙是一种替代缺失牙齿的现代修复方式，被誉为"人类的第三副牙齿"。它由三部分组成：</p>'
       +       '<div class="implant-parts">'
       +         '<div class="implant-part">'
@@ -759,7 +965,7 @@ function showKnowledgePage(type) {
 
       +   '<div class="knowledge-section">'
       +     '<h3>✨ 种植牙的优势</h3>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-44">'
       +       '<div class="implant-advantages">'
       +         '<div class="advantage-item">'
       +           '<div class="advantage-icon">😊</div>'
@@ -791,7 +997,7 @@ function showKnowledgePage(type) {
 
       +   '<div class="knowledge-section">'
       +     '<h3>📋 种植牙流程</h3>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-45">'
       +       '<div class="implant-steps">'
       +         '<div class="implant-step">'
       +           '<div class="step-num">1</div>'
@@ -834,7 +1040,7 @@ function showKnowledgePage(type) {
 
       +   '<div class="knowledge-section">'
       +     '<h3>💰 费用参考</h3>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-46">'
       +       '<table class="knowledge-table">'
       +         '<tr><th>项目</th><th>价格区间</th><th>说明</th></tr>'
       +         '<tr><td>国产种植体</td><td>2,980 - 5,000元/颗</td><td>性价比高，适合预算有限人群</td></tr>'
@@ -848,7 +1054,7 @@ function showKnowledgePage(type) {
 
       +   '<div class="knowledge-section">'
       +     '<h3>📝 术前注意事项</h3>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-47">'
       +       '<ul>'
       +         '<li><strong>全身健康评估：</strong>高血压、糖尿病患者需将指标控制在稳定范围后方可手术</li>'
       +         '<li><strong>术前检查：</strong>需完成血常规、凝血功能、CBCT等检查</li>'
@@ -862,7 +1068,7 @@ function showKnowledgePage(type) {
 
       +   '<div class="knowledge-section">'
       +     '<h3>🔧 术后护理指南</h3>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-48">'
       +       '<h4>术后24小时内</h4>'
       +       '<ul>'
       +         '<li>咬住纱布30-40分钟，帮助止血</li>'
@@ -890,19 +1096,19 @@ function showKnowledgePage(type) {
 
       +   '<div class="knowledge-section">'
       +     '<h3>❓ 种植牙常见问题</h3>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-49">'
       +       '<h4>Q：种植牙疼吗？</h4>'
       +       '<p>种植手术在局部麻醉下进行，术中无疼痛感。术后可能有轻微肿痛，一般2-3天即可缓解，服用止痛药可有效控制。</p>'
       +     '</div>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-50">'
       +       '<h4>Q：种植牙能用多久？</h4>'
       +       '<p>种植牙的使用寿命与个人维护密切相关。良好的口腔卫生和定期复查可使种植牙使用15-30年甚至终身。临床数据显示，种植牙10年存活率在95%以上。</p>'
       +     '</div>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-51">'
       +       '<h4>Q：所有人都适合种植牙吗？</h4>'
       +       '<p>大多数缺牙患者都可以进行种植修复，但以下情况需谨慎评估：严重牙周病未控制者、糖尿病血糖未控制者、长期服用双膦酸盐类药物者、接受过头颈部放疗者。建议到专业口腔机构进行详细评估。</p>'
       +     '</div>'
-      +     '<div class="knowledge-card">'
+      +     '<div class="knowledge-card" id="academy-art-52">'
       +       '<h4>Q：种植牙和烤瓷牙哪个好？</h4>'
       +       '<p>烤瓷牙需要磨损两侧健康邻牙作为支撑，而种植牙是独立植入，不损伤邻牙。从长远来看，种植牙对口腔整体健康更有利。具体选择需根据个人情况由专业医生评估。</p>'
       +     '</div>'
@@ -920,6 +1126,28 @@ function showKnowledgePage(type) {
 function closeKnowledgePage() {
   document.getElementById('knowledgePage').classList.remove('show');
   document.body.style.overflow = '';
+}
+
+
+function toggleAcademyToc() {
+  var sidebar = document.getElementById('academyTocSidebar');
+  if (sidebar) {
+    sidebar.classList.toggle('show');
+  }
+}
+
+function scrollToAcademyArticle(id) {
+  var el = document.getElementById(id);
+  if (el) {
+    var container = document.getElementById('academyContent');
+    if (container) {
+      container.scrollTo({ top: el.offsetTop - 16, behavior: 'smooth' });
+    }
+    if (window.innerWidth <= 900) {
+      var sidebar = document.getElementById('academyTocSidebar');
+      if (sidebar) sidebar.classList.remove('show');
+    }
+  }
 }
 
 // 生成商品描述
@@ -1033,15 +1261,40 @@ function removeFromCart(id) {
   openCart();
 }
 
-// 结算 - 此时才要求登录
+// 结算 - 未登录则要求登录
 function checkoutCart() {
   if (shopCart.length === 0) {
     showCartToast('购物车是空的');
     return;
   }
-  pendingAction = { type: 'checkout' };
-  closeCart();
-  openLoginModal();
+  // 检查是否已登录
+  var isLoggedIn = (typeof currentUser !== 'undefined' && currentUser) ||
+                   localStorage.getItem('xiaowei_account');
+  if (isLoggedIn) {
+    // 已登录，直接提交订单
+    var total = shopCart.reduce(function(s, x) { return s + x.price * x.qty; }, 0);
+    var itemList = shopCart.map(function(x) { return x.name + ' x' + x.qty; }).join('\n');
+    closeCart();
+    // 显示订单确认
+    var overlay = document.getElementById('cartPage');
+    var body = document.getElementById('cartBody');
+    body.innerHTML = '<div class="cart-confirm">' +
+      '<div class="cart-confirm-icon">✅</div>' +
+      '<h3>订单提交成功</h3>' +
+      '<div class="cart-confirm-items">' + itemList.replace(/\n/g, '<br>') + '</div>' +
+      '<div class="cart-confirm-total">合计：¥' + total.toFixed(2) + '</div>' +
+      '<p class="cart-confirm-tip">我们会在24小时内联系您确认订单详情</p>' +
+      '<button class="cart-confirm-btn" onclick="closeCart();shopCart=[];updateCartBadge();">完成</button>' +
+      '</div>';
+    overlay.classList.add('show');
+    shopCart = [];
+    updateCartBadge();
+  } else {
+    // 未登录，弹出登录
+    pendingAction = { type: 'checkout' };
+    closeCart();
+    openLoginModal();
+  }
 }
 
 // 点击入口链接
@@ -1068,12 +1321,20 @@ function startBanner() {
 
 // 登录弹窗
 function openLoginModal() {
-  // 关闭可能遮挡的详情页和购物车页
   closeProductDetail();
   closeCart();
-  document.getElementById('loginModal').classList.add('show');
-  document.getElementById('modalAccount').focus();
-  refreshModalCaptcha();
+  // 滚动到banner登录面板
+  var panel = document.getElementById('bannerLoginPanel');
+  if (panel) {
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(function() {
+      var form = document.getElementById('bannerLoginForm');
+      if (form && form.style.display !== 'none') {
+        document.getElementById('bannerLoginAccount').focus();
+      }
+      refreshBannerCaptcha();
+    }, 500);
+  }
 }
 function closeLoginModal() {
   document.getElementById('loginModal').classList.remove('show');
@@ -1131,13 +1392,43 @@ function doModalLogin() {
   }
 
   errorEl.style.display = 'none';
+  closeLoginModal();
 
-  // 登录成功 - 直接调用loginUser，跳过API请求（已本地验证）
+  // 保存登录状态
+  localStorage.setItem('xiaowei_account', account);
+  localStorage.setItem('xiaowei_password', password);
+  if (typeof currentUser !== 'undefined') {
+    currentUser = user;
+  }
+  // 更新顶部用户信息
+  var userMenu = document.getElementById('userMenu');
+  if (userMenu) {
+    userMenu.style.display = 'inline-flex';
+    var avatarEl = userMenu.querySelector('.user-avatar');
+    if (avatarEl) avatarEl.textContent = user.avatar || user.name.charAt(0);
+    var nameEl = userMenu.querySelector('.user-name');
+    if (nameEl) nameEl.textContent = user.name;
+  }
+  // 隐藏登录/注册按钮
+  var loginBtn = document.querySelector('.shop-login-btn');
+  if (loginBtn) loginBtn.style.display = 'none';
+
+  // 如果是结算操作，留在商城页面
+  if (pendingAction && pendingAction.type === 'checkout') {
+    pendingAction = null;
+    // 确保商城首页可见
+    document.getElementById('shopHome').style.display = 'block';
+    // 重新打开购物车，让用户确认订单
+    setTimeout(function() {
+      openCart();
+    }, 300);
+    showCartToast('登录成功，请点击结算');
+    return;
+  }
+
+  // 其他情况：进入后台管理系统
   if (typeof loginUser === 'function') {
-    localStorage.setItem('xiaowei_account', account);
     document.getElementById('shopHome').style.display = 'none';
-    closeLoginModal();
-    // 直接调用loginUser，不走doLogin的API流程，避免白屏等待
     loginUser(user, account);
 
     // 如果有挂起的操作，执行
@@ -1150,18 +1441,11 @@ function doModalLogin() {
           if (typeof switchPort === 'function') {
             switchPort(action.entry);
           }
-        } else if (action.type === 'checkout') {
-          // 结算成功
-          var total = shopCart.reduce(function(s, x) { return s + x.price * x.qty; }, 0);
-          showCartToast('订单已提交！合计¥' + total.toFixed(2));
-          shopCart = [];
-          updateCartBadge();
         }
       }, 500);
     }
   } else {
     // 降级：直接进入
-    closeLoginModal();
     alert('登录成功！欢迎' + user.name);
   }
 }
@@ -1192,12 +1476,42 @@ function scrollToTop() {
 function initShopHome() {
   renderProducts();
   startBanner();
-  // 检查是否已登录
+  // 检查是否已登录（必须验证密码），更新banner面板状态
   var savedAccount = localStorage.getItem('xiaowei_account');
-  if (savedAccount && typeof currentUser !== 'undefined' && currentUser) {
-    // 已登录，显示管理系统
-    document.getElementById('shopHome').style.display = 'none';
+  var savedPassword = localStorage.getItem('xiaowei_password');
+  if (savedAccount && savedPassword && typeof ACCOUNTS !== 'undefined' && ACCOUNTS[savedAccount]) {
+    var user = ACCOUNTS[savedAccount];
+    if (user.password === savedPassword) {
+      if (typeof currentUser !== 'undefined') currentUser = user;
+      // 显示已登录面板
+      var formEl = document.getElementById('bannerLoginForm');
+      var panelEl = document.getElementById('bannerUserPanel');
+      if (formEl) formEl.style.display = 'none';
+      if (panelEl) {
+        panelEl.style.display = 'flex';
+        var avatarEl = document.getElementById('bannerUserAvatar');
+        var nameEl = document.getElementById('bannerUserName');
+        if (avatarEl) avatarEl.textContent = user.avatar || user.name.charAt(0);
+        if (nameEl) nameEl.textContent = user.name;
+      }
+      // 更新顶部
+      var loginBtn = document.querySelector('.shop-login-btn');
+      if (loginBtn) loginBtn.style.display = 'none';
+      var userMenu = document.getElementById('userMenu');
+      if (userMenu) {
+        userMenu.style.display = 'inline-flex';
+        var ua = userMenu.querySelector('.user-avatar');
+        var un = userMenu.querySelector('.user-name');
+        if (ua) ua.textContent = user.avatar || user.name.charAt(0);
+        if (un) un.textContent = user.name;
+      }
+    } else {
+      // 密码不匹配，清除
+      localStorage.removeItem('xiaowei_account');
+      localStorage.removeItem('xiaowei_password');
+    }
   }
+  refreshBannerCaptcha();
 }
 
 // DOM加载完成后初始化
@@ -1213,7 +1527,7 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=7"></script>
+<script src="js/app.js?v=8"></script>
 <script src="js/pages.js?v=5"></script>
 <script>
   // 页面加载时初始化数据库
@@ -1236,8 +1550,17 @@ if (document.readyState === 'loading') {
     // 确保显示商城首页
     document.getElementById('shopHome').style.display = 'block';
     document.getElementById('loginPage').style.display = 'none';
-    // 清除保存的账号
+    // 清除保存的账号和密码
     localStorage.removeItem('xiaowei_account');
+    localStorage.removeItem('xiaowei_password');
+    // 恢复banner登录面板
+    document.getElementById('bannerLoginForm').style.display = 'block';
+    document.getElementById('bannerUserPanel').style.display = 'none';
+    // 恢复顶部登录按钮
+    var loginBtn = document.querySelector('.shop-login-btn');
+    if (loginBtn) loginBtn.style.display = 'inline-block';
+    var userMenu = document.getElementById('userMenu');
+    if (userMenu) userMenu.style.display = 'none';
   }
 
   // 覆盖 showRegister：从商城首页跳转到注册页

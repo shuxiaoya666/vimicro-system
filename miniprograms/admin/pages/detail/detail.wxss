@@ -1,0 +1,11 @@
+.detail-page { min-height: 100vh; padding-bottom: 120rpx; }
+.loading { text-align: center; padding: 80rpx; color: #999; }
+.detail-header { display: flex; align-items: center; justify-content: space-between; }
+.detail-title { font-size: 36rpx; font-weight: 700; }
+.info-row { display: flex; align-items: center; padding: 20rpx 0; border-bottom: 1rpx solid #f0f0f0; }
+.info-row:last-child { border-bottom: none; }
+.info-label { width: 200rpx; font-size: 26rpx; color: #999; flex-shrink: 0; }
+.info-value { flex: 1; font-size: 28rpx; color: #333; }
+.info-input { flex: 1; height: 64rpx; border: 2rpx solid #e0e0e0; border-radius: 8rpx; padding: 0 16rpx; font-size: 26rpx; }
+.detail-actions { display: flex; gap: 16rpx; padding: 24rpx; }
+.detail-actions .btn { flex: 1; }

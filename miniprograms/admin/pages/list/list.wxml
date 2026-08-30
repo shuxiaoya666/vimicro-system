@@ -1,0 +1,81 @@
+<view class="list-page">
+  <view class="list-sidebar">
+    <view class="sidebar-port" bindtap="goPort">
+      <text class="sidebar-port-icon">{{portColor === '#1abc9c' ? '🏠' : portColor === '#3498db' ? '🏥' : portColor === '#f39c12' ? '👤' : portColor === '#8e44ad' ? '💊' : '🏭'}}</text>
+      <text class="sidebar-port-name">{{portName}}</text>
+      <text class="sidebar-switch">切换›</text>
+    </view>
+    <scroll-view scroll-y class="sidebar-menu">
+      <view class="menu-group" wx:for="{{menuGroups}}" wx:for-item="group" wx:key="title">
+        <view class="menu-group-title">{{group.title}}</view>
+        <view class="menu-item {{activeMenu === item.key ? 'active' : ''}}" wx:for="{{group.items}}" wx:for-item="item" wx:key="key" data-key="{{item.key}}" data-entity="{{item.entity}}" data-special="{{item.special}}" bindtap="selectMenu">
+          <text class="menu-icon">{{item.icon}}</text>
+          <text class="menu-name">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="list-main">
+    <view class="list-header">
+      <text class="list-title">{{activeName}}</text>
+      <view class="list-add" bindtap="showAdd">+ 新增</view>
+    </view>
+
+    <view class="list-filters">
+      <input class="search-input" placeholder="搜索..." value="{{keyword}}" bindinput="onSearch" />
+      <picker class="status-picker" range="{{statusOptions}}" bindchange="onStatusChange">
+        <view class="picker-label">{{statusFilter || '全部状态'}} ▾</view>
+      </picker>
+    </view>
+
+    <view class="list-count">共 {{filteredList.length}} 条记录</view>
+
+    <scroll-view scroll-y class="list-scroll">
+      <view class="data-card" wx:for="{{filteredList}}" wx:key="id">
+        <view class="data-main">
+          <view class="data-title">{{item.name || item.cardNo || item.orderNo || item.title || ('#' + item.id)}}</view>
+          <view class="data-sub" wx:if="{{item.owner || item.manager}}">负责人：{{item.owner || item.manager}}</view>
+          <view class="data-sub" wx:if="{{item.phone}}">电话：{{item.phone}}</view>
+          <view class="data-sub" wx:if="{{item.region}}">地区：{{item.region}}</view>
+          <view class="data-sub" wx:if="{{item.patient}}">患者：{{item.patient}}</view>
+          <view class="data-sub" wx:if="{{item.clinic}}">诊所：{{item.clinic}}</view>
+          <view class="data-sub" wx:if="{{item.implantType}}">型号：{{item.implantType}}</view>
+          <view class="data-sub" wx:if="{{item.price}}">价格：{{item.price}} 积分</view>
+          <view class="data-sub" wx:if="{{item.stock !== undefined}}">库存：{{item.stock}}</view>
+          <view class="data-sub" wx:if="{{item.commission}}">佣金：¥{{item.commission}}</view>
+        </view>
+        <view class="data-side">
+          <view class="tag tag-{{item.status || 'active'}}">{{item.status || 'active'}}</view>
+          <view class="data-actions">
+            <text class="action-edit" data-id="{{item.id}}" bindtap="showEdit">编辑</text>
+            <text class="action-del" data-id="{{item.id}}" bindtap="deleteItem">删除</text>
+          </view>
+        </view>
+      </view>
+      <view class="empty" wx:if="{{filteredList.length === 0}}">暂无数据</view>
+    </scroll-view>
+  </view>
+
+  <view class="form-mask" wx:if="{{showForm}}" bindtap="closeForm"></view>
+  <view class="form-drawer" wx:if="{{showForm}}">
+    <view class="form-header">
+      <text class="form-title">{{formTitle}}</text>
+      <text class="form-close" bindtap="closeForm">✕</text>
+    </view>
+    <scroll-view scroll-y class="form-body">
+      <view class="form-field" wx:for="{{formFields}}" wx:key="name">
+        <text class="field-label">{{item.label}}{{item.required ? ' *' : ''}}</text>
+        <input class="input" wx:if="{{item.type === 'text' || item.type === 'phone' || item.type === 'number'}}" type="{{item.type === 'number' ? 'number' : 'text'}}" data-field="{{item.name}}" value="{{formData[item.name]}}" bindinput="onFormInput" placeholder="请输入{{item.label}}" />
+        <textarea class="textarea" wx:if="{{item.type === 'textarea'}}" data-field="{{item.name}}" value="{{formData[item.name]}}" bindinput="onFormInput" placeholder="请输入{{item.label}}"></textarea>
+        <picker wx:if="{{item.type === 'select'}}" range="{{item.options}}" data-field="{{item.name}}" bindchange="onFormInput">
+          <view class="picker-display">{{formData[item.name] || '请选择'}}</view>
+        </picker>
+      </view>
+    </scroll-view>
+    <view class="form-footer">
+      <button class="btn btn-outline" bindtap="closeForm">取消</button>
+      <button class="btn btn-primary" bindtap="submitForm">保存</button>
+    </view>
+  </view>
+</view>

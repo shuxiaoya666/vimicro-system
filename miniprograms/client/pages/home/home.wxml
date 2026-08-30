@@ -1,0 +1,60 @@
+<view class="home-page">
+  <view class="header-banner">
+    <view class="header-top">
+      <view>
+        <view class="user-greeting">你好，{{userInfo.name}}</view>
+        <view class="user-role">小唯尊享客户</view>
+      </view>
+      <view class="user-avatar">{{userInfo.avatar}}</view>
+    </view>
+    <view class="header-stats">
+      <view class="header-stat">
+        <text class="header-stat-value">{{points}}</text>
+        <text class="header-stat-label">积分</text>
+      </view>
+      <view class="header-stat">
+        <text class="header-stat-value">{{orders.length}}</text>
+        <text class="header-stat-label">订单</text>
+      </view>
+      <view class="header-stat">
+        <text class="header-stat-value">{{cards.length}}</text>
+        <text class="header-stat-label">实体卡</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="plant-card" bindtap="goPlant">
+    <view class="plant-left">
+      <text class="plant-icon">🦷</text>
+      <view>
+        <view class="plant-title">我要种植</view>
+        <view class="plant-desc">一站式种植服务，从选诊所到手术全程跟踪</view>
+      </view>
+    </view>
+    <text class="plant-arrow">→</text>
+  </view>
+
+  <view class="section-title">快捷功能</view>
+  <view class="quick-grid">
+    <view class="quick-item" wx:for="{{quickActions}}" wx:key="name" bindtap="goPage" data-page="{{item.page}}">
+      <view class="quick-icon" style="background: {{item.color}}1a;">{{item.icon}}</view>
+      <text class="quick-name">{{item.name}}</text>
+    </view>
+  </view>
+
+  <view class="section-title">最近订单</view>
+  <view class="card" wx:if="{{orders.length > 0}}">
+    <view class="order-item" wx:for="{{orders}}" wx:key="id">
+      <view class="order-header">
+        <text class="order-no">{{item.no}}</text>
+        <text class="tag tag-{{item.status}}">{{item.status === 'active' ? '已完成' : '进行中'}}</text>
+      </view>
+      <view class="order-desc">{{item.item}}</view>
+      <view class="order-footer">
+        <text class="order-amount">¥{{item.amount}}</text>
+        <text class="order-date">{{item.createdAt}}</text>
+      </view>
+    </view>
+  </view>
+  <view class="empty" wx:else>暂无订单记录</view>
+</view>
