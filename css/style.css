@@ -1287,6 +1287,7 @@ body {
   align-items: center;
 }
 .shop-cart-btn {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -2043,8 +2044,8 @@ body {
 .cart-toast.show { opacity: 1; }
 .cart-badge {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: -8px;
+  right: -8px;
   background: #ff4400;
   color: #fff;
   font-size: 11px;
@@ -2056,6 +2057,11 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0 4px;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(255,68,0,0.4);
+}
+.cart-badge.show {
+  display: flex;
 }
 
 /* ===== Product Grid ===== */

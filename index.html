@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=39">
+<link rel="stylesheet" href="css/style.css?v=40">
 </head>
 <body>
 
@@ -46,7 +46,7 @@
         <button onclick="searchProducts()">🔍 搜索</button>
       </div>
       <div class="shop-nav-right">
-        <button class="shop-cart-btn" onclick="openCart()">🛒 购物车<span id="cartBadge" class="cart-badge" style="display:none">0</span></button>
+        <button class="shop-cart-btn" onclick="openCart()">🛒 购物车<span id="cartBadge" class="cart-badge">0</span></button>
         <button class="shop-login-btn" onclick="openLoginModal()">登录 / 注册</button>
       </div>
     </div>
@@ -1191,9 +1191,9 @@ function updateCartBadge() {
   var badge = document.getElementById('cartBadge');
   if (total > 0) {
     badge.textContent = total;
-    badge.style.display = 'inline-block';
+    badge.classList.add('show');
   } else {
-    badge.style.display = 'none';
+    badge.classList.remove('show');
   }
 }
 
