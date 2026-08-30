@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=38">
+<link rel="stylesheet" href="css/style.css?v=39">
 </head>
 <body>
 
@@ -750,8 +750,8 @@ function showProductDetail(id) {
       '</div>' +
     '</div>' +
     '<div class="detail-footer">' +
-      '<button class="detail-cart-btn" onclick="addToCart(' + p.id + ')">加入购物车</button>' +
-      '<button class="detail-buy-btn" onclick="addToCart(' + p.id + ');openCart();">立即购买</button>' +
+      '<button class="detail-cart-btn" onclick="addToCart(' + p.id + ');closeProductDetail();openCart();">加入购物车</button>' +
+      '<button class="detail-buy-btn" onclick="addToCart(' + p.id + ');closeProductDetail();openCart();">立即购买</button>' +
     '</div>';
   detail.classList.add('show');
   document.body.style.overflow = 'hidden';
