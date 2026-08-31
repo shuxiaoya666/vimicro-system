@@ -565,10 +565,20 @@ var DEALER_WITHDRAW = Object.assign({}, CLINIC_WITHDRAW, {
   breadcrumb: '首页 / 收益'
 });
 
-// ---- 药店端：种植卡管理 ----
+// ---- 药店端：种植卡库存（只读，仅显示剩余卡和激活状态） ----
 var PHARMACY_CARDS = Object.assign({}, PLATFORM_CARDS, {
   breadcrumb: '首页 / 商品',
-  addLabel: '新增种植卡'
+  title: '种植卡库存',
+  addLabel: '',
+  creatable: false,
+  editable: false,
+  deletable: false,
+  columns: [
+    { field: 'cardNo', label: '卡号' },
+    { field: 'implantType', label: '植体型号' },
+    { field: 'issueDate', label: '发卡日期' },
+    { field: 'status', label: '激活状态', type: 'status' }
+  ]
 });
 
 // ---- 药店端：库存查看 ----
@@ -1037,13 +1047,12 @@ var SIDEBAR_MENUS = {
       { key: 'home', icon: '🏠', name: '首页' }
     ]},
     { title: '商品', items: [
-      { key: 'cards', icon: '💳', name: '种植卡管理' },
-      { key: 'inventory', icon: '📦', name: '库存查看' },
+      { key: 'cards', icon: '💳', name: '种植卡库存' },
       { key: 'purchase', icon: '🛒', name: '采购管理' }
     ]},
     { title: '财务', items: [
-      { key: 'finance', icon: '💰', name: '财务收支' },
-      { key: 'mall', icon: '🏦', name: '提现/商城' }
+      { key: 'withdraw', icon: '💸', name: '提现' },
+      { key: 'mall', icon: '🛍️', name: '商城' }
     ]},
     { title: '客户', items: [
       { key: 'customers', icon: '👤', name: '客户管理' }
@@ -1831,35 +1840,56 @@ _homeStats([
 
     home: function() {
       var cards = DB.getAll('cards');
-      var products = DB.getAll('products');
-      var transactions = DB.getAll('transactions');
-      var income = transactions.filter(function(t){return t.direction==='收入';}).reduce(function(s,t){return s+(t.amount||0);},0);
+      var remainingCards = cards.filter(function(c){ return c.status !== 'inactive'; });
       return `
 <div class="breadcrumb">首页 / <span>概览</span></div>` +
 _homeStats([
-  { label:'种植卡销量', value: cards.length, icon:'💳', color:'green', change:'↑ 8.3%' },
-  { label:'商品总数', value: products.length, icon:'🛒', color:'blue' },
-  { label:'本月收入', value:'¥' + income.toLocaleString(), icon:'💰', color:'orange', change:'↑ 12.6%' },
+  { label:'剩余种植卡', value: remainingCards.length, icon:'💳', color:'green', change:'↑ 8.3%' },
+  { label:'已激活', value: cards.filter(function(c){return c.status==='active';}).length, icon:'✅', color:'blue' },
+  { label:'待核销', value: cards.filter(function(c){return c.status==='processing';}).length, icon:'⏳', color:'orange' },
   { label:'待提现', value:'¥56,200', icon:'💳', color:'red', change:'1 笔待审' }
 ]) + `
 <div class="quick-grid">
-  <div class="quick-item" onclick="navigateTo('cards')"><div class="icon green">💳</div><div class="name">种植卡管理</div><div class="desc">${cards.length} 张</div></div>
-  <div class="quick-item" onclick="navigateTo('inventory')"><div class="icon blue">📦</div><div class="name">库存查看</div><div class="desc">实时库存</div></div>
+  <div class="quick-item" onclick="navigateTo('cards')"><div class="icon green">💳</div><div class="name">种植卡库存</div><div class="desc">${remainingCards.length} 张</div></div>
   <div class="quick-item" onclick="navigateTo('purchase')"><div class="icon orange">🛒</div><div class="name">采购管理</div><div class="desc">下单采购</div></div>
-  <div class="quick-item" onclick="navigateTo('finance')"><div class="icon teal">💰</div><div class="name">财务收支</div><div class="desc">收支明细</div></div>
+  <div class="quick-item" onclick="navigateTo('withdraw')"><div class="icon red">💸</div><div class="name">提现</div><div class="desc">¥56,200</div></div>
+  <div class="quick-item" onclick="navigateTo('mall')"><div class="icon teal">🛍️</div><div class="name">商城</div><div class="desc">商品浏览</div></div>
 </div>`;
     },
 
-    cards: function() { return CRUD.builder('pharmacy_cards', PHARMACY_CARDS); },
-    inventory: function() { return CRUD.builder('pharmacy_inventory', PHARMACY_INVENTORY); },
-    purchase: function() { return CRUD.builder('pharmacy_purchase', PHARMACY_PURCHASE); },
-    finance: function() { return CRUD.builder('pharmacy_finance', PHARMACY_FINANCE); },
-
-    mall: function() {
+    cards: function() {
+      var allCards = DB.getAll('cards');
+      var cards = allCards.filter(function(c){ return c.status !== 'inactive'; });
+      var statusMap = {};
+      STATUS_OPTS_CARD.forEach(function(o){ statusMap[o.value] = o.label; });
+      var rows = cards.map(function(c) {
+        return '<tr>' +
+          '<td>' + CRUD._esc(c.cardNo || '') + '</td>' +
+          '<td>' + CRUD._esc(c.implantType || '') + '</td>' +
+          '<td>' + CRUD._esc(c.issueDate || '') + '</td>' +
+          '<td><span class="status-tag ' + (c.status || '') + '">' + (statusMap[c.status] || c.status || '') + '</span></td>' +
+        '</tr>';
+      }).join('');
       return `
-<div class="breadcrumb">首页 / 财务 / <span>提现/商城</span></div>
+<div class="breadcrumb">首页 / 商品 / <span>种植卡库存</span></div>
 <div class="card">
-  <div class="card-header"><span class="card-title">提现申请</span><button class="btn btn-primary btn-sm" onclick="navigateTo('cards')">去管理种植卡</button></div>
+  <div class="card-header"><span class="card-title">种植卡库存（剩余 ${cards.length} 张）</span></div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead><tr><th>卡号</th><th>植体型号</th><th>发卡日期</th><th>激活状态</th></tr></thead>
+      <tbody>${rows || '<tr><td colspan="4" style="text-align:center;color:#999;padding:40px;">暂无库存</td></tr>'}</tbody>
+    </table>
+  </div>
+</div>`;
+    },
+
+    purchase: function() { return CRUD.builder('pharmacy_purchase', PHARMACY_PURCHASE); },
+
+    withdraw: function() {
+      return `
+<div class="breadcrumb">首页 / 财务 / <span>提现</span></div>
+<div class="card">
+  <div class="card-header"><span class="card-title">提现申请</span></div>
   <div style="padding:20px;max-width:500px;">
     <div class="form-group"><label>可提现余额</label><input type="text" value="¥56,200" readonly style="background:#f5f5f5;"></div>
     <div class="form-group"><label>提现金额</label><input type="number" placeholder="请输入提现金额"></div>
@@ -1867,6 +1897,30 @@ _homeStats([
     <button class="btn btn-primary" onclick="UI.toast.success('提现申请已提交')">提交申请</button>
   </div>
 </div>`;
+    },
+
+    mall: function() {
+      var products = typeof shopProducts !== 'undefined' ? shopProducts : DB.getAll('products');
+      var productHtml = products.map(function(p) {
+        var priceHtml = p.originalPrice && p.originalPrice > p.price
+          ? '<span style="color:#ff4400;font-weight:700;font-size:16px;">¥' + p.price + '</span><span style="color:#999;text-decoration:line-through;font-size:12px;margin-left:6px;">¥' + p.originalPrice + '</span>'
+          : '<span style="color:#ff4400;font-weight:700;font-size:16px;">¥' + p.price + '</span>';
+        var imgHtml = p.img
+          ? '<img src="' + p.img + '" alt="' + (p.name||'') + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'" style="width:100%;height:100%;object-fit:cover;">'
+          : '🦷';
+        var tagHtml = p.tag ? '<span class="product-tag">' + p.tag + '</span>' : '';
+        return '<div class="mall-product-card">' +
+          '<div class="mall-product-img">' + imgHtml + '</div>' +
+          '<div class="mall-product-name">' + (p.name||'') + '</div>' +
+          '<div class="mall-product-meta">' + tagHtml + priceHtml + '</div>' +
+        '</div>';
+      }).join('');
+      return '' +
+'<div class="breadcrumb">首页 / 财务 / <span>商城</span></div>' +
+'<div class="card">' +
+  '<div class="card-header"><span class="card-title">商品浏览</span></div>' +
+  '<div class="mall-product-grid">' + productHtml + '</div>' +
+'</div>';
     },
 
     customers: function() { return CRUD.builder('pharmacy_customers', PHARMACY_CUSTOMERS); },
