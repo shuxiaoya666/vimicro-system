@@ -1534,7 +1534,6 @@ if (document.readyState === 'loading') {
   DB.init();
 
   // 覆盖 showLogin：显示商城首页而不是登录页
-  var _originalShowLogin = typeof showLogin === 'function' ? showLogin : null;
   function showLogin() {
     document.getElementById('shopHome').style.display = 'block';
     document.getElementById('mainApp').style.display = 'none';
@@ -1543,32 +1542,51 @@ if (document.readyState === 'loading') {
     window.scrollTo(0, 0);
   }
 
-  // 覆盖 doLogout：退出后回到商城首页
-  var _originalDoLogout = typeof doLogout === 'function' ? doLogout : null;
+  // 覆盖 doLogout：退出后回到商城首页，清除所有登录状态
   function doLogout() {
-    if (_originalDoLogout) _originalDoLogout();
-    // 确保显示商城首页
-    document.getElementById('shopHome').style.display = 'block';
-    document.getElementById('loginPage').style.display = 'none';
-    // 清除保存的账号和密码
+    // 清除用户状态
+    if (typeof currentUser !== 'undefined') currentUser = null;
+    if (typeof currentPort !== 'undefined') currentPort = 'platform';
+    if (typeof currentPage !== 'undefined') currentPage = 'home';
+    // 隐藏后台
+    document.getElementById('mainApp').style.display = 'none';
+    // 清除登录表单
+    var la = document.getElementById('loginAccount');
+    var lp = document.getElementById('loginPassword');
+    var lc = document.getElementById('loginCaptcha');
+    var le = document.getElementById('loginError');
+    if (la) la.value = '';
+    if (lp) lp.value = '';
+    if (lc) lc.value = '';
+    if (le) le.style.display = 'none';
+    // 禁用 API 模式
+    if (typeof DB !== 'undefined' && DB.disableApiMode) DB.disableApiMode();
+    // 清除所有登录凭证
+    localStorage.removeItem('xiaowei_token');
     localStorage.removeItem('xiaowei_account');
     localStorage.removeItem('xiaowei_password');
+    // 显示商城首页，隐藏登录页
+    document.getElementById('shopHome').style.display = 'block';
+    document.getElementById('loginPage').style.display = 'none';
     // 恢复banner登录面板
-    document.getElementById('bannerLoginForm').style.display = 'block';
-    document.getElementById('bannerUserPanel').style.display = 'none';
+    var formEl = document.getElementById('bannerLoginForm');
+    var panelEl = document.getElementById('bannerUserPanel');
+    if (formEl) formEl.style.display = 'block';
+    if (panelEl) panelEl.style.display = 'none';
     // 恢复顶部登录按钮
     var loginBtn = document.querySelector('.shop-login-btn');
     if (loginBtn) loginBtn.style.display = 'inline-block';
     var userMenu = document.getElementById('userMenu');
     if (userMenu) userMenu.style.display = 'none';
+    window.scrollTo(0, 0);
   }
 
   // 覆盖 showRegister：从商城首页跳转到注册页
-  var _originalShowRegister = typeof showRegister === 'function' ? showRegister : null;
   function showRegister() {
     document.getElementById('shopHome').style.display = 'none';
     document.getElementById('loginPage').style.display = 'none';
-    if (_originalShowRegister) _originalShowRegister();
+    document.getElementById('registerPage').style.display = 'flex';
+    window.scrollTo(0, 0);
   }
 
   // 添加返回商城首页的功能
