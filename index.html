@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=41">
+<link rel="stylesheet" href="css/style.css?v=42">
 </head>
 <body>
 
@@ -153,13 +153,13 @@
         <div class="category-icon">🔥</div>
         <div class="category-name">热销爆款</div>
       </div>
-      <div class="category-item" onclick="openLoginModal()">
-        <div class="category-icon">🆕</div>
-        <div class="category-name">新品上市</div>
-      </div>
-      <div class="category-item" onclick="handleEntryClick('clinic')">
+      <div class="category-item" onclick="handleRegistration('clinic')">
         <div class="category-icon">🏥</div>
         <div class="category-name">诊所入驻</div>
+      </div>
+      <div class="category-item" onclick="handleRegistration('pharmacy')">
+        <div class="category-icon">💊</div>
+        <div class="category-name">药店入驻</div>
       </div>
     </div>
   </section>
@@ -1303,6 +1303,23 @@ function handleEntryClick(type) {
   openLoginModal();
 }
 
+// 诊所/药店入驻 → 跳转到注册页面并预选类型
+function handleRegistration(type) {
+  // 重置注册表单
+  if (typeof regType !== 'undefined') {
+    regType = type;
+  }
+  // 显示注册页面
+  document.getElementById('shopHome').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('registerPage').style.display = 'flex';
+  // 预选注册类型
+  if (typeof switchRegType === 'function') {
+    switchRegType(type);
+  }
+  window.scrollTo(0, 0);
+}
+
 // Banner轮播
 function goBanner(idx) {
   bannerIdx = idx;
@@ -1527,7 +1544,7 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=8"></script>
+<script src="js/app.js?v=9"></script>
 <script src="js/pages.js?v=6"></script>
 <script>
   // 页面加载时初始化数据库
