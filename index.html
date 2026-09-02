@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=46">
+<link rel="stylesheet" href="css/style.css?v=47">
 </head>
 <body>
 
@@ -494,6 +494,9 @@
           <div class="port-menu-item" onclick="switchPort('factory')">
             <span class="icon">🏭</span><span>工厂端</span>
           </div>
+          <div class="port-menu-item" onclick="switchPort('client')">
+            <span class="icon">📱</span><span>客户端</span>
+          </div>
         </div>
       </div>
     </div>
@@ -596,16 +599,19 @@ function doBannerLogin() {
       user = ACCOUNTS[account];
     }
   }
-  if (!user) {
-    var clientAccounts = {
-      client: {password:'123456',name:'周小明',avatar:'周',role:'client',ports:['client']}
-    };
-    if (clientAccounts[account] && clientAccounts[account].password === password) {
-      user = clientAccounts[account];
-    }
-  }
 
   if (!user) {
+    // 检查是否是待审核的注册账号
+    if (typeof DB !== 'undefined') {
+      var regs = DB.getAll('registrations');
+      var pendingReg = regs.filter(function(r) { return r.account === account && r.status === 'pending'; });
+      if (pendingReg.length > 0) {
+        errorEl.textContent = '您的账号正在审核中，请耐心等待';
+        errorEl.style.display = 'block';
+        refreshBannerCaptcha();
+        return;
+      }
+    }
     errorEl.textContent = '账号或密码错误';
     errorEl.style.display = 'block';
     refreshBannerCaptcha();
@@ -1582,8 +1588,8 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=11"></script>
-<script src="js/pages.js?v=9"></script>
+<script src="js/app.js?v=12"></script>
+<script src="js/pages.js?v=10"></script>
 <script>
   // 页面加载时初始化数据库
   DB.init();

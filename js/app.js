@@ -20,6 +20,31 @@ const PORT_CONFIG = {
   client:   { name: '客户端',     icon: '📱', color: '#e91e63' },
 };
 
+// 从 localStorage 加载动态注册/创建的账号，合并到 ACCOUNTS
+(function loadCustomAccounts() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('xiaowei_custom_accounts') || '{}');
+    for (var key in saved) {
+      if (!ACCOUNTS[key]) {
+        ACCOUNTS[key] = saved[key];
+      }
+    }
+  } catch(e) {
+    console.warn('[Auth] 加载自定义账号失败:', e.message);
+  }
+})();
+
+// 保存动态账号到 localStorage
+function saveCustomAccount(account, data) {
+  try {
+    var saved = JSON.parse(localStorage.getItem('xiaowei_custom_accounts') || '{}');
+    saved[account] = data;
+    localStorage.setItem('xiaowei_custom_accounts', JSON.stringify(saved));
+  } catch(e) {
+    console.warn('[Auth] 保存自定义账号失败:', e.message);
+  }
+}
+
 // 当前状态
 let currentUser = null;
 let currentPort = 'platform';
@@ -270,15 +295,17 @@ function doRegister() {
 
   // 客户注册：自动通过，直接添加账号
   if (!needsLicense) {
+    var clientAccountData = {
+      password: password,
+      name: person,
+      avatar: person ? person.charAt(0) : '客',
+      role: 'client',
+      ports: ['client']
+    };
     if (typeof ACCOUNTS !== 'undefined') {
-      ACCOUNTS[account] = {
-        password: password,
-        name: person,
-        avatar: person ? person.charAt(0) : '客',
-        role: 'client',
-        ports: ['client']
-      };
+      ACCOUNTS[account] = clientAccountData;
     }
+    saveCustomAccount(account, clientAccountData);
     DB.add('registrations', regData);
     if (typeof UI !== 'undefined' && UI.toast) {
       UI.toast.success('注册成功！请使用账号 ' + account + ' 登录');
@@ -360,6 +387,16 @@ function doLogin() {
     console.warn('[Auth] API不可用，使用本地账号验证:', err.message);
     var user = ACCOUNTS[account];
     if (!user || user.password !== password) {
+      // 检查是否是待审核的注册账号
+      if (typeof DB !== 'undefined') {
+        var regs = DB.getAll('registrations');
+        var pendingReg = regs.filter(function(r) { return r.account === account && r.status === 'pending'; });
+        if (pendingReg.length > 0) {
+          errorEl.textContent = '您的账号正在审核中，请耐心等待';
+          errorEl.style.display = 'block';
+          return;
+        }
+      }
       errorEl.textContent = '账号或密码错误，请重试';
       errorEl.style.display = 'block';
       refreshCaptcha();
@@ -442,11 +479,11 @@ function toggleUserMenu() {
 function updatePortMenu() {
   const menu = document.getElementById('portMenu');
   const items = menu.querySelectorAll('.port-menu-item');
-  const portKeys = ['platform','clinic','dealer','pharmacy','factory'];
-  
+  const portKeys = ['platform','clinic','dealer','pharmacy','factory','client'];
+
   items.forEach((item, index) => {
     const portKey = portKeys[index];
-    if (currentUser.ports.includes(portKey)) {
+    if (portKey && currentUser.ports.includes(portKey)) {
       item.classList.remove('disabled');
       item.style.pointerEvents = 'auto';
     } else {

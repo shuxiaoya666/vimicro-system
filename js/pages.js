@@ -1457,13 +1457,17 @@ function approveReg(id) {
       if (typeof ACCOUNTS !== 'undefined') {
         var port = r.type;
         var avatarChar = r.person ? r.person.charAt(0) : '新';
-        ACCOUNTS[r.account] = {
+        var newAccountData = {
           password: r.password,
           name: r.person,
           avatar: avatarChar,
           role: port,
           ports: [port]
         };
+        ACCOUNTS[r.account] = newAccountData;
+        if (typeof saveCustomAccount === 'function') {
+          saveCustomAccount(r.account, newAccountData);
+        }
       }
       UI.toast.success('已通过审核，账号 ' + r.account + ' 现可登录');
       loadPage();
@@ -1544,13 +1548,17 @@ function doCreateAccount() {
   }
 
   if (typeof ACCOUNTS !== 'undefined') {
-    ACCOUNTS[account] = {
+    var newAcctData = {
       password: password,
       name: name,
       avatar: name ? name.charAt(0) : '新',
       role: port,
       ports: [port]
     };
+    ACCOUNTS[account] = newAcctData;
+    if (typeof saveCustomAccount === 'function') {
+      saveCustomAccount(account, newAcctData);
+    }
   }
 
   UI.closeModal();
