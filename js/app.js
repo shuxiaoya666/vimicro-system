@@ -108,6 +108,8 @@ function resetRegisterForm() {
   // 重置类型选择
   document.getElementById('tabClinic').classList.add('active');
   document.getElementById('tabPharmacy').classList.remove('active');
+  document.getElementById('tabDealer').classList.remove('active');
+  document.getElementById('tabClient').classList.remove('active');
   updateRegTypeUI();
 }
 
@@ -115,20 +117,47 @@ function switchRegType(type) {
   regType = type;
   document.getElementById('tabClinic').classList.toggle('active', type === 'clinic');
   document.getElementById('tabPharmacy').classList.toggle('active', type === 'pharmacy');
+  document.getElementById('tabDealer').classList.toggle('active', type === 'dealer');
+  document.getElementById('tabClient').classList.toggle('active', type === 'client');
   updateRegTypeUI();
 }
 
 function updateRegTypeUI() {
+  var licenseSection = document.getElementById('regLicenseSection');
+  var flowHint = document.getElementById('regFlowHint');
+  var orgTitle = document.getElementById('regOrgTitle');
+  var orgNameLabel = document.getElementById('regOrgNameLabel');
+  var personLabel = document.getElementById('regPersonLabel');
+  var orgNameInput = document.getElementById('regOrgName');
+
   if (regType === 'clinic') {
-    document.getElementById('regOrgTitle').textContent = '诊所信息';
-    document.getElementById('regOrgNameLabel').innerHTML = '诊所名称 <span class="reg-required">*</span>';
-    document.getElementById('regPersonLabel').innerHTML = '负责人姓名 <span class="reg-required">*</span>';
-    document.getElementById('regOrgName').placeholder = '请输入诊所完整名称';
-  } else {
-    document.getElementById('regOrgTitle').textContent = '药店信息';
-    document.getElementById('regOrgNameLabel').innerHTML = '药店名称 <span class="reg-required">*</span>';
-    document.getElementById('regPersonLabel').innerHTML = '店长姓名 <span class="reg-required">*</span>';
-    document.getElementById('regOrgName').placeholder = '请输入药店完整名称';
+    orgTitle.textContent = '诊所信息';
+    orgNameLabel.innerHTML = '诊所名称 <span class="reg-required">*</span>';
+    personLabel.innerHTML = '负责人姓名 <span class="reg-required">*</span>';
+    orgNameInput.placeholder = '请输入诊所完整名称';
+    licenseSection.style.display = '';
+    flowHint.innerHTML = '<strong>注册流程：</strong><br>1. 填写基本信息并上传营业资质<br>2. 提交申请，等待平台审核<br>3. 审核通过后即可登录使用';
+  } else if (regType === 'pharmacy') {
+    orgTitle.textContent = '药店信息';
+    orgNameLabel.innerHTML = '药店名称 <span class="reg-required">*</span>';
+    personLabel.innerHTML = '店长姓名 <span class="reg-required">*</span>';
+    orgNameInput.placeholder = '请输入药店完整名称';
+    licenseSection.style.display = '';
+    flowHint.innerHTML = '<strong>注册流程：</strong><br>1. 填写基本信息并上传营业资质<br>2. 提交申请，等待平台审核<br>3. 审核通过后即可登录使用';
+  } else if (regType === 'dealer') {
+    orgTitle.textContent = '经销商信息';
+    orgNameLabel.innerHTML = '公司名称 <span class="reg-required">*</span>';
+    personLabel.innerHTML = '负责人姓名 <span class="reg-required">*</span>';
+    orgNameInput.placeholder = '请输入公司完整名称';
+    licenseSection.style.display = '';
+    flowHint.innerHTML = '<strong>注册流程：</strong><br>1. 填写基本信息并上传营业资质<br>2. 提交申请，等待平台审核<br>3. 审核通过后即可登录使用';
+  } else if (regType === 'client') {
+    orgTitle.textContent = '个人信息';
+    orgNameLabel.innerHTML = '姓名 <span class="reg-required">*</span>';
+    personLabel.innerHTML = '昵称 <span class="reg-required">*</span>';
+    orgNameInput.placeholder = '请输入您的真实姓名';
+    licenseSection.style.display = 'none';
+    flowHint.innerHTML = '<strong>注册流程：</strong><br>1. 填写基本信息<br>2. 提交注册，无需审核<br>3. 注册成功后即可登录使用';
   }
 }
 
@@ -205,12 +234,14 @@ function doRegister() {
   if (!password) { showRegError('请设置密码'); return; }
   if (password.length < 6) { showRegError('密码至少需要6位'); return; }
   if (password !== passwordConfirm) { showRegError('两次输入的密码不一致'); return; }
-  if (!orgName) { showRegError(regType === 'clinic' ? '请输入诊所名称' : '请输入药店名称'); return; }
+  if (!orgName) { showRegError('请输入名称'); return; }
   if (!person) { showRegError('请输入负责人姓名'); return; }
   if (!phone) { showRegError('请输入联系电话'); return; }
   if (!/^1[3-9]\d{9}$/.test(phone.replace(/-/g, ''))) { showRegError('请输入正确的手机号'); return; }
   if (!region) { showRegError('请输入所在地区'); return; }
-  if (!regLicenseData) { showRegError('请上传营业资质照片或电子档'); return; }
+
+  var needsLicense = regType !== 'client';
+  if (needsLicense && !regLicenseData) { showRegError('请上传营业资质照片或电子档'); return; }
 
   // 检查账号是否已存在
   var existingAccounts = Object.keys(ACCOUNTS);
@@ -231,13 +262,32 @@ function doRegister() {
     phone: phone,
     region: region,
     address: address,
-    licenseName: document.getElementById('regLicenseFile').files[0] ? document.getElementById('regLicenseFile').files[0].name : 'license',
-    licenseData: regLicenseData,
-    status: 'pending',
+    licenseName: needsLicense && document.getElementById('regLicenseFile').files[0] ? document.getElementById('regLicenseFile').files[0].name : '',
+    licenseData: needsLicense ? regLicenseData : null,
+    status: needsLicense ? 'pending' : 'approved',
     submittedAt: DB._today()
   };
 
-  // 尝试通过 API 注册，失败则降级到本地存储
+  // 客户注册：自动通过，直接添加账号
+  if (!needsLicense) {
+    if (typeof ACCOUNTS !== 'undefined') {
+      ACCOUNTS[account] = {
+        password: password,
+        name: person,
+        avatar: person ? person.charAt(0) : '客',
+        role: 'client',
+        ports: ['client']
+      };
+    }
+    DB.add('registrations', regData);
+    if (typeof UI !== 'undefined' && UI.toast) {
+      UI.toast.success('注册成功！请使用账号 ' + account + ' 登录');
+    }
+    setTimeout(function() { showLogin(); }, 1500);
+    return;
+  }
+
+  // 诊所/药店/经销商：需要审核
   var _apiBase = (typeof API_CONFIG !== 'undefined') ? API_CONFIG.baseUrl.replace(/\/api$/, '') : 'http://localhost:3000';
   fetch(_apiBase + '/api/auth/register', {
     method: 'POST',
@@ -249,19 +299,16 @@ function doRegister() {
     return res.json();
   })
   .then(function(data) {
-    // API 注册成功
     console.log('[Auth] API注册成功:', data);
     showRegSuccess();
   })
   .catch(function(err) {
-    // API 不可用，降级到本地存储
     console.warn('[Auth] API不可用，使用本地存储注册:', err.message);
     DB.add('registrations', regData);
     showRegSuccess();
   });
 
   function showRegSuccess() {
-    // 显示成功提示并返回登录
     if (typeof UI !== 'undefined' && UI.toast) {
       UI.toast.success('注册申请已提交，请等待平台审核');
     }

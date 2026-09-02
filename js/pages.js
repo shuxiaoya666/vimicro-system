@@ -996,6 +996,7 @@ var SIDEBAR_MENUS = {
     { title: '系统', items: [
       { key: 'permissions', icon: '⚙️', name: '权限配置' },
       { key: 'regreview', icon: '📋', name: '注册审核', badge: '待审' },
+      { key: 'accounts', icon: '🔑', name: '账号管理' },
       { key: 'notifications', icon: '📢', name: '消息通知' }
     ]}
   ],
@@ -1315,11 +1316,17 @@ function _barChart(values, labels) {
 
 // 渲染注册审核卡片
 function _renderRegCard(r) {
-  var typeLabel = r.type === 'clinic'
-    ? '<span class="reg-review-type-badge clinic">🏥 诊所注册</span>'
-    : '<span class="reg-review-type-badge pharmacy">💊 药店注册</span>';
-  var personLabel = r.type === 'clinic' ? '负责人' : '店长';
-  var orgLabel = r.type === 'clinic' ? '诊所名称' : '药店名称';
+  var typeLabels = {
+    clinic: '<span class="reg-review-type-badge clinic">🏥 诊所注册</span>',
+    pharmacy: '<span class="reg-review-type-badge pharmacy">💊 药店注册</span>',
+    dealer: '<span class="reg-review-type-badge dealer">👤 经销商注册</span>',
+    client: '<span class="reg-review-type-badge client">📱 客户注册</span>'
+  };
+  var typeLabel = typeLabels[r.type] || typeLabels.clinic;
+  var personLabels = { clinic: '负责人', pharmacy: '店长', dealer: '负责人', client: '昵称' };
+  var orgLabels = { clinic: '诊所名称', pharmacy: '药店名称', dealer: '公司名称', client: '姓名' };
+  var personLabel = personLabels[r.type] || '负责人';
+  var orgLabel = orgLabels[r.type] || '名称';
 
   // 营业资质预览
   var licenseHtml = '';
@@ -1372,8 +1379,10 @@ function viewLicenseImage(id) {
 function viewRegDetail(id) {
   var r = DB.getById('registrations', id);
   if (!r) { UI.toast.error('记录不存在'); return; }
-  var typeLabel = r.type === 'clinic' ? '诊所注册' : '药店注册';
-  var personLabel = r.type === 'clinic' ? '负责人' : '店长';
+  var typeLabels = { clinic: '诊所注册', pharmacy: '药店注册', dealer: '经销商注册', client: '客户注册' };
+  var personLabels = { clinic: '负责人', pharmacy: '店长', dealer: '负责人', client: '昵称' };
+  var typeLabel = typeLabels[r.type] || '注册';
+  var personLabel = personLabels[r.type] || '负责人';
   var statusLabel = r.status === 'approved' ? '已通过' : (r.status === 'rejected' ? '已拒绝' : '待审核');
 
   var body = '<table class="ui-detail-table">';
@@ -1433,10 +1442,19 @@ function approveReg(id) {
           cardSales: 0,
           status: 'active'
         });
+      } else if (r.type === 'dealer') {
+        DB.add('dealers', {
+          name: r.orgName,
+          manager: r.person,
+          phone: r.phone,
+          region: r.region,
+          salesAmount: 0,
+          status: 'active'
+        });
       }
       // 添加到可登录账号
       if (typeof ACCOUNTS !== 'undefined') {
-        var port = r.type === 'clinic' ? 'clinic' : 'pharmacy';
+        var port = r.type;
         var avatarChar = r.person ? r.person.charAt(0) : '新';
         ACCOUNTS[r.account] = {
           password: r.password,
@@ -1466,6 +1484,77 @@ function rejectReg(id) {
     },
     '确认拒绝'
   );
+}
+
+// 创建账号弹窗
+function openCreateAccountModal() {
+  var body = '<div class="form-group"><label>账号 <span class="reg-required">*</span></label>';
+  body += '<input type="text" id="newAccount" placeholder="字母或数字，3-20位"></div>';
+  body += '<div class="form-group"><label>姓名 <span class="reg-required">*</span></label>';
+  body += '<input type="text" id="newName" placeholder="请输入姓名"></div>';
+  body += '<div class="form-group"><label>密码 <span class="reg-required">*</span></label>';
+  body += '<input type="password" id="newPassword" placeholder="至少6位"></div>';
+  body += '<div class="form-group"><label>分配端口 <span class="reg-required">*</span></label>';
+  body += '<select id="newPort" class="form-control" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:14px;">';
+  body += '<option value="factory">🏭 工厂端</option>';
+  body += '<option value="platform">🏠 平台端（小唯其他部门）</option>';
+  body += '<option value="clinic">🏥 诊所端</option>';
+  body += '<option value="dealer">👤 经销商端</option>';
+  body += '<option value="pharmacy">💊 药店端</option>';
+  body += '<option value="client">📱 客户端</option>';
+  body += '</select></div>';
+  body += '<div id="createAcctError" class="login-error" style="display:none;"></div>';
+
+  UI.modal({
+    title: '创建账号',
+    body: body,
+    footer: '<button class="btn btn-outline" onclick="UI.closeModal()">取消</button><button class="btn btn-primary" onclick="doCreateAccount()">创建</button>'
+  });
+}
+
+// 执行创建账号
+function doCreateAccount() {
+  var account = document.getElementById('newAccount').value.trim();
+  var name = document.getElementById('newName').value.trim();
+  var password = document.getElementById('newPassword').value;
+  var port = document.getElementById('newPort').value;
+  var errEl = document.getElementById('createAcctError');
+
+  if (!account || !/^[a-zA-Z0-9_]{3,20}$/.test(account)) {
+    errEl.textContent = '账号只能使用字母、数字和下划线，3-20位';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!name) {
+    errEl.textContent = '请输入姓名';
+    errEl.style.display = 'block';
+    return;
+  }
+  if (!password || password.length < 6) {
+    errEl.textContent = '密码至少需要6位';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if (typeof ACCOUNTS !== 'undefined' && ACCOUNTS[account]) {
+    errEl.textContent = '该账号已存在，请更换';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if (typeof ACCOUNTS !== 'undefined') {
+    ACCOUNTS[account] = {
+      password: password,
+      name: name,
+      avatar: name ? name.charAt(0) : '新',
+      role: port,
+      ports: [port]
+    };
+  }
+
+  UI.closeModal();
+  UI.toast.success('账号 ' + account + ' 创建成功');
+  loadPage();
 }
 
 
@@ -1659,7 +1748,13 @@ _barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月'
         html += '<div class="card"><div class="card-header"><span class="card-title">已处理记录（' + processed.length + '）</span></div>';
         html += '<table class="data-table"><thead><tr><th>账号</th><th>类型</th><th>名称</th><th>负责人</th><th>电话</th><th>地区</th><th>状态</th><th>提交日期</th><th>操作</th></tr></thead><tbody>';
         processed.forEach(function(r) {
-          var typeLabel = r.type === 'clinic' ? '<span class="reg-review-type-badge clinic">诊所</span>' : '<span class="reg-review-type-badge pharmacy">药店</span>';
+          var typeLabels = {
+            clinic: '<span class="reg-review-type-badge clinic">诊所</span>',
+            pharmacy: '<span class="reg-review-type-badge pharmacy">药店</span>',
+            dealer: '<span class="reg-review-type-badge dealer">经销商</span>',
+            client: '<span class="reg-review-type-badge client">客户</span>'
+          };
+          var typeLabel = typeLabels[r.type] || typeLabels.clinic;
           var statusLabel = r.status === 'approved'
             ? '<span class="status-tag active">已通过</span>'
             : '<span class="status-tag inactive">已拒绝</span>';
@@ -1678,6 +1773,44 @@ _barChart([186,215,248,198,267,312,289,341], ['1月','2月','3月','4月','5月'
         html += '</tbody></table></div>';
       }
 
+      return html;
+    },
+
+    accounts: function() {
+      var html = '<div class="breadcrumb">首页 / 系统 / <span>账号管理</span></div>';
+      html += '<div class="card"><div class="card-header"><span class="card-title">创建账号</span>';
+      html += '<button class="btn btn-primary btn-sm" onclick="openCreateAccountModal()" style="float:right;">+ 创建账号</button>';
+      html += '</div>';
+      html += '<div style="padding:16px;color:var(--text-muted);font-size:13px;">管理员可为工厂端和小唯其他部门人员创建登录账号，注册审核通过的诊所/药店/经销商账号也会在此显示。</div>';
+      html += '</div>';
+
+      // 列出所有账号
+      var accountList = [];
+      if (typeof ACCOUNTS !== 'undefined') {
+        for (var key in ACCOUNTS) {
+          var u = ACCOUNTS[key];
+          accountList.push({ account: key, name: u.name, role: u.role, ports: (u.ports || []).join(', ') });
+        }
+      }
+
+      html += '<div class="card"><div class="card-header"><span class="card-title">账号列表（' + accountList.length + '）</span></div>';
+      html += '<table class="data-table"><thead><tr><th>账号</th><th>姓名</th><th>角色</th><th>可访问端口</th><th>来源</th></tr></thead><tbody>';
+      var roleLabels = {
+        super: '超级管理员', clinic: '诊所', dealer: '经销商', pharmacy: '药店',
+        factory: '工厂', client: '客户', platform: '平台'
+      };
+      accountList.forEach(function(a) {
+        var isBuiltin = ['admin','clinic','dealer','pharmacy','factory','client'].indexOf(a.account) !== -1;
+        var source = isBuiltin ? '<span class="status-tag active">内置</span>' : '<span class="status-tag" style="background:var(--primary-light);color:var(--primary-dark);">新增</span>';
+        html += '<tr>';
+        html += '<td>' + CRUD._esc(a.account) + '</td>';
+        html += '<td>' + CRUD._esc(a.name) + '</td>';
+        html += '<td>' + (roleLabels[a.role] || a.role) + '</td>';
+        html += '<td>' + CRUD._esc(a.ports) + '</td>';
+        html += '<td>' + source + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
       return html;
     },
 

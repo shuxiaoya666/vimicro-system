@@ -649,10 +649,12 @@ body {
 
 .reg-type-tabs {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 .reg-type-tab {
   flex: 1;
+  min-width: 70px;
   padding: 10px 12px;
   border: 2px solid var(--border);
   border-radius: 8px;
@@ -757,6 +759,8 @@ body {
 }
 .reg-review-type-badge.clinic { background: #e8f4fd; color: #3498db; }
 .reg-review-type-badge.pharmacy { background: #f0e6ff; color: #8e44ad; }
+.reg-review-type-badge.dealer { background: #fff3e0; color: #f39c12; }
+.reg-review-type-badge.client { background: #fce4ec; color: #e91e63; }
 .reg-review-info {
   display: grid;
   grid-template-columns: 1fr 1fr;

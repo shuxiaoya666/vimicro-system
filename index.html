@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=44">
+<link rel="stylesheet" href="css/style.css?v=45">
 </head>
 <body>
 
@@ -160,6 +160,14 @@
       <div class="category-item" onclick="handleRegistration('pharmacy')">
         <div class="category-icon">💊</div>
         <div class="category-name">药店入驻</div>
+      </div>
+      <div class="category-item" onclick="handleRegistration('dealer')">
+        <div class="category-icon">👤</div>
+        <div class="category-name">经销商入驻</div>
+      </div>
+      <div class="category-item" onclick="handleRegistration('client')">
+        <div class="category-icon">📱</div>
+        <div class="category-name">客户注册</div>
       </div>
     </div>
   </section>
@@ -347,17 +355,23 @@
         <span onclick="backToShopHome()">← 返回商城</span>
       </div>
       <h3>账号注册</h3>
-      <div class="login-sub">诊所 / 药店入驻申请</div>
+      <div class="login-sub">诊所 / 药店 / 经销商 / 客户注册</div>
       <div class="register-form">
         <!-- 注册类型选择 -->
         <div class="form-group">
           <label>注册类型 <span class="reg-required">*</span></label>
           <div class="reg-type-tabs">
             <div class="reg-type-tab active" id="tabClinic" onclick="switchRegType('clinic')">
-              <span class="icon">🏥</span> 诊所注册
+              <span class="icon">🏥</span> 诊所
             </div>
             <div class="reg-type-tab" id="tabPharmacy" onclick="switchRegType('pharmacy')">
-              <span class="icon">💊</span> 药店注册
+              <span class="icon">💊</span> 药店
+            </div>
+            <div class="reg-type-tab" id="tabDealer" onclick="switchRegType('dealer')">
+              <span class="icon">👤</span> 经销商
+            </div>
+            <div class="reg-type-tab" id="tabClient" onclick="switchRegType('client')">
+              <span class="icon">📱</span> 客户
             </div>
           </div>
         </div>
@@ -401,6 +415,7 @@
         </div>
 
         <!-- 营业资质上传 -->
+        <div id="regLicenseSection">
         <div class="reg-section-title">营业资质上传 <span class="reg-required">*</span></div>
         <div class="form-group">
           <label>请上传营业执照照片或电子档</label>
@@ -418,13 +433,14 @@
           </div>
           <input type="file" id="regLicenseFile" accept="image/*,.pdf" style="display:none;" onchange="handleFileUpload(this)">
         </div>
+        </div>
 
         <div id="regError" class="login-error" style="display:none;"></div>
         <button class="login-btn" onclick="doRegister()">提交注册申请</button>
         <div class="register-link">
           已有账号？<a href="javascript:void(0)" onclick="showLogin()">返回登录</a>
         </div>
-        <div class="login-hint">
+        <div class="login-hint" id="regFlowHint">
           <strong>注册流程：</strong><br>
           1. 填写基本信息并上传营业资质<br>
           2. 提交申请，等待平台审核<br>
@@ -1547,8 +1563,8 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=9"></script>
-<script src="js/pages.js?v=6"></script>
+<script src="js/app.js?v=10"></script>
+<script src="js/pages.js?v=7"></script>
 <script>
   // 页面加载时初始化数据库
   DB.init();
