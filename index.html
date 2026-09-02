@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=45">
+<link rel="stylesheet" href="css/style.css?v=46">
 </head>
 <body>
 
@@ -1290,9 +1290,27 @@ function checkoutCart() {
   var isLoggedIn = (typeof currentUser !== 'undefined' && currentUser) ||
                    localStorage.getItem('xiaowei_account');
   if (isLoggedIn) {
-    // 已登录，直接提交订单
+    // 已登录，创建真实订单
     var total = shopCart.reduce(function(s, x) { return s + x.price * x.qty; }, 0);
-    var itemList = shopCart.map(function(x) { return x.name + ' x' + x.qty; }).join('\n');
+    var itemList = shopCart.map(function(x) { return x.name + ' x' + x.qty; }).join('、');
+    var orderNo = 'ORD' + Date.now();
+    var account = localStorage.getItem('xiaowei_account') || (currentUser ? currentUser.name : '');
+
+    // 保存订单到数据库
+    if (typeof DB !== 'undefined') {
+      DB.add('clientOrders', {
+        no: orderNo,
+        type: '商品购买',
+        item: itemList,
+        clinic: '—',
+        amount: total,
+        status: 'processing',
+        createdAt: (typeof DB._today === 'function') ? DB._today() : new Date().toISOString().slice(0,10),
+        account: account,
+        items: JSON.parse(JSON.stringify(shopCart))
+      });
+    }
+
     closeCart();
     // 显示订单确认
     var overlay = document.getElementById('cartPage');
@@ -1300,9 +1318,10 @@ function checkoutCart() {
     body.innerHTML = '<div class="cart-confirm">' +
       '<div class="cart-confirm-icon">✅</div>' +
       '<h3>订单提交成功</h3>' +
-      '<div class="cart-confirm-items">' + itemList.replace(/\n/g, '<br>') + '</div>' +
+      '<div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">订单号：' + orderNo + '</div>' +
+      '<div class="cart-confirm-items">' + itemList.replace(/、/g, '<br>') + '</div>' +
       '<div class="cart-confirm-total">合计：¥' + total.toFixed(2) + '</div>' +
-      '<p class="cart-confirm-tip">我们会在24小时内联系您确认订单详情</p>' +
+      '<p class="cart-confirm-tip">订单已保存，可在"我的订单"中查看</p>' +
       '<button class="cart-confirm-btn" onclick="closeCart();shopCart=[];updateCartBadge();">完成</button>' +
       '</div>';
     overlay.classList.add('show');
@@ -1563,8 +1582,8 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=10"></script>
-<script src="js/pages.js?v=8"></script>
+<script src="js/app.js?v=11"></script>
+<script src="js/pages.js?v=9"></script>
 <script>
   // 页面加载时初始化数据库
   DB.init();

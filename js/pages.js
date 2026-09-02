@@ -2502,7 +2502,43 @@ _homeStats([
 
     mall: function() { return CRUD.builder('client_mall', CLIENT_PRODUCTS); },
 
-    orders: function() { return CRUD.builder('client_orders', CLIENT_ORDERS); },
+    orders: function() {
+      var orders = DB.getAll('clientOrders');
+      var account = localStorage.getItem('xiaowei_account') || '';
+      var html = '<div class="breadcrumb">首页 / 我的 / <span>我的订单</span></div>';
+      html += _homeStats([
+        { label:'全部订单', value: orders.length, icon:'📋', color:'blue' },
+        { label:'进行中', value: orders.filter(function(o){ return o.status === 'processing'; }).length, icon:'⏳', color:'orange' },
+        { label:'已完成', value: orders.filter(function(o){ return o.status === 'active'; }).length, icon:'✅', color:'green' },
+        { label:'本月新增', value: orders.filter(function(o){ return o.createdAt && o.createdAt.indexOf(new Date().toISOString().slice(0,7)) >= 0; }).length, icon:'📅', color:'teal' }
+      ]);
+
+      if (orders.length === 0) {
+        html += '<div class="card"><div style="padding:40px;text-align:center;color:var(--text-muted);">';
+        html += '<div style="font-size:40px;margin-bottom:12px;">📋</div>';
+        html += '<div style="font-size:14px;">暂无订单记录</div>';
+        html += '</div></div>';
+        return html;
+      }
+
+      html += '<div class="card"><div class="card-header"><span class="card-title">订单列表（' + orders.length + '）</span></div>';
+      html += '<table class="data-table"><thead><tr><th>订单号</th><th>类型</th><th>商品</th><th>金额</th><th>状态</th><th>下单日期</th></tr></thead><tbody>';
+      orders.reverse().forEach(function(o) {
+        var statusLabel = o.status === 'active' ? '<span class="status-tag active">已完成</span>'
+          : '<span class="status-tag processing">进行中</span>';
+        var amount = o.amount != null ? '¥' + Number(o.amount).toFixed(2) : '—';
+        html += '<tr>';
+        html += '<td style="font-size:12px;">' + CRUD._esc(o.no || '') + '</td>';
+        html += '<td>' + CRUD._esc(o.type || '') + '</td>';
+        html += '<td>' + CRUD._esc(o.item || '') + '</td>';
+        html += '<td style="color:#ff4400;font-weight:600;">' + amount + '</td>';
+        html += '<td>' + statusLabel + '</td>';
+        html += '<td>' + CRUD._esc(o.createdAt || '') + '</td>';
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+      return html;
+    },
 
     progress: function() {
       var items = DB.getAll('clientProgress');
