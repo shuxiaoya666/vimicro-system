@@ -2508,7 +2508,29 @@ _homeStats([
       return html;
     },
 
-    mall: function() { return CRUD.builder('client_mall', CLIENT_PRODUCTS); },
+    mall: function() {
+      var products = typeof shopProducts !== 'undefined' ? shopProducts : DB.getAll('products');
+      var productHtml = products.map(function(p) {
+        var priceHtml = p.originalPrice && p.originalPrice > p.price
+          ? '<span style="color:#ff4400;font-weight:700;font-size:16px;">¥' + p.price + '</span><span style="color:#999;text-decoration:line-through;font-size:12px;margin-left:6px;">¥' + p.originalPrice + '</span>'
+          : '<span style="color:#ff4400;font-weight:700;font-size:16px;">¥' + p.price + '</span>';
+        var imgHtml = p.img
+          ? '<img src="' + p.img + '" alt="' + (p.name||'') + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'" style="width:100%;height:100%;object-fit:cover;">'
+          : '🦷';
+        var tagHtml = p.tag ? '<span class="product-tag">' + p.tag + '</span>' : '';
+        return '<div class="mall-product-card">' +
+          '<div class="mall-product-img">' + imgHtml + '</div>' +
+          '<div class="mall-product-name">' + (p.name||'') + '</div>' +
+          '<div class="mall-product-meta">' + tagHtml + priceHtml + '</div>' +
+          '</div>';
+      }).join('');
+      return '' +
+        '<div class="breadcrumb">首页 / 小唯商场 / <span>商品兑换</span></div>' +
+        '<div class="card">' +
+        '<div class="card-header"><span class="card-title">商品浏览</span></div>' +
+        '<div class="mall-product-grid">' + productHtml + '</div>' +
+        '</div>';
+    },
 
     orders: function() {
       var orders = DB.getAll('clientOrders');

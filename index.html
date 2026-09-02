@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=47">
+<link rel="stylesheet" href="css/style.css?v=48">
 </head>
 <body>
 
@@ -622,7 +622,13 @@ function doBannerLogin() {
   localStorage.setItem('xiaowei_account', account);
   localStorage.setItem('xiaowei_password', password);
   if (typeof currentUser !== 'undefined') {
-    currentUser = user;
+    currentUser = {
+      name: user.name,
+      avatar: user.avatar,
+      role: user.role,
+      ports: user.ports || [],
+      account: account
+    };
   }
 
   // 切换到已登录面板
@@ -1353,11 +1359,11 @@ function handleRegistration(type) {
   if (typeof switchRegType === 'function') {
     switchRegType(type);
   } else {
-    // 手动设置注册类型UI
-    var tabClinic = document.getElementById('tabClinic');
-    var tabPharmacy = document.getElementById('tabPharmacy');
-    if (tabClinic) tabClinic.classList.toggle('active', type === 'clinic');
-    if (tabPharmacy) tabPharmacy.classList.toggle('active', type === 'pharmacy');
+    var tabs = ['clinic', 'pharmacy', 'dealer', 'client'];
+    tabs.forEach(function(t) {
+      var el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+      if (el) el.classList.toggle('active', type === t);
+    });
   }
   if (typeof regType !== 'undefined') {
     regType = type;
@@ -1543,7 +1549,15 @@ function initShopHome() {
   if (savedAccount && savedPassword && typeof ACCOUNTS !== 'undefined' && ACCOUNTS[savedAccount]) {
     var user = ACCOUNTS[savedAccount];
     if (user.password === savedPassword) {
-      if (typeof currentUser !== 'undefined') currentUser = user;
+      if (typeof currentUser !== 'undefined') {
+        currentUser = {
+          name: user.name,
+          avatar: user.avatar,
+          role: user.role,
+          ports: user.ports || [],
+          account: savedAccount
+        };
+      }
       // 显示已登录面板
       var formEl = document.getElementById('bannerLoginForm');
       var panelEl = document.getElementById('bannerUserPanel');
@@ -1588,8 +1602,8 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=12"></script>
-<script src="js/pages.js?v=10"></script>
+<script src="js/app.js?v=13"></script>
+<script src="js/pages.js?v=11"></script>
 <script>
   // 页面加载时初始化数据库
   DB.init();
