@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=48">
+<link rel="stylesheet" href="css/style.css?v=49">
 </head>
 <body>
 
@@ -193,6 +193,19 @@
   </section>
 
   <!-- 热门推荐商品 -->
+  <!-- 限时秒杀 -->
+  <section class="flash-sale" id="flashSale">
+    <div class="flash-sale-header">
+      <div class="flash-sale-title">
+        <span class="flash-icon">⚡</span>
+        <span>限时秒杀</span>
+        <span class="flash-countdown" id="flashCountdown">00:00:00</span>
+      </div>
+      <span class="flash-more" onclick="scrollToProducts()">查看更多 →</span>
+    </div>
+    <div class="flash-sale-grid" id="flashSaleGrid"></div>
+  </section>
+
   <section class="shop-products">
     <div class="shop-section-title">
       <h2>热门推荐</h2>
@@ -205,16 +218,100 @@
         <span onclick="filterByCategory('益生菌', this)">益生菌</span>
       </div>
     </div>
+    <div class="shop-sort-bar" id="sortBar">
+      <span class="sort-label">排序：</span>
+      <span class="sort-item active" data-sort="default" onclick="changeSort('default',this)">综合</span>
+      <span class="sort-item" data-sort="sales" onclick="changeSort('sales',this)">销量优先</span>
+      <span class="sort-item" data-sort="priceAsc" onclick="changeSort('priceAsc',this)">价格↑</span>
+      <span class="sort-item" data-sort="priceDesc" onclick="changeSort('priceDesc',this)">价格↓</span>
+      <span class="sort-item" data-sort="newest" onclick="changeSort('newest',this)">最新</span>
+    </div>
     <div class="product-grid" id="productGrid">
       <!-- 商品由JS动态渲染 -->
     </div>
   </section>
 
+  <!-- 热销排行 -->
+  <section class="hot-ranking">
+    <div class="hot-ranking-header">
+      <h2>🔥 热销排行</h2>
+    </div>
+    <div class="hot-ranking-list" id="hotRankingList"></div>
+  </section>
+
   <!-- 页脚 -->
   <footer class="shop-footer">
-    <p>© 2026 小唯商城 VMicro · 口腔健康一站式平台</p>
-    <p style="margin-top:6px;">客服热线：400-888-8888 | 工作时间：9:00-21:00</p>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>购物指南</h4>
+        <a href="javascript:void(0)" onclick="UI.toast.info('新手教程即将上线')">新手教程</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('支付方式：微信/支付宝/银行转账')">支付方式</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('购物流程说明即将上线')">购物流程</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('会员等级说明即将上线')">会员权益</a>
+      </div>
+      <div class="footer-col">
+        <h4>商家服务</h4>
+        <a href="javascript:void(0)" onclick="handleRegistration('clinic')">诊所入驻</a>
+        <a href="javascript:void(0)" onclick="handleRegistration('pharmacy')">药店入驻</a>
+        <a href="javascript:void(0)" onclick="handleRegistration('dealer')">经销商入驻</a>
+        <a href="javascript:void(0)" onclick="handleRegistration('client')">客户注册</a>
+      </div>
+      <div class="footer-col">
+        <h4>服务支持</h4>
+        <a href="javascript:void(0)" onclick="UI.toast.info('客服热线：400-888-8888')">在线客服</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('售后政策：7天无理由退换')">售后政策</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('质保服务说明即将上线')">质保服务</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('配送说明：全国包邮（偏远地区除外）')">配送说明</a>
+      </div>
+      <div class="footer-col">
+        <h4>关于小唯</h4>
+        <a href="javascript:void(0)" onclick="handleEntryClick('academy')">小唯学院</a>
+        <a href="javascript:void(0)" onclick="handleEntryClick('implant')">了解种植</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('公司介绍即将上线')">关于我们</a>
+        <a href="javascript:void(0)" onclick="UI.toast.info('联系我们：service@vmicro.com')">联系我们</a>
+      </div>
+      <div class="footer-col footer-qr">
+        <h4>关注小唯</h4>
+        <div class="footer-qr-box">
+          <div class="qr-placeholder">📱</div>
+          <p>扫码关注公众号</p>
+          <p class="qr-sub">小唯医学工程</p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 小唯商城 VMicro · 口腔健康一站式平台</p>
+      <p>客服热线：400-888-8888 | 工作时间：9:00-21:00 | <a href="https://beian.miit.gov.cn/" target="_blank" style="color:inherit;">粤ICP备2026XXXXXX号</a></p>
+      <p class="footer-legal">小唯精密制造有限公司 · 广东省东莞市松山湖科技产业园 · 医疗器械经营许可</p>
+    </div>
   </footer>
+</div>
+
+<!-- 浮动按钮 -->
+<div class="float-buttons" id="floatButtons">
+  <div class="float-btn float-cs" onclick="UI.toast.info('客服热线：400-888-8888\\n工作时间：9:00-21:00')" title="在线客服">
+    <span>💬</span>
+    <span class="float-btn-label">客服</span>
+  </div>
+  <div class="float-btn float-fav" onclick="showFavorites()" title="我的收藏">
+    <span>❤️</span>
+    <span class="float-btn-label">收藏</span>
+  </div>
+  <div class="float-btn float-top" id="floatTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="返回顶部" style="display:none;">
+    <span>⬆</span>
+    <span class="float-btn-label">顶部</span>
+  </div>
+</div>
+
+<!-- 收藏弹窗 -->
+<div class="fav-overlay" id="favOverlay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="fav-panel">
+    <div class="fav-panel-header">
+      <h3>我的收藏</h3>
+      <button class="fav-close" onclick="document.getElementById('favOverlay').classList.remove('show')">×</button>
+    </div>
+    <div class="fav-panel-body" id="favBody"></div>
+  </div>
 </div>
 
 <!-- ========== 登录弹窗 ========== -->
@@ -686,6 +783,9 @@ function scrollToProducts() {
 }
 
 // 渲染商品
+var currentSort = 'default';
+var shopFavorites = JSON.parse(localStorage.getItem('xiaowei_favorites') || '[]');
+
 function renderProducts() {
   var grid = document.getElementById('productGrid');
   if (!grid) return;
@@ -694,13 +794,29 @@ function renderProducts() {
     var matchSearch = !currentSearch || p.name.toLowerCase().indexOf(currentSearch.toLowerCase()) >= 0;
     return matchCat && matchSearch;
   });
+  // 排序
+  if (currentSort === 'sales') {
+    list.sort(function(a,b) { return (b.sales||0) - (a.sales||0); });
+  } else if (currentSort === 'priceAsc') {
+    list.sort(function(a,b) { return a.price - b.price; });
+  } else if (currentSort === 'priceDesc') {
+    list.sort(function(a,b) { return b.price - a.price; });
+  } else if (currentSort === 'newest') {
+    list.sort(function(a,b) { return (b.id||0) - (a.id||0); });
+  }
   if (list.length === 0) {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:#999;">暂无相关商品</div>';
     return;
   }
   var h = '';
   list.forEach(function(p) {
+    var isFav = shopFavorites.indexOf(p.id) >= 0;
+    var sales = p.sales || Math.floor(Math.random() * 500 + 100);
+    var rating = p.rating || (4.5 + Math.random() * 0.5).toFixed(1);
+    var reviewCount = p.reviews || Math.floor(sales * 0.3);
+    var storeName = p.store || '小唯官方旗舰店';
     h += '<div class="product-card" onclick="showProductDetail(' + p.id + ')">';
+    h += '<div class="fav-btn ' + (isFav ? 'active' : '') + '" onclick="event.stopPropagation();toggleFavorite(' + p.id + ',this)">' + (isFav ? '❤' : '♡') + '</div>';
     h += '<div class="product-img">' + (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷') + '</div>';
     h += '<div class="product-info">';
     if (p.tag) h += '<span class="product-tag">' + p.tag + '</span>';
@@ -710,12 +826,155 @@ function renderProducts() {
     } else {
       h += '<div class="product-price"><span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span></div>';
     }
+    h += '<div class="product-meta">';
+    h += '<span class="product-rating">⭐' + rating + '</span>';
+    h += '<span class="product-sales">已售' + sales + '件</span>';
+    h += '</div>';
+    h += '<div class="product-store">🏪 ' + storeName + '</div>';
     h += '<div class="product-actions">';
     h += '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart(' + p.id + ')">🛒 加入购物车</button>';
     h += '</div>';
     h += '</div></div>';
   });
   grid.innerHTML = h;
+}
+
+// 排序切换
+function changeSort(sort, el) {
+  currentSort = sort;
+  document.querySelectorAll('.sort-item').forEach(function(s) { s.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  renderProducts();
+}
+
+// 收藏功能
+function toggleFavorite(id, el) {
+  var idx = shopFavorites.indexOf(id);
+  if (idx >= 0) {
+    shopFavorites.splice(idx, 1);
+    el.classList.remove('active');
+    el.textContent = '♡';
+    showCartToast('已取消收藏');
+  } else {
+    shopFavorites.push(id);
+    el.classList.add('active');
+    el.textContent = '❤';
+    showCartToast('已添加到收藏');
+  }
+  localStorage.setItem('xiaowei_favorites', JSON.stringify(shopFavorites));
+}
+
+function showFavorites() {
+  var overlay = document.getElementById('favOverlay');
+  var body = document.getElementById('favBody');
+  if (shopFavorites.length === 0) {
+    body.innerHTML = '<div class="fav-empty"><div style="font-size:40px;margin-bottom:8px;">💔</div>暂无收藏商品</div>';
+  } else {
+    var h = '';
+    shopFavorites.forEach(function(id) {
+      var p = shopProducts.filter(function(x) { return x.id === id; })[0];
+      if (!p) return;
+      h += '<div class="fav-item">';
+      h += '<div class="fav-item-img">' + (p.img ? '<img src="' + p.img + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷') + '</div>';
+      h += '<div class="fav-item-info"><div class="fav-item-name">' + p.name + '</div><div class="fav-item-price">¥' + p.price + '</div></div>';
+      h += '<button class="add-cart-btn" style="margin-right:8px;" onclick="addToCart(' + p.id + ')">🛒</button>';
+      h += '<button class="fav-item-del" onclick="removeFavorite(' + p.id + ')">🗑</button>';
+      h += '</div>';
+    });
+    body.innerHTML = h;
+  }
+  overlay.classList.add('show');
+}
+
+function removeFavorite(id) {
+  var idx = shopFavorites.indexOf(id);
+  if (idx >= 0) shopFavorites.splice(idx, 1);
+  localStorage.setItem('xiaowei_favorites', JSON.stringify(shopFavorites));
+  showFavorites();
+}
+
+// 限时秒杀
+function renderFlashSale() {
+  var grid = document.getElementById('flashSaleGrid');
+  if (!grid) return;
+  var flashItems = shopProducts.slice(0, 6);
+  var h = '';
+  flashItems.forEach(function(p, i) {
+    var sold = Math.floor(Math.random() * 70 + 20);
+    var imgHtml = p.img ? '<img src="' + p.img + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷';
+    h += '<div class="flash-card" onclick="showProductDetail(' + p.id + ')">';
+    h += '<div class="flash-card-img"><span class="flash-card-badge">秒杀</span>' + imgHtml + '</div>';
+    h += '<div class="flash-card-name">' + p.name.substring(0, 12) + '</div>';
+    h += '<div class="flash-card-price">¥' + p.price + '</div>';
+    if (p.originalPrice) h += '<div class="flash-card-original">¥' + p.originalPrice + '</div>';
+    h += '<div class="flash-card-bar"><div class="flash-card-bar-fill" style="width:' + sold + '%;"></div><div class="flash-card-bar-text">已抢' + sold + '%</div></div>';
+    h += '</div>';
+  });
+  grid.innerHTML = h;
+}
+
+function startFlashCountdown() {
+  var el = document.getElementById('flashCountdown');
+  if (!el) return;
+  // 倒计时到当天23:59:59
+  function update() {
+    var now = new Date();
+    var end = new Date();
+    end.setHours(23, 59, 59);
+    var diff = Math.floor((end - now) / 1000);
+    var h = Math.floor(diff / 3600);
+    var m = Math.floor((diff % 3600) / 60);
+    var s = diff % 60;
+    el.textContent = (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+  update();
+  setInterval(update, 1000);
+}
+
+// 热销排行
+function renderHotRanking() {
+  var list = document.getElementById('hotRankingList');
+  if (!list) return;
+  var sorted = shopProducts.slice().sort(function(a,b) { return (b.sales||Math.random()*500+100) - (a.sales||Math.random()*500+100); });
+  var top = sorted.slice(0, 6);
+  var h = '';
+  top.forEach(function(p, i) {
+    var sales = p.sales || Math.floor(Math.random() * 500 + 100);
+    var imgHtml = p.img ? '<img src="' + p.img + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷';
+    h += '<div class="hot-rank-card" onclick="showProductDetail(' + p.id + ')">';
+    h += '<div class="hot-rank-num">' + (i + 1) + '</div>';
+    h += '<div class="hot-rank-img">' + imgHtml + '</div>';
+    h += '<div class="hot-rank-info">';
+    h += '<div class="hot-rank-name">' + p.name + '</div>';
+    h += '<div class="hot-rank-sales">已售' + sales + '件</div>';
+    h += '</div>';
+    h += '<div class="hot-rank-price">¥' + p.price + '</div>';
+    h += '</div>';
+  });
+  list.innerHTML = h;
+}
+
+// 购物车持久化
+function saveCartToStorage() {
+  localStorage.setItem('xiaowei_cart', JSON.stringify(shopCart));
+}
+
+function loadCartFromStorage() {
+  try {
+    var saved = JSON.parse(localStorage.getItem('xiaowei_cart') || '[]');
+    if (Array.isArray(saved) && saved.length > 0) {
+      shopCart = saved;
+      updateCartBadge();
+    }
+  } catch(e) {}
+}
+
+// 浮动按钮显示控制
+function initFloatButtons() {
+  var topBtn = document.getElementById('floatTop');
+  window.addEventListener('scroll', function() {
+    if (topBtn) topBtn.style.display = window.scrollY > 400 ? 'flex' : 'none';
+  });
 }
 
 // 按分类筛选
@@ -755,12 +1014,44 @@ function showProductDetail(id) {
   } else {
     priceHtml = '<span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span>';
   }
-  // 获取小程序真实详情内容
   var realContent = '';
   if (typeof productDetails !== 'undefined' && productDetails[id] && productDetails[id].content) {
     realContent = productDetails[id].content;
   } else {
     realContent = getProductDescription(p);
+  }
+  var rating = p.rating || (4.5 + Math.random() * 0.5).toFixed(1);
+  var reviewCount = p.reviews || Math.floor(Math.random() * 200 + 50);
+  var sales = p.sales || Math.floor(Math.random() * 500 + 100);
+  var storeName = p.store || '小唯官方旗舰店';
+  var isFav = shopFavorites.indexOf(p.id) >= 0;
+  // 生成评价
+  var reviewNames = ['张*', '李*', '王*', '陈*', '刘*', '赵*', '周*', '吴*'];
+  var reviewTexts = [
+    '质量很好，用着很舒服，会回购！',
+    '包装精美，物流也快，满意！',
+    '一直在用这个牌子，值得信赖',
+    '性价比很高，推荐购买',
+    '和描述一致，没有失望',
+    '用了几天感觉不错，后续追评',
+    '老客户了，一如既往的好',
+    '客服态度很好，产品也不错'
+  ];
+  var reviewHtml = '';
+  for (var i = 0; i < 3; i++) {
+    var rName = reviewNames[Math.floor(Math.random() * reviewNames.length)];
+    var rText = reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
+    var rDate = '2026-0' + Math.floor(Math.random() * 8 + 1) + '-' + Math.floor(Math.random() * 28 + 1);
+    var rStars = '⭐⭐⭐⭐⭐';
+    reviewHtml += '<div class="detail-review-item">' +
+      '<div class="detail-review-header">' +
+      '<div class="detail-review-avatar">' + rName.charAt(0) + '</div>' +
+      '<span class="detail-review-name">' + rName + '</span>' +
+      '<span class="detail-review-stars">' + rStars + '</span>' +
+      '</div>' +
+      '<div class="detail-review-text">' + rText + '</div>' +
+      '<div class="detail-review-date">' + rDate + '</div>' +
+      '</div>';
   }
   detail.innerHTML =
     '<div class="detail-header">' +
@@ -768,24 +1059,81 @@ function showProductDetail(id) {
       '<span>商品详情</span>' +
     '</div>' +
     '<div class="detail-body detail-body-with-toc">' +
-      '<div class="detail-img">' + imgHtml + '</div>' +
+      '<div class="detail-gallery">' +
+        '<div class="detail-main-img" id="detailMainImg">' + imgHtml + '</div>' +
+        '<div class="detail-thumbs">' +
+          '<div class="detail-thumb active" onclick="changeDetailImg(this,\'' + (p.img||'') + '\')">' + imgHtml + '</div>' +
+          '<div class="detail-thumb" onclick="changeDetailImg(this,\'\')">🦷</div>' +
+          '<div class="detail-thumb" onclick="changeDetailImg(this,\'\')">📦</div>' +
+        '</div>' +
+      '</div>' +
       '<div class="detail-info">' +
         (p.tag ? '<span class="product-tag">' + p.tag + '</span>' : '') +
         '<h1 class="detail-name">' + p.name + '</h1>' +
         '<div class="detail-price">' + priceHtml + '</div>' +
-        '<div class="detail-meta"><span>分类：' + p.category + '</span></div>' +
+        '<div class="detail-meta">' +
+          '<span>分类：' + p.category + '</span>' +
+          '<span style="margin-left:16px;color:var(--text-muted);">已售' + sales + '件</span>' +
+          '<span style="margin-left:16px;color:#ff7733;">⭐' + rating + '</span>' +
+          '<span style="margin-left:16px;color:var(--text-muted);">' + reviewCount + '条评价</span>' +
+        '</div>' +
+        '<div style="padding:8px 12px;background:var(--primary-light);border-radius:6px;margin:8px 0;font-size:12px;color:var(--primary-dark);">🏪 ' + storeName + ' · 正品保障 · 7天无理由退换</div>' +
+        '<div class="detail-specs">' +
+          '<span class="detail-spec-item active">标准装</span>' +
+          '<span class="detail-spec-item">家庭装</span>' +
+          '<span class="detail-spec-item">试用装</span>' +
+        '</div>' +
+        '<div class="detail-qty-row">' +
+          '<span class="detail-qty-label">数量：</span>' +
+          '<div class="detail-qty-control">' +
+            '<button class="detail-qty-btn" onclick="detailQtyChange(-1)">−</button>' +
+            '<input type="text" class="detail-qty-input" id="detailQty" value="1" readonly>' +
+            '<button class="detail-qty-btn" onclick="detailQtyChange(1)">+</button>' +
+          '</div>' +
+          '<span style="font-size:12px;color:var(--text-muted);">库存' + (sales + 200) + '件</span>' +
+        '</div>' +
       '</div>' +
       '<div class="detail-content">' +
         '<h3>商品介绍</h3>' +
         '<div class="detail-content-html">' + realContent + '</div>' +
       '</div>' +
+      '<div class="detail-reviews">' +
+        '<h3>用户评价（' + reviewCount + '）</h3>' +
+        '<div class="detail-rating-summary">' +
+          '<div class="detail-rating-score">' + rating + '</div>' +
+          '<div>' +
+            '<div class="detail-rating-stars">⭐⭐⭐⭐⭐</div>' +
+            '<div class="detail-rating-count">综合评分 · 好评率98%</div>' +
+          '</div>' +
+        '</div>' +
+        reviewHtml +
+        '<div style="text-align:center;padding:12px;"><a href="javascript:void(0)" onclick="UI.toast.info(\'查看全部评价功能开发中\')" style="color:var(--primary);font-size:13px;">查看全部' + reviewCount + '条评价 →</a></div>' +
+      '</div>' +
     '</div>' +
     '<div class="detail-footer">' +
+      '<button class="detail-cart-btn" style="display:flex;align-items:center;gap:4px;" onclick="toggleFavorite(' + p.id + ',this);"><span>' + (isFav ? '❤' : '♡') + '</span><span>收藏</span></button>' +
       '<button class="detail-cart-btn" onclick="addToCart(' + p.id + ');closeProductDetail();openCart();">加入购物车</button>' +
       '<button class="detail-buy-btn" onclick="addToCart(' + p.id + ');closeProductDetail();openCart();">立即购买</button>' +
     '</div>';
   detail.classList.add('show');
   document.body.style.overflow = 'hidden';
+}
+
+function changeDetailImg(el, img) {
+  document.querySelectorAll('.detail-thumb').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  var main = document.getElementById('detailMainImg');
+  if (img) {
+    main.innerHTML = '<img src="' + img + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">';
+  } else {
+    main.innerHTML = '🦷';
+  }
+}
+
+function detailQtyChange(delta) {
+  var input = document.getElementById('detailQty');
+  var v = parseInt(input.value) + delta;
+  if (v >= 1) input.value = v;
 }
 
 function closeProductDetail() {
@@ -1213,6 +1561,7 @@ function addToCart(id) {
     shopCart.push({id: p.id, name: p.name, price: p.price, img: p.img, qty: 1});
   }
   updateCartBadge();
+  saveCartToStorage();
   showCartToast('已加入购物车');
 }
 
@@ -1282,6 +1631,7 @@ function changeQty(id, delta) {
       shopCart = shopCart.filter(function(x) { return x.id !== id; });
     }
     updateCartBadge();
+    saveCartToStorage();
     openCart();
   }
 }
@@ -1289,6 +1639,7 @@ function changeQty(id, delta) {
 function removeFromCart(id) {
   shopCart = shopCart.filter(function(x) { return x.id !== id; });
   updateCartBadge();
+  saveCartToStorage();
   openCart();
 }
 
@@ -1339,6 +1690,7 @@ function checkoutCart() {
     overlay.classList.add('show');
     shopCart = [];
     updateCartBadge();
+    saveCartToStorage();
   } else {
     // 未登录，弹出登录
     pendingAction = { type: 'checkout' };
@@ -1542,6 +1894,11 @@ function scrollToTop() {
 // 初始化商城首页
 function initShopHome() {
   renderProducts();
+  renderFlashSale();
+  startFlashCountdown();
+  renderHotRanking();
+  loadCartFromStorage();
+  initFloatButtons();
   startBanner();
   // 检查是否已登录（必须验证密码），更新banner面板状态
   var savedAccount = localStorage.getItem('xiaowei_account');
@@ -1602,8 +1959,8 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=13"></script>
-<script src="js/pages.js?v=11"></script>
+<script src="js/app.js?v=14"></script>
+<script src="js/pages.js?v=12"></script>
 <script>
   // 页面加载时初始化数据库
   DB.init();
