@@ -5427,3 +5427,189 @@ input:checked + .slider:before {
   .hot-ranking-list { grid-template-columns: 1fr; }
   .shop-sort-bar { flex-wrap: wrap; }
 }
+
+/* ==============================================================
+   ===== 🌟 身份选择页 Identity Page 🌟 =====
+   ============================================================== */
+.identity-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f0f7f9 0%, #e8f4f6 50%, #f5f0e8 100%);
+  position: relative;
+}
+.identity-back-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 14px 40px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(15,76,92,0.08);
+}
+.identity-back-bar span {
+  font-size: 14px;
+  color: #0f4c5c;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.identity-back-bar span:hover { color: #1a7a8c; }
+
+.identity-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.identity-hero {
+  text-align: center;
+  padding: 36px 24px 28px;
+  margin-bottom: 28px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8c 50%, #2d95a8 100%);
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(15,76,92,0.18);
+}
+.identity-hero::before {
+  content: '';
+  position: absolute;
+  top: -40%; right: -20%;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.identity-hero h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+.identity-hero p {
+  font-size: 14px;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.identity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.identity-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 24px;
+  background: #fff;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 18px rgba(15,76,92,0.06);
+  border: 1px solid rgba(15,76,92,0.05);
+  position: relative;
+  overflow: hidden;
+}
+.identity-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--card-accent, #1a7a8c), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.identity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(15,76,92,0.12);
+  border-color: rgba(15,76,92,0.12);
+}
+.identity-card:hover::before { opacity: 1; }
+
+.identity-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+.identity-info {
+  flex: 1;
+  min-width: 0;
+}
+.identity-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 3px;
+}
+.identity-desc {
+  font-size: 13px;
+  color: #7a8590;
+  line-height: 1.5;
+}
+.identity-arrow {
+  font-size: 20px;
+  color: #b8c2c8;
+  font-weight: 300;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+.identity-card:hover .identity-arrow {
+  color: #1a7a8c;
+  transform: translateX(4px);
+}
+
+.identity-footer {
+  text-align: center;
+  margin-top: 36px;
+}
+.identity-footer span {
+  font-size: 13px;
+  color: #7a8590;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.identity-footer span:hover { color: #1a7a8c; }
+
+/* ---- 登录页返回栏 ---- */
+.login-back-bar {
+  position: sticky;
+  top: -40px;
+  margin: -40px -40px 18px;
+  padding: 10px 40px;
+  background: var(--card-bg, #fff);
+  z-index: 10;
+  border-bottom: 1px solid var(--border, #eee);
+}
+.login-back-bar span {
+  font-size: 13px;
+  color: var(--primary, #1abc9c);
+  cursor: pointer;
+  font-weight: 600;
+}
+.login-back-bar span:hover { text-decoration: underline; }
+
+/* ---- 移动端适配 ---- */
+@media (max-width: 768px) {
+  .identity-container { padding: 24px 16px 40px; }
+  .identity-hero { padding: 28px 18px 22px; }
+  .identity-hero h2 { font-size: 22px; }
+  .identity-hero p { font-size: 13px; }
+  .identity-card { padding: 14px 18px; gap: 14px; }
+  .identity-icon { width: 48px; height: 48px; font-size: 24px; }
+  .identity-name { font-size: 15px; }
+  .identity-desc { font-size: 12px; }
+}

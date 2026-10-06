@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=52">
+<link rel="stylesheet" href="css/style.css?v=53">
 </head>
 <body>
 
@@ -76,7 +76,7 @@
           <div class="banner-text">
             <h2>新用户专享福利</h2>
             <p>注册即送100积分，首单立减50元</p>
-            <div class="banner-btn" onclick="document.getElementById('bannerLoginAccount').focus()">立即注册 →</div>
+            <div class="banner-btn" onclick="openLoginModal()">立即注册 →</div>
           </div>
           <div class="banner-img">🎁</div>
         </div>
@@ -84,39 +84,6 @@
           <div class="banner-dot on" onclick="goBanner(0)"></div>
           <div class="banner-dot" onclick="goBanner(1)"></div>
           <div class="banner-dot" onclick="goBanner(2)"></div>
-        </div>
-      </div>
-      <!-- 右侧固定登录面板 -->
-      <div class="banner-login-panel" id="bannerLoginPanel">
-        <div class="banner-login-form" id="bannerLoginForm">
-          <h3>登录小唯</h3>
-          <div class="banner-login-group">
-            <input type="text" id="bannerLoginAccount" placeholder="请输入账号">
-          </div>
-          <div class="banner-login-group">
-            <input type="password" id="bannerLoginPassword" placeholder="请输入密码">
-          </div>
-          <div class="banner-login-group">
-            <div class="banner-login-captcha">
-              <input type="text" id="bannerLoginCaptcha" placeholder="验证码" onkeypress="if(event.key==='Enter')doBannerLogin()">
-              <div class="banner-captcha-code" id="bannerCaptchaCode" onclick="refreshBannerCaptcha()">A3B7</div>
-            </div>
-          </div>
-          <div class="banner-login-error" id="bannerLoginError"></div>
-          <button class="banner-login-btn" onclick="doBannerLogin()">登 录</button>
-          <div class="banner-login-hint">
-            测试：admin / 123456<br>
-            <a onclick="switchToRegister()">没有账号？立即注册</a>
-          </div>
-        </div>
-        <!-- 已登录状态 -->
-        <div class="banner-user-panel" id="bannerUserPanel" style="display:none;">
-          <div class="banner-user-avatar" id="bannerUserAvatar">A</div>
-          <div class="banner-user-name" id="bannerUserName">用户名</div>
-          <div class="banner-user-actions">
-            <button onclick="enterSystem()">进入系统</button>
-            <button onclick="doLogout()">退出</button>
-          </div>
         </div>
       </div>
     </div>
@@ -314,6 +281,72 @@
   </div>
 </div>
 
+<!-- ========== 身份选择页 ========== -->
+<div id="identityPage" class="identity-page" style="display:none;">
+  <div class="identity-back-bar">
+    <span onclick="backToShopHomeFromIdentity()">← 返回商城</span>
+  </div>
+  <div class="identity-container">
+    <div class="identity-hero">
+      <h2>选择您的身份</h2>
+      <p>请选择您所属的身份，进入对应的管理后台</p>
+    </div>
+    <div class="identity-list">
+      <div class="identity-card" onclick="selectIdentity('platform')">
+        <div class="identity-icon" style="background:linear-gradient(135deg,#0f4c5c,#1a7a8c);">🏢</div>
+        <div class="identity-info">
+          <div class="identity-name">属于小唯</div>
+          <div class="identity-desc">小唯平台管理端 · 超级管理员</div>
+        </div>
+        <div class="identity-arrow">→</div>
+      </div>
+      <div class="identity-card" onclick="selectIdentity('factory')">
+        <div class="identity-icon" style="background:linear-gradient(135deg,#0097a7,#00bcd4);">🏭</div>
+        <div class="identity-info">
+          <div class="identity-name">属于工厂</div>
+          <div class="identity-desc">工厂生产管理端 · 工厂人员</div>
+        </div>
+        <div class="identity-arrow">→</div>
+      </div>
+      <div class="identity-card" onclick="selectIdentity('clinic')">
+        <div class="identity-icon" style="background:linear-gradient(135deg,#3498db,#5dade2);">🏥</div>
+        <div class="identity-info">
+          <div class="identity-name">属于诊所</div>
+          <div class="identity-desc">诊所业务管理端 · 诊所人员</div>
+        </div>
+        <div class="identity-arrow">→</div>
+      </div>
+      <div class="identity-card" onclick="selectIdentity('pharmacy')">
+        <div class="identity-icon" style="background:linear-gradient(135deg,#8e44ad,#a569bd);">💊</div>
+        <div class="identity-info">
+          <div class="identity-name">属于药房</div>
+          <div class="identity-desc">药店库存管理端 · 药店人员</div>
+        </div>
+        <div class="identity-arrow">→</div>
+      </div>
+      <div class="identity-card" onclick="selectIdentity('dealer')">
+        <div class="identity-icon" style="background:linear-gradient(135deg,#f39c12,#f5b041);">👤</div>
+        <div class="identity-info">
+          <div class="identity-name">属于经销商</div>
+          <div class="identity-desc">经销商供货管理端 · 经销商人员</div>
+        </div>
+        <div class="identity-arrow">→</div>
+      </div>
+      <div class="identity-card" onclick="selectIdentity('client')">
+        <div class="identity-icon" style="background:linear-gradient(135deg,#e91e63,#f06292);">🎧</div>
+        <div class="identity-info">
+          <div class="identity-name">属于客服</div>
+          <div class="identity-desc">客服服务管理端 · 客服人员</div>
+        </div>
+        <div class="identity-arrow">→</div>
+      </div>
+    </div>
+    <div class="identity-footer">
+      <span onclick="backToShopHomeFromIdentity()">← 返回商城首页</span>
+    </div>
+  </div>
+</div>
+
 <!-- ========== 登录弹窗 ========== -->
 <div id="loginModal" class="login-modal-mask" onclick="if(event.target===this)closeLoginModal()">
   <div class="login-modal">
@@ -379,8 +412,11 @@
     </div>
   </div>
   <div class="login-right">
-    <h3>欢迎登录</h3>
-    <div class="login-sub">小唯管理系统</div>
+    <div class="login-back-bar">
+      <span onclick="backToIdentity()">← 返回身份选择</span>
+    </div>
+    <h3 id="loginPageTitle">欢迎登录</h3>
+    <div class="login-sub" id="loginPageSub">小唯管理系统</div>
     <div class="login-form">
       <div class="form-group">
         <label>账号</label>
@@ -449,7 +485,7 @@
     </div>
     <div class="login-right register-right">
       <div class="reg-back-bar">
-        <span onclick="backToShopHome()">← 返回商城</span>
+        <span onclick="backToIdentityOrShop()">← 返回</span>
       </div>
       <h3>账号注册</h3>
       <div class="login-sub">诊所 / 药店 / 经销商 / 客户注册</div>
@@ -672,7 +708,9 @@ function refreshBannerCaptcha() {
 }
 
 function doBannerLogin() {
-  var account = document.getElementById('bannerLoginAccount').value.trim().toLowerCase();
+  var accountEl = document.getElementById('bannerLoginAccount');
+  if (!accountEl) return; // banner登录面板已移除，直接退出
+  var account = accountEl.value.trim().toLowerCase();
   var password = document.getElementById('bannerLoginPassword').value;
   var captcha = document.getElementById('bannerLoginCaptcha').value.trim().toUpperCase();
   var errorEl = document.getElementById('bannerLoginError');
@@ -729,10 +767,14 @@ function doBannerLogin() {
   }
 
   // 切换到已登录面板
-  document.getElementById('bannerLoginForm').style.display = 'none';
-  document.getElementById('bannerUserPanel').style.display = 'flex';
-  document.getElementById('bannerUserAvatar').textContent = user.avatar || user.name.charAt(0);
-  document.getElementById('bannerUserName').textContent = user.name;
+  var bForm = document.getElementById('bannerLoginForm');
+  var bPanel = document.getElementById('bannerUserPanel');
+  if (bForm) bForm.style.display = 'none';
+  if (bPanel) bPanel.style.display = 'flex';
+  var bAvatar = document.getElementById('bannerUserAvatar');
+  var bName = document.getElementById('bannerUserName');
+  if (bAvatar) bAvatar.textContent = user.avatar || user.name.charAt(0);
+  if (bName) bName.textContent = user.name;
 
   // 更新顶部用户信息
   var userMenu = document.getElementById('userMenu');
@@ -1738,23 +1780,84 @@ function startBanner() {
   }, 3500);
 }
 
-// 登录弹窗
+// 登录弹窗 → 改为显示身份选择页
 function openLoginModal() {
   closeProductDetail();
   closeCart();
-  // 滚动到banner登录面板
-  var panel = document.getElementById('bannerLoginPanel');
-  if (panel) {
-    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(function() {
-      var form = document.getElementById('bannerLoginForm');
-      if (form && form.style.display !== 'none') {
-        document.getElementById('bannerLoginAccount').focus();
-      }
-      refreshBannerCaptcha();
-    }, 500);
+  // 显示身份选择页
+  document.getElementById('shopHome').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('registerPage').style.display = 'none';
+  document.getElementById('identityPage').style.display = 'flex';
+  // 重置所选身份
+  if (typeof selectedRole !== 'undefined') selectedRole = null;
+  window.scrollTo(0, 0);
+}
+
+// 从身份选择页返回商城首页
+function backToShopHomeFromIdentity() {
+  document.getElementById('identityPage').style.display = 'none';
+  document.getElementById('shopHome').style.display = 'block';
+  if (typeof selectedRole !== 'undefined') selectedRole = null;
+  window.scrollTo(0, 0);
+}
+
+// 选择身份 → 进入登录页
+function selectIdentity(role) {
+  if (typeof selectedRole !== 'undefined') selectedRole = role;
+  else window.selectedRole = role;
+
+  // 更新登录页标题与提示
+  var titleEl = document.getElementById('loginPageTitle');
+  var subEl = document.getElementById('loginPageSub');
+  var identityMap = {
+    platform: { title: '小唯平台登录', sub: '超级管理员入口' },
+    factory:  { title: '工厂端登录',   sub: '工厂人员入口' },
+    clinic:   { title: '诊所端登录',   sub: '诊所人员入口' },
+    pharmacy: { title: '药房端登录',   sub: '药店人员入口' },
+    dealer:   { title: '经销商端登录', sub: '经销商人员入口' },
+    client:   { title: '客服端登录',   sub: '客服人员入口' }
+  };
+  var info = identityMap[role] || identityMap.platform;
+  if (titleEl) titleEl.textContent = info.title;
+  if (subEl) subEl.textContent = info.sub;
+
+  // 切换显示
+  document.getElementById('identityPage').style.display = 'none';
+  document.getElementById('loginPage').style.display = 'flex';
+  // 重置登录表单
+  var la = document.getElementById('loginAccount');
+  var lp = document.getElementById('loginPassword');
+  var lc = document.getElementById('loginCaptcha');
+  var le = document.getElementById('loginError');
+  if (la) la.value = '';
+  if (lp) lp.value = '';
+  if (lc) lc.value = '';
+  if (le) le.style.display = 'none';
+  if (typeof refreshCaptcha === 'function') refreshCaptcha();
+  window.scrollTo(0, 0);
+}
+
+// 从登录页返回身份选择
+function backToIdentity() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('identityPage').style.display = 'flex';
+  if (typeof selectedRole !== 'undefined') selectedRole = null;
+  window.scrollTo(0, 0);
+}
+
+// 从注册页返回：有身份则回身份选择，否则回商城首页
+function backToIdentityOrShop() {
+  if (typeof selectedRole !== 'undefined' && selectedRole) {
+    document.getElementById('registerPage').style.display = 'none';
+    document.getElementById('identityPage').style.display = 'flex';
+    selectedRole = null;
+    window.scrollTo(0, 0);
+  } else {
+    if (typeof backToShopHome === 'function') backToShopHome();
   }
 }
+
 function closeLoginModal() {
   document.getElementById('loginModal').classList.remove('show');
   pendingAction = null;
@@ -1900,7 +2003,7 @@ function initShopHome() {
   loadCartFromStorage();
   initFloatButtons();
   startBanner();
-  // 检查是否已登录（必须验证密码），更新banner面板状态
+  // 检查是否已登录（必须验证密码），更新顶部菜单状态
   var savedAccount = localStorage.getItem('xiaowei_account');
   var savedPassword = localStorage.getItem('xiaowei_password');
   if (savedAccount && savedPassword && typeof ACCOUNTS !== 'undefined' && ACCOUNTS[savedAccount]) {
@@ -1915,18 +2018,7 @@ function initShopHome() {
           account: savedAccount
         };
       }
-      // 显示已登录面板
-      var formEl = document.getElementById('bannerLoginForm');
-      var panelEl = document.getElementById('bannerUserPanel');
-      if (formEl) formEl.style.display = 'none';
-      if (panelEl) {
-        panelEl.style.display = 'flex';
-        var avatarEl = document.getElementById('bannerUserAvatar');
-        var nameEl = document.getElementById('bannerUserName');
-        if (avatarEl) avatarEl.textContent = user.avatar || user.name.charAt(0);
-        if (nameEl) nameEl.textContent = user.name;
-      }
-      // 更新顶部
+      // 更新顶部菜单
       var loginBtn = document.querySelector('.shop-login-btn');
       if (loginBtn) loginBtn.style.display = 'none';
       var userMenu = document.getElementById('userMenu');
@@ -1943,7 +2035,6 @@ function initShopHome() {
       localStorage.removeItem('xiaowei_password');
     }
   }
-  refreshBannerCaptcha();
 }
 
 // DOM加载完成后初始化
@@ -1959,7 +2050,7 @@ if (document.readyState === 'loading') {
 <script src="js/data.js?v=5"></script>
 <script src="js/ui.js?v=4"></script>
 <script src="js/crud.js?v=4"></script>
-<script src="js/app.js?v=14"></script>
+<script src="js/app.js?v=15"></script>
 <script src="js/pages.js?v=12"></script>
 <script>
   // 页面加载时初始化数据库
@@ -1971,6 +2062,7 @@ if (document.readyState === 'loading') {
     document.getElementById('mainApp').style.display = 'none';
     document.getElementById('loginPage').style.display = 'none';
     document.getElementById('registerPage').style.display = 'none';
+    document.getElementById('identityPage').style.display = 'none';
     window.scrollTo(0, 0);
   }
 
@@ -2000,11 +2092,9 @@ if (document.readyState === 'loading') {
     // 显示商城首页，隐藏登录页
     document.getElementById('shopHome').style.display = 'block';
     document.getElementById('loginPage').style.display = 'none';
-    // 恢复banner登录面板
-    var formEl = document.getElementById('bannerLoginForm');
-    var panelEl = document.getElementById('bannerUserPanel');
-    if (formEl) formEl.style.display = 'block';
-    if (panelEl) panelEl.style.display = 'none';
+    document.getElementById('identityPage').style.display = 'none';
+    // 重置所选身份
+    if (typeof selectedRole !== 'undefined') selectedRole = null;
     // 恢复顶部登录按钮
     var loginBtn = document.querySelector('.shop-login-btn');
     if (loginBtn) loginBtn.style.display = 'inline-block';
@@ -2017,6 +2107,7 @@ if (document.readyState === 'loading') {
   function showRegister() {
     document.getElementById('shopHome').style.display = 'none';
     document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('identityPage').style.display = 'none';
     document.getElementById('registerPage').style.display = 'flex';
     if (typeof resetRegisterForm === 'function') resetRegisterForm();
     window.scrollTo(0, 0);
@@ -2026,6 +2117,7 @@ if (document.readyState === 'loading') {
   function backToShopHome() {
     document.getElementById('registerPage').style.display = 'none';
     document.getElementById('loginPage').style.display = 'none';
+    document.getElementById('identityPage').style.display = 'none';
     document.getElementById('shopHome').style.display = 'block';
     window.scrollTo(0, 0);
   }

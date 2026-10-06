@@ -53,6 +53,7 @@ let regType = 'clinic'; // 注册类型：clinic 或 pharmacy
 let regLicenseData = null; // 营业资质base64数据
 let plantStep = 1; // 我要种植向导步骤：1绑定卡 2登录认证 3种植须知 4选择诊所 5确认信息
 let plantSelectedClinicId = null; // 选中的诊所ID
+let selectedRole = null; // 用户在身份选择页选择的角色端口（platform/factory/clinic/pharmacy/dealer/client）
 
 // ===== 我要种植向导 =====
 function plantNextStep() {
@@ -419,13 +420,32 @@ function loginUser(user, account) {
     ports: user.ports || [],
     account: account
   };
-  currentPort = currentUser.ports[0]; // 默认进入第一个可用端口
+  // 优先使用身份选择页选定的端口（需账号有权限），否则进入第一个可用端口
+  var ports = currentUser.ports || [];
+  if (typeof selectedRole === 'string' && ports.indexOf(selectedRole) >= 0) {
+    currentPort = selectedRole;
+  } else if (typeof selectedRole === 'string' && selectedRole && ports.indexOf(selectedRole) < 0) {
+    // 所选身份与账号权限不匹配：给出提示，但仍进入第一个可用端口
+    if (typeof UI !== 'undefined' && UI.toast) {
+      UI.toast.warn('该账号无 [' + selectedRole + '] 端口权限，已进入默认端口');
+    }
+    currentPort = ports[0];
+  } else {
+    currentPort = ports[0]; // 默认进入第一个可用端口
+  }
+  selectedRole = null; // 用完即清
   currentPage = 'home';
 
   var shopHome = document.getElementById('shopHome');
   if (shopHome) shopHome.style.display = 'none';
   document.getElementById('loginPage').style.display = 'none';
+  var identityPage = document.getElementById('identityPage');
+  if (identityPage) identityPage.style.display = 'none';
   document.getElementById('mainApp').style.display = 'flex';
+
+  // 保存登录状态
+  localStorage.setItem('xiaowei_account', account);
+  if (user.password) localStorage.setItem('xiaowei_password', user.password);
 
   // 更新用户信息
   document.getElementById('userAvatar').textContent = currentUser.avatar;
