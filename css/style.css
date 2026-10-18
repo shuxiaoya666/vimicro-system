@@ -5732,6 +5732,8 @@ input:checked + .slider:before {
 }
 #shopHome .banner-slides {
   border-radius: 0 !important;
+  height: 560px !important;
+  position: relative !important;
 }
 #shopHome .banner-slide {
   position: absolute !important;
@@ -6097,6 +6099,7 @@ input:checked + .slider:before {
 /* ---- 移动端适配（保持苹果感） ---- */
 @media (max-width: 768px) {
   #shopHome .banner-wrapper { height: 420px !important; }
+  #shopHome .banner-slides { height: 420px !important; }
   #shopHome .banner-slide { height: 420px !important; padding: 36px 24px !important; }
   #shopHome .banner-slide h2 { font-size: 34px !important; letter-spacing: -0.015em !important; }
   #shopHome .banner-slide p { font-size: 15px !important; margin-bottom: 24px !important; }
