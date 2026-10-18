@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=55">
+<link rel="stylesheet" href="css/style.css?v=56">
 </head>
 <body>
 
@@ -863,15 +863,21 @@ function changeSort(sort, el) {
 // 收藏功能
 function toggleFavorite(id, el) {
   var idx = shopFavorites.indexOf(id);
+  // 详情页按钮内心形在独立span中，只更新它，避免覆盖"收藏"文字
+  var target = (el.querySelector && el.querySelector('.fav-heart-icon')) || el;
   if (idx >= 0) {
     shopFavorites.splice(idx, 1);
     el.classList.remove('active');
-    el.textContent = '♡';
+    target.textContent = '♡';
     showCartToast('已取消收藏');
   } else {
     shopFavorites.push(id);
     el.classList.add('active');
-    el.textContent = '❤';
+    target.textContent = '❤';
+    // 心形弹跳动画
+    el.classList.remove('fav-pop');
+    void el.offsetWidth;
+    el.classList.add('fav-pop');
     showCartToast('已添加到收藏');
   }
   localStorage.setItem('xiaowei_favorites', JSON.stringify(shopFavorites));
@@ -1093,8 +1099,6 @@ function showProductDetail(id) {
         '<div style="padding:8px 12px;background:var(--primary-light);border-radius:6px;margin:8px 0;font-size:12px;color:var(--primary-dark);">🏪 ' + storeName + ' · 正品保障 · 7天无理由退换</div>' +
         '<div class="detail-specs">' +
           '<span class="detail-spec-item active">标准装</span>' +
-          '<span class="detail-spec-item">家庭装</span>' +
-          '<span class="detail-spec-item">试用装</span>' +
         '</div>' +
         '<div class="detail-qty-row">' +
           '<span class="detail-qty-label">数量：</span>' +
@@ -1124,7 +1128,7 @@ function showProductDetail(id) {
       '</div>' +
     '</div>' +
     '<div class="detail-footer">' +
-      '<button class="detail-cart-btn" style="display:flex;align-items:center;gap:4px;" onclick="toggleFavorite(' + p.id + ',this);"><span>' + (isFav ? '❤' : '♡') + '</span><span>收藏</span></button>' +
+      '<button class="detail-cart-btn detail-fav-btn' + (isFav ? ' active' : '') + '" style="display:flex;align-items:center;gap:4px;" onclick="toggleFavorite(' + p.id + ',this);"><span class="fav-heart-icon">' + (isFav ? '❤' : '♡') + '</span><span>收藏</span></button>' +
       '<button class="detail-cart-btn" onclick="addToCart(' + p.id + ');closeProductDetail();openCart();">加入购物车</button>' +
       '<button class="detail-buy-btn" onclick="addToCart(' + p.id + ');closeProductDetail();openCart();">立即购买</button>' +
     '</div>';
