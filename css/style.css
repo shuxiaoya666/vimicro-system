@@ -5760,6 +5760,29 @@ input:checked + .slider:before {
   background: radial-gradient(ellipse 80% 60% at 50% 120%, rgba(210,105,30,0.4), transparent 60%),
               linear-gradient(180deg, #0b0b0f 0%, #181209 55%, #0b0b0f 100%) !important;
 }
+/* 第四张 · 品牌白底 Logo 展示 */
+#shopHome .banner-slide[data-idx="3"] {
+  background: linear-gradient(180deg, #fafafa 0%, #ffffff 50%, #fafafa 100%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+#shopHome .banner-slide .banner-brand-logo {
+  max-width: 720px;
+  width: 68%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 8px 28px rgba(0,0,0,0.08));
+  position: relative;
+  z-index: 2;
+}
+/* 白底 slide 下指示点切换为深色 */
+#shopHome .banner-dots.on-light .banner-dot {
+  background: rgba(0,0,0,0.28) !important;
+}
+#shopHome .banner-dots.on-light .banner-dot.on {
+  background: #1d1d1f !important;
+}
 #shopHome .banner-slide .banner-text {
   position: relative;
   z-index: 2;
@@ -6105,6 +6128,7 @@ input:checked + .slider:before {
   #shopHome .banner-slide p { font-size: 15px !important; margin-bottom: 24px !important; }
   #shopHome .banner-slide .banner-btn { padding: 12px 26px !important; font-size: 14px !important; }
   #shopHome .banner-slide .banner-img { font-size: 150px !important; bottom: -20px; right: -4%; }
+  #shopHome .banner-slide .banner-brand-logo { width: 82%; max-width: 420px; }
   #shopHome .shop-section-title h2 { font-size: 26px !important; }
   #shopHome .flash-sale-title { font-size: 22px !important; }
   #shopHome .shop-categories { padding: 36px 16px 8px !important; }

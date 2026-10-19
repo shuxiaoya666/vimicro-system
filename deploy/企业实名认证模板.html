@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>腾讯云企业实名认证 - 信息填写模板</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: #f0f4f8;
+    color: #2c3e50;
+    line-height: 1.8;
+    padding: 20px;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .header {
+    background: linear-gradient(135deg, #0097a7, #006978);
+    color: #fff;
+    padding: 36px 30px;
+    text-align: center;
+  }
+  .header h1 { font-size: 26px; margin-bottom: 8px; }
+  .header p { font-size: 14px; opacity: 0.85; }
+  .body { padding: 30px; }
+  .section {
+    margin-bottom: 32px;
+    border: 1px solid #e0e6ed;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .section-header {
+    background: #e3f2fd;
+    padding: 14px 20px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #006978;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-header .num {
+    background: #0097a7;
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .section-body { padding: 20px; }
+  .field {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eef2f5;
+    align-items: flex-start;
+  }
+  .field:last-child { border-bottom: none; }
+  .field-label {
+    width: 180px;
+    font-weight: 600;
+    color: #37474f;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+  .field-label .required {
+    color: #f44336;
+    margin-left: 2px;
+  }
+  .field-value {
+    flex: 1;
+    min-height: 28px;
+    border-bottom: 1px solid #b0bec5;
+    padding: 2px 0;
+    font-size: 14px;
+  }
+  .field-hint {
+    font-size: 12px;
+    color: #78909c;
+    margin-top: 2px;
+  }
+  .field-desc {
+    width: 180px;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: #90a4ae;
+    text-align: right;
+    padding-right: 10px;
+  }
+  .tip-box {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .tip-box h4 {
+    color: #e65100;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .tip-box ul {
+    margin-left: 20px;
+    font-size: 13px;
+    color: #795548;
+  }
+  .tip-box li { margin-bottom: 4px; }
+  .checklist {
+    background: #e8f5e9;
+    border: 1px solid #a5d6a7;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .checklist h4 {
+    color: #2e7d32;
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .checklist label {
+    display: block;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #33691e;
+    cursor: pointer;
+  }
+  .checklist input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+  }
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .summary-table th {
+    background: #0097a7;
+    color: #fff;
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+  .summary-table td {
+    border: 1px solid #e0e6ed;
+    padding: 10px 12px;
+  }
+  .summary-table tr:nth-child(even) { background: #f5f7fa; }
+  .footer {
+    background: #f5f7fa;
+    padding: 20px 30px;
+    text-align: center;
+    font-size: 13px;
+    color: #78909c;
+    border-top: 1px solid #e0e6ed;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .container { box-shadow: none; border-radius: 0; }
+    .field-value { border-bottom: 1px solid #999; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>腾讯云企业实名认证 - 信息填写模板</h1>
+    <p>提前准备好以下信息，认证时直接照着填，避免手忙脚乱</p>
+  </div>
+
+  <div class="body">
+
+    <div class="tip-box">
+      <h4>认证方式选择建议</h4>
+      <ul>
+        <li><strong>法定代表人扫脸认证</strong> - 最快，法人有微信即可，几分钟完成</li>
+        <li><strong>企业对公打款认证</strong> - 最通用，需对公银行账户，1-3个工作日</li>
+        <li><strong>微信公众平台认证</strong> - 需已有微信公众平台的认证记录，秒通过</li>
+      </ul>
+    </div>
+
+    <!-- ===== Section 1: 企业基本信息 ===== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="num">1</span> 企业基本信息（所有认证方式通用）
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <div class="field-label">企业名称<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">与营业执照完全一致，含"有限公司"等字样</div>
+        </div>
+        <div class="field">
+          <div class="field-label">统一社会信用代码<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">18位，营业执照上的注册号</div>
+        </div>
+        <div class="field">
+          <div class="field-label">企业类型<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">如：有限责任公司、股份有限公司、个体工商户等</div>
+        </div>
+        <div class="field">
+          <div class="field-label">成立日期<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">营业执照上的成立日期，格式：YYYY-MM-DD</div>
+        </div>
+        <div class="field">
+          <div class="field-label">营业期限<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">如：2020-01-01 至 2040-12-31（长期写"长期"）</div>
+        </div>
+        <div class="field">
+          <div class="field-label">注册资本<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">如：100万元人民币</div>
+        </div>
+        <div class="field">
+          <div class="field-label">注册地址<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">营业执照上的注册地址，需完整</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Section 2: 法定代表人信息 ===== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="num">2</span> 法定代表人信息
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <div class="field-label">法定代表人姓名<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">与营业执照一致</div>
+        </div>
+        <div class="field">
+          <div class="field-label">法人身份证号<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">18位身份证号码</div>
+        </div>
+        <div class="field">
+          <div class="field-label">法人手机号<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">法人本人手机号，需接收验证码</div>
+        </div>
+        <div class="field">
+          <div class="field-label">法人身份证正面照<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">拍照或扫描，需清晰、完整、无遮挡</div>
+        </div>
+        <div class="field">
+          <div class="field-label">法人身份证反面照<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">国徽面，需清晰</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Section 3: 经办人信息 ===== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="num">3</span> 经办人信息（非法人本人办理时填写）
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <div class="field-label">经办人姓名<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">实际办理认证的人</div>
+        </div>
+        <div class="field">
+          <div class="field-label">经办人身份证号<span class="required">*</span></div>
+          <div class="field-value"></div>
+        </div>
+        <div class="field">
+          <div class="field-label">经办人手机号<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">需接收验证码和审核结果通知</div>
+        </div>
+        <div class="field">
+          <div class="field-label">经办人邮箱</div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">接收腾讯云通知邮件</div>
+        </div>
+        <div class="field">
+          <div class="field-label">经办人身份证正面<span class="required">*</span></div>
+          <div class="field-value"></div>
+        </div>
+        <div class="field">
+          <div class="field-label">经办人身份证反面<span class="required">*</span></div>
+          <div class="field-value"></div>
+        </div>
+        <div class="field">
+          <div class="field-label">法人授权委托书<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">法人签字+企业盖章的授权书照片</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Section 4: 对公银行账户（仅打款认证） ===== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="num">4</span> 对公银行账户信息（仅"企业对公打款认证"需要）
+      </div>
+      <div class="section-body">
+        <div class="tip-box">
+          <h4>注意</h4>
+          <ul>
+            <li>必须是<strong>企业名下</strong>的银行对公账户，不能用个人账户</li>
+            <li>账户名称必须与企业名称<strong>完全一致</strong></li>
+            <li>腾讯云会向此账户打一笔小额款项（如0.01元），你需查收并回填金额</li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">开户银行<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">如：中国工商银行、中国建设银行等</div>
+        </div>
+        <div class="field">
+          <div class="field-label">开户行支行名称<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">如：中国工商银行深圳南山支行</div>
+        </div>
+        <div class="field">
+          <div class="field-label">对公账户名称<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">通常为企业全称</div>
+        </div>
+        <div class="field">
+          <div class="field-label">对公账号<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">银行对公账户号码</div>
+        </div>
+        <div class="field">
+          <div class="field-label">开户行所在地<span class="required">*</span></div>
+          <div class="field-value"></div>
+          <div class="field-hint" style="width:100%;padding-left:180px;">如：广东省深圳市</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Section 5: 营业执照 ===== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="num">5</span> 营业执照照片
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <div class="field-label">营业执照照片<span class="required">*</span></div>
+          <div class="field-value"></div>
+        </div>
+        <div class="tip-box">
+          <h4>营业执照拍照要求</h4>
+          <ul>
+            <li>必须是<strong>原件</strong>拍照（复印件不行）</li>
+            <li>照片完整，四个边角都在画面内</li>
+            <li>文字清晰可读，无反光、无遮挡</li>
+            <li>格式：JPG/PNG，大小：不超过2MB</li>
+            <li>如果是"三证合一"或"五证合一"执照，直接拍一张即可</li>
+            <li>执照须在有效期内</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 材料清单 ===== -->
+    <div class="checklist">
+      <h4>材料准备清单（打勾确认）</h4>
+      <label><input type="checkbox"> 营业执照原件（拍照用）</label>
+      <label><input type="checkbox"> 法定代表人身份证原件（正反面拍照）</label>
+      <label><input type="checkbox"> 法人手机号（可接收验证码）</label>
+      <label><input type="checkbox"> 经办人身份证原件（正反面拍照）</label>
+      <label><input type="checkbox"> 法人授权委托书（如非法人本人办理）</label>
+      <label><input type="checkbox"> 企业对公银行账户信息（对公打款认证）</label>
+      <label><input type="checkbox"> 腾讯云账号已注册</label>
+      <label><input type="checkbox"> 营业执照已公示7天以上（新注册企业）</label>
+    </div>
+
+    <!-- ===== 常见问题 ===== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="num">6</span> 常见问题 & 注意事项
+      </div>
+      <div class="section-body">
+        <table class="summary-table">
+          <tr><th style="width:35%">问题</th><th>解答</th></tr>
+          <tr><td>新注册的企业能认证吗？</td><td>营业执照需在市场监督管理总局公示 <strong>7-15个工作日</strong>后才能认证</td></tr>
+          <tr><td>营业执照变更过怎么办？</td><td>企业名称/法人变更后同样需等待7-15个工作日</td></tr>
+          <tr><td>认证被驳回怎么办？</td><td>检查企业名称是否与执照完全一致、信用代码是否正确、照片是否清晰</td></tr>
+          <tr><td>对公打款多久到账？</td><td>通常1-3个工作日，注意查收银行短信或流水</td></tr>
+          <tr><td>认证后能改企业名称吗？</td><td>可以，但需重新提交认证，流程同首次</td></tr>
+          <tr><td>个体工商户能企业认证吗？</td><td>可以，选择企业认证，填写个体工商户信息</td></tr>
+          <tr><td>认证要收费吗？</td><td><strong>免费</strong>，不收取任何费用</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== 认证流程简述 ===== -->
+    <div class="section">
+      <div class="section-header">
+        <span class="num">7</span> 认证流程简述
+      </div>
+      <div class="section-body">
+        <table class="summary-table">
+          <tr><th style="width:8%">步骤</th><th style="width:25%">操作</th><th>说明</th></tr>
+          <tr><td>1</td><td>登录腾讯云</td><td>访问 cloud.tencent.com，用已注册的账号登录</td></tr>
+          <tr><td>2</td><td>进入认证页面</td><td>点击右上角头像 → 账号信息 → 认证状态 → 提交认证</td></tr>
+          <tr><td>3</td><td>选择企业认证</td><td>选择"企业"类型</td></tr>
+          <tr><td>4</td><td>填写企业信息</td><td>照着本模板填写企业名称、信用代码等</td></tr>
+          <tr><td>5</td><td>上传营业执照</td><td>上传拍照清晰的营业执照原件照片</td></tr>
+          <tr><td>6</td><td>填写法人信息</td><td>法人姓名、身份证号、手机号</td></tr>
+          <tr><td>7</td><td>选择认证方式</td><td>扫脸认证(快) / 对公打款(通用) / 微信公众号(最快)</td></tr>
+          <tr><td>8</td><td>提交等待审核</td><td>扫脸立即通过；对公打款1-3天；公众号秒过</td></tr>
+          <tr><td>9</td><td>认证完成</td><td>可购买服务器、域名、备案等</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>小唯管理系统 - 腾讯云企业实名认证模板 | 打印后填写，方便对照操作</p>
+  </div>
+</div>
+
+</body>
+</html>
