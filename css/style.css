@@ -6150,44 +6150,59 @@ input:checked + .slider:before {
   gap: 16px !important;
 }
 
-/* ---- 分类区块 · 带背景色与左右偏移 ---- */
+/* ---- 分类区块 · 背景色横向全屏铺满 + 内容整体平移 ---- */
 #shopHome .category-section {
-  margin-bottom: 48px !important;
-  padding: 36px 28px !important;
-  border-radius: 28px !important;
+  margin-left: calc(-1 * ((100vw - 100%) / 2)) !important;
+  margin-right: calc(-1 * ((100vw - 100%) / 2)) !important;
+  padding-left: calc((100vw - 100%) / 2) !important;
+  padding-right: calc((100vw - 100%) / 2) !important;
+  padding-top: 40px !important;
+  padding-bottom: 40px !important;
+  border-radius: 0 !important;
+  margin-bottom: 0 !important;
 }
 #shopHome .category-section:last-child {
-  margin-bottom: 24px !important;
+  margin-bottom: 0 !important;
 }
 /* 牙膏：右移 + logo蓝 */
 #shopHome #catSection-toothpaste {
   background: rgba(0, 180, 200, 0.10) !important;
-  padding-left: 110px !important;
-  padding-right: 28px !important;
+}
+#shopHome #catSection-toothpaste .category-title,
+#shopHome #catSection-toothpaste .product-grid {
+  transform: translateX(70px) !important;
 }
 /* 漱口水：右移 + logo蓝 */
 #shopHome #catSection-mouthwash {
   background: rgba(0, 180, 200, 0.10) !important;
-  padding-left: 110px !important;
-  padding-right: 28px !important;
+}
+#shopHome #catSection-mouthwash .category-title,
+#shopHome #catSection-mouthwash .product-grid {
+  transform: translateX(70px) !important;
 }
 /* 牙刷：左移 + logo黄 */
 #shopHome #catSection-toothbrush {
   background: rgba(255, 167, 38, 0.12) !important;
-  padding-right: 110px !important;
-  padding-left: 28px !important;
+}
+#shopHome #catSection-toothbrush .category-title,
+#shopHome #catSection-toothbrush .product-grid {
+  transform: translateX(-70px) !important;
 }
 /* 口腔护理：右移 + logo蓝 */
 #shopHome #catSection-oralcare {
   background: rgba(0, 180, 200, 0.10) !important;
-  padding-left: 110px !important;
-  padding-right: 28px !important;
+}
+#shopHome #catSection-oralcare .category-title,
+#shopHome #catSection-oralcare .product-grid {
+  transform: translateX(70px) !important;
 }
 /* 益生菌：右移 + logo蓝 */
 #shopHome #catSection-probiotics {
   background: rgba(0, 180, 200, 0.10) !important;
-  padding-left: 110px !important;
-  padding-right: 28px !important;
+}
+#shopHome #catSection-probiotics .category-title,
+#shopHome #catSection-probiotics .product-grid {
+  transform: translateX(70px) !important;
 }
 #shopHome .category-title {
   margin-bottom: 22px !important;
@@ -6467,16 +6482,33 @@ input:checked + .slider:before {
   #shopHome .product-card .add-cart-btn { padding: 9px 0 !important; font-size: 12px !important; }
   #shopHome .flash-card { padding: 12px !important; border-radius: 14px !important; }
   #shopHome .hot-rank-card { padding: 12px !important; border-radius: 14px !important; }
-  #shopHome .category-section { margin-bottom: 36px !important; padding: 20px 12px !important; }
+  #shopHome .category-section {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 20px 12px !important;
+  }
   #shopHome #catSection-toothpaste,
   #shopHome #catSection-mouthwash,
   #shopHome #catSection-toothbrush,
   #shopHome #catSection-oralcare,
   #shopHome #catSection-probiotics { padding-left: 12px !important; padding-right: 12px !important; }
+  #shopHome #catSection-toothpaste .category-title,
+  #shopHome #catSection-toothpaste .product-grid,
+  #shopHome #catSection-mouthwash .category-title,
+  #shopHome #catSection-mouthwash .product-grid,
+  #shopHome #catSection-toothbrush .category-title,
+  #shopHome #catSection-toothbrush .product-grid,
+  #shopHome #catSection-oralcare .category-title,
+  #shopHome #catSection-oralcare .product-grid,
+  #shopHome #catSection-probiotics .category-title,
+  #shopHome #catSection-probiotics .product-grid { transform: none !important; }
   #shopHome .category-title { margin-bottom: 16px !important; }
   #shopHome .category-title h2 { font-size: 22px !important; }
   #shopHome .product-card .product-name { font-size: 12px !important; min-height: auto; }
 }
+
+/* 防止分类区块全屏背景色撑出横向滚动条 */
+html, body { overflow-x: hidden !important; }
 
 /* ==============================================================
    ===== ❤️ 收藏功能高级感升级 Favorites Premium (v56) =====
