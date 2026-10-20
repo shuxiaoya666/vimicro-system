@@ -6147,18 +6147,50 @@ input:checked + .slider:before {
 /* ---- 商品网格 ---- */
 #shopHome .product-grid {
   grid-template-columns: repeat(4, 1fr) !important;
-  gap: 26px !important;
+  gap: 16px !important;
 }
 
-/* ---- 分类区块 ---- */
+/* ---- 分类区块 · 带背景色与左右偏移 ---- */
 #shopHome .category-section {
-  margin-bottom: 56px !important;
+  margin-bottom: 48px !important;
+  padding: 36px 28px !important;
+  border-radius: 28px !important;
 }
 #shopHome .category-section:last-child {
   margin-bottom: 24px !important;
 }
+/* 牙膏：右移 + logo蓝 */
+#shopHome #catSection-toothpaste {
+  background: rgba(0, 180, 200, 0.10) !important;
+  padding-left: 110px !important;
+  padding-right: 28px !important;
+}
+/* 漱口水：右移 + logo蓝 */
+#shopHome #catSection-mouthwash {
+  background: rgba(0, 180, 200, 0.10) !important;
+  padding-left: 110px !important;
+  padding-right: 28px !important;
+}
+/* 牙刷：左移 + logo黄 */
+#shopHome #catSection-toothbrush {
+  background: rgba(255, 167, 38, 0.12) !important;
+  padding-right: 110px !important;
+  padding-left: 28px !important;
+}
+/* 口腔护理：右移 + logo蓝 */
+#shopHome #catSection-oralcare {
+  background: rgba(0, 180, 200, 0.10) !important;
+  padding-left: 110px !important;
+  padding-right: 28px !important;
+}
+/* 益生菌：右移 + logo蓝 */
+#shopHome #catSection-probiotics {
+  background: rgba(0, 180, 200, 0.10) !important;
+  padding-left: 110px !important;
+  padding-right: 28px !important;
+}
 #shopHome .category-title {
-  margin-bottom: 24px !important;
+  margin-bottom: 22px !important;
 }
 #shopHome .category-title h2 {
   font-size: 30px !important;
@@ -6186,7 +6218,7 @@ input:checked + .slider:before {
 
 /* 图片区 */
 #shopHome .product-card .product-img {
-  height: 240px !important;
+  height: 200px !important;
   background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%) !important;
   display: flex !important;
   align-items: center;
@@ -6224,17 +6256,12 @@ input:checked + .slider:before {
   margin-bottom: 10px !important;
 }
 #shopHome .product-card .product-name {
-  font-size: 16px !important;
-  font-weight: 600 !important;
-  color: #1d1d1f !important;
-  letter-spacing: -0.01em;
-  line-height: 1.4 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #424245 !important;
+  letter-spacing: 0;
+  line-height: 1.5 !important;
   margin-bottom: 10px !important;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 44px;
 }
 #shopHome .product-card .product-price {
   display: flex;
@@ -6440,9 +6467,15 @@ input:checked + .slider:before {
   #shopHome .product-card .add-cart-btn { padding: 9px 0 !important; font-size: 12px !important; }
   #shopHome .flash-card { padding: 12px !important; border-radius: 14px !important; }
   #shopHome .hot-rank-card { padding: 12px !important; border-radius: 14px !important; }
-  #shopHome .category-section { margin-bottom: 36px !important; }
+  #shopHome .category-section { margin-bottom: 36px !important; padding: 20px 12px !important; }
+  #shopHome #catSection-toothpaste,
+  #shopHome #catSection-mouthwash,
+  #shopHome #catSection-toothbrush,
+  #shopHome #catSection-oralcare,
+  #shopHome #catSection-probiotics { padding-left: 12px !important; padding-right: 12px !important; }
   #shopHome .category-title { margin-bottom: 16px !important; }
   #shopHome .category-title h2 { font-size: 22px !important; }
+  #shopHome .product-card .product-name { font-size: 12px !important; min-height: auto; }
 }
 
 /* ==============================================================
