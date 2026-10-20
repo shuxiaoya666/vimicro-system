@@ -6146,8 +6146,26 @@ input:checked + .slider:before {
 
 /* ---- 商品网格 ---- */
 #shopHome .product-grid {
-  grid-template-columns: repeat(5, 1fr) !important;
-  gap: 28px !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 26px !important;
+}
+
+/* ---- 分类区块 ---- */
+#shopHome .category-section {
+  margin-bottom: 56px !important;
+}
+#shopHome .category-section:last-child {
+  margin-bottom: 24px !important;
+}
+#shopHome .category-title {
+  margin-bottom: 24px !important;
+}
+#shopHome .category-title h2 {
+  font-size: 30px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
+  color: #1d1d1f !important;
+  text-align: center;
 }
 
 /* ---- 商品卡片 ---- */
@@ -6168,7 +6186,7 @@ input:checked + .slider:before {
 
 /* 图片区 */
 #shopHome .product-card .product-img {
-  height: 280px !important;
+  height: 240px !important;
   background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%) !important;
   display: flex !important;
   align-items: center;
@@ -6181,7 +6199,7 @@ input:checked + .slider:before {
   width: 100%;
   height: 100%;
   object-fit: contain !important;
-  padding: 22px;
+  padding: 18px;
   box-sizing: border-box;
   transition: transform 0.55s cubic-bezier(0.34,1.2,0.5,1) !important;
 }
@@ -6191,7 +6209,7 @@ input:checked + .slider:before {
 
 /* 信息区 */
 #shopHome .product-card .product-info {
-  padding: 22px 24px 24px !important;
+  padding: 18px 20px 20px !important;
   background: transparent !important;
 }
 #shopHome .product-card .product-tag {
@@ -6422,6 +6440,9 @@ input:checked + .slider:before {
   #shopHome .product-card .add-cart-btn { padding: 9px 0 !important; font-size: 12px !important; }
   #shopHome .flash-card { padding: 12px !important; border-radius: 14px !important; }
   #shopHome .hot-rank-card { padding: 12px !important; border-radius: 14px !important; }
+  #shopHome .category-section { margin-bottom: 36px !important; }
+  #shopHome .category-title { margin-bottom: 16px !important; }
+  #shopHome .category-title h2 { font-size: 22px !important; }
 }
 
 /* ==============================================================

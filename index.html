@@ -8,7 +8,7 @@
 <meta http-equiv="Expires" content="0">
 <title>小唯商城 - 口腔健康一站式平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css?v=62">
+<link rel="stylesheet" href="css/style.css?v=63">
 </head>
 <body>
 
@@ -147,29 +147,49 @@
     </div>
   </section>
 
-  <!-- 热门推荐商品 -->
+  <!-- 商品分类陈列 -->
   <section class="shop-products">
-    <div class="shop-section-title">
-      <h2>热门推荐</h2>
-      <div class="shop-section-tabs" id="productTabs">
-        <span class="active" onclick="filterByCategory('all', this)">全部</span>
-        <span onclick="filterByCategory('械字号牙膏', this)">牙膏</span>
-        <span onclick="filterByCategory('械字号牙刷', this)">牙刷</span>
-        <span onclick="filterByCategory('漱口水', this)">漱口水</span>
-        <span onclick="filterByCategory('械字号口腔护理', this)">口腔护理</span>
-        <span onclick="filterByCategory('益生菌', this)">益生菌</span>
+    <!-- 搜索结果区（默认隐藏，搜索时显示） -->
+    <div id="searchResultSection" style="display:none;">
+      <div class="shop-section-title category-title">
+        <h2>搜索结果</h2>
+      </div>
+      <div class="product-grid" id="productGrid">
+        <!-- 搜索结果由JS动态渲染 -->
       </div>
     </div>
-    <div class="shop-sort-bar" id="sortBar">
-      <span class="sort-label">排序：</span>
-      <span class="sort-item active" data-sort="default" onclick="changeSort('default',this)">综合</span>
-      <span class="sort-item" data-sort="sales" onclick="changeSort('sales',this)">销量优先</span>
-      <span class="sort-item" data-sort="priceAsc" onclick="changeSort('priceAsc',this)">价格↑</span>
-      <span class="sort-item" data-sort="priceDesc" onclick="changeSort('priceDesc',this)">价格↓</span>
-      <span class="sort-item" data-sort="newest" onclick="changeSort('newest',this)">最新</span>
-    </div>
-    <div class="product-grid" id="productGrid">
-      <!-- 商品由JS动态渲染 -->
+    <!-- 五大分类区块 -->
+    <div id="categorySections">
+      <div class="category-section" id="catSection-toothpaste">
+        <div class="shop-section-title category-title">
+          <h2>牙膏</h2>
+        </div>
+        <div class="product-grid" id="grid-toothpaste"></div>
+      </div>
+      <div class="category-section" id="catSection-mouthwash">
+        <div class="shop-section-title category-title">
+          <h2>漱口水</h2>
+        </div>
+        <div class="product-grid" id="grid-mouthwash"></div>
+      </div>
+      <div class="category-section" id="catSection-toothbrush">
+        <div class="shop-section-title category-title">
+          <h2>牙刷</h2>
+        </div>
+        <div class="product-grid" id="grid-toothbrush"></div>
+      </div>
+      <div class="category-section" id="catSection-oralcare">
+        <div class="shop-section-title category-title">
+          <h2>口腔护理</h2>
+        </div>
+        <div class="product-grid" id="grid-oralcare"></div>
+      </div>
+      <div class="category-section" id="catSection-probiotics">
+        <div class="shop-section-title category-title">
+          <h2>益生菌</h2>
+        </div>
+        <div class="product-grid" id="grid-probiotics"></div>
+      </div>
     </div>
   </section>
 
@@ -787,7 +807,7 @@ function enterSystem() {
 }
 
 function scrollToProducts() {
-  var grid = document.getElementById('productGrid');
+  var grid = document.getElementById('categorySections') || document.getElementById('productGrid');
   if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -795,57 +815,88 @@ function scrollToProducts() {
 var currentSort = 'default';
 var shopFavorites = JSON.parse(localStorage.getItem('xiaowei_favorites') || '[]');
 
-function renderProducts() {
-  var grid = document.getElementById('productGrid');
-  if (!grid) return;
-  var list = shopProducts.filter(function(p) {
-    var matchCat = currentCategory === 'all' || p.category === currentCategory;
-    var matchSearch = !currentSearch || p.name.toLowerCase().indexOf(currentSearch.toLowerCase()) >= 0;
-    return matchCat && matchSearch;
-  });
-  // 排序
-  if (currentSort === 'sales') {
-    list.sort(function(a,b) { return (b.sales||0) - (a.sales||0); });
-  } else if (currentSort === 'priceAsc') {
-    list.sort(function(a,b) { return a.price - b.price; });
-  } else if (currentSort === 'priceDesc') {
-    list.sort(function(a,b) { return b.price - a.price; });
-  } else if (currentSort === 'newest') {
-    list.sort(function(a,b) { return (b.id||0) - (a.id||0); });
-  }
-  if (list.length === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:#999;">暂无相关商品</div>';
-    return;
-  }
+// 五大分类分组配置（key对应商品category，gridId对应分类区块容器）
+var categoryGroups = [
+  { key: '械字号牙膏', gridId: 'grid-toothpaste' },
+  { key: '漱口水', gridId: 'grid-mouthwash' },
+  { key: '械字号牙刷', gridId: 'grid-toothbrush' },
+  { key: '械字号口腔护理', gridId: 'grid-oralcare' },
+  { key: '益生菌', gridId: 'grid-probiotics' }
+];
+
+// 生成单个商品卡片HTML
+function buildProductCard(p) {
+  var isFav = shopFavorites.indexOf(p.id) >= 0;
+  var sales = p.sales || Math.floor(Math.random() * 500 + 100);
+  var rating = p.rating || (4.5 + Math.random() * 0.5).toFixed(1);
+  var reviewCount = p.reviews || Math.floor(sales * 0.3);
+  var storeName = p.store || '小唯官方旗舰店';
   var h = '';
-  list.forEach(function(p) {
-    var isFav = shopFavorites.indexOf(p.id) >= 0;
-    var sales = p.sales || Math.floor(Math.random() * 500 + 100);
-    var rating = p.rating || (4.5 + Math.random() * 0.5).toFixed(1);
-    var reviewCount = p.reviews || Math.floor(sales * 0.3);
-    var storeName = p.store || '小唯官方旗舰店';
-    h += '<div class="product-card" onclick="showProductDetail(' + p.id + ')">';
-    h += '<div class="fav-btn ' + (isFav ? 'active' : '') + '" onclick="event.stopPropagation();toggleFavorite(' + p.id + ',this)">' + (isFav ? '❤' : '♡') + '</div>';
-    h += '<div class="product-img">' + (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷') + '</div>';
-    h += '<div class="product-info">';
-    if (p.tag) h += '<span class="product-tag">' + p.tag + '</span>';
-    h += '<div class="product-name">' + p.name + '</div>';
-    if (p.originalPrice && p.originalPrice > p.price) {
-      h += '<div class="product-price"><span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span><span class="price-original">¥' + p.originalPrice + '</span></div>';
-    } else {
-      h += '<div class="product-price"><span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span></div>';
+  h += '<div class="product-card" onclick="showProductDetail(' + p.id + ')">';
+  h += '<div class="fav-btn ' + (isFav ? 'active' : '') + '" onclick="event.stopPropagation();toggleFavorite(' + p.id + ',this)">' + (isFav ? '❤' : '♡') + '</div>';
+  h += '<div class="product-img">' + (p.img ? '<img src="' + p.img + '" alt="' + p.name + '" loading="lazy" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'🦷\'">' : '🦷') + '</div>';
+  h += '<div class="product-info">';
+  if (p.tag) h += '<span class="product-tag">' + p.tag + '</span>';
+  h += '<div class="product-name">' + p.name + '</div>';
+  if (p.originalPrice && p.originalPrice > p.price) {
+    h += '<div class="product-price"><span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span><span class="price-original">¥' + p.originalPrice + '</span></div>';
+  } else {
+    h += '<div class="product-price"><span class="price-symbol">¥</span><span class="price-value">' + p.price + '</span></div>';
+  }
+  h += '<div class="product-meta">';
+  h += '<span class="product-rating">⭐' + rating + '</span>';
+  h += '<span class="product-sales">已售' + sales + '件</span>';
+  h += '</div>';
+  h += '<div class="product-store">🏪 ' + storeName + '</div>';
+  h += '<div class="product-actions">';
+  h += '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart(' + p.id + ')">🛒 加入购物车</button>';
+  h += '</div>';
+  h += '</div></div>';
+  return h;
+}
+
+function renderProducts() {
+  var searchSection = document.getElementById('searchResultSection');
+  var catWrap = document.getElementById('categorySections');
+  if (currentSearch) {
+    // 搜索模式：显示搜索结果区块
+    if (catWrap) catWrap.style.display = 'none';
+    if (searchSection) searchSection.style.display = '';
+    var grid = document.getElementById('productGrid');
+    if (!grid) return;
+    var list = shopProducts.filter(function(p) {
+      return p.name.toLowerCase().indexOf(currentSearch.toLowerCase()) >= 0;
+    });
+    // 排序
+    if (currentSort === 'sales') {
+      list.sort(function(a,b) { return (b.sales||0) - (a.sales||0); });
+    } else if (currentSort === 'priceAsc') {
+      list.sort(function(a,b) { return a.price - b.price; });
+    } else if (currentSort === 'priceDesc') {
+      list.sort(function(a,b) { return b.price - a.price; });
+    } else if (currentSort === 'newest') {
+      list.sort(function(a,b) { return (b.id||0) - (a.id||0); });
     }
-    h += '<div class="product-meta">';
-    h += '<span class="product-rating">⭐' + rating + '</span>';
-    h += '<span class="product-sales">已售' + sales + '件</span>';
-    h += '</div>';
-    h += '<div class="product-store">🏪 ' + storeName + '</div>';
-    h += '<div class="product-actions">';
-    h += '<button class="add-cart-btn" onclick="event.stopPropagation();addToCart(' + p.id + ')">🛒 加入购物车</button>';
-    h += '</div>';
-    h += '</div></div>';
-  });
-  grid.innerHTML = h;
+    if (list.length === 0) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:#999;">暂无相关商品</div>';
+      return;
+    }
+    var h = '';
+    list.forEach(function(p) { h += buildProductCard(p); });
+    grid.innerHTML = h;
+  } else {
+    // 分类模式：按五大分类分区渲染
+    if (searchSection) searchSection.style.display = 'none';
+    if (catWrap) catWrap.style.display = '';
+    categoryGroups.forEach(function(g) {
+      var grid = document.getElementById(g.gridId);
+      if (!grid) return;
+      var list = shopProducts.filter(function(p) { return p.category === g.key; });
+      var h = '';
+      list.forEach(function(p) { h += buildProductCard(p); });
+      grid.innerHTML = h || '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#999;">暂无商品</div>';
+    });
+  }
 }
 
 // 排序切换
@@ -995,21 +1046,35 @@ function initFloatButtons() {
 // 按分类筛选
 function filterByCategory(cat, el) {
   currentCategory = cat;
-  if (el) {
-    var tabs = document.querySelectorAll('#productTabs span');
-    tabs.forEach(function(t) { t.classList.remove('active'); });
-    el.classList.add('active');
-  }
+  // 清除搜索状态，恢复分类视图
+  currentSearch = '';
+  var searchInput = document.getElementById('shopSearchInput');
+  if (searchInput) searchInput.value = '';
   renderProducts();
-  // 滚动到商品区域
-  document.getElementById('productGrid').scrollIntoView({behavior:'smooth',block:'start'});
+  // 滚动到对应分类区块
+  var targetMap = {
+    'all': 'categorySections',
+    '械字号牙膏': 'catSection-toothpaste',
+    '牙膏': 'catSection-toothpaste',
+    '漱口水': 'catSection-mouthwash',
+    '械字号牙刷': 'catSection-toothbrush',
+    '牙刷': 'catSection-toothbrush',
+    '械字号口腔护理': 'catSection-oralcare',
+    '口腔护理': 'catSection-oralcare',
+    '益生菌': 'catSection-probiotics'
+  };
+  var tid = targetMap[cat] || 'categorySections';
+  var t = document.getElementById(tid);
+  if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // 搜索商品
 function searchProducts() {
   currentSearch = document.getElementById('shopSearchInput').value.trim();
   renderProducts();
-  document.getElementById('productGrid').scrollIntoView({behavior:'smooth',block:'start'});
+  var tid = currentSearch ? 'searchResultSection' : 'categorySections';
+  var t = document.getElementById(tid);
+  if (t) t.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
 // 购物车数据
